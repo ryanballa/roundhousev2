@@ -1,0 +1,33 @@
+/* Add CSS styles here! */
+body {
+  background: #5D737E;
+  color: #87BBA2;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: 'TofinoProBold';
+  src: url('/fonts/TofinoProPersonal-Bold.otf') format('opentype');
+  font-style: bold;
+}
+
+@font-face {
+  font-family: 'TofinoProBook';
+  src: url('/fonts/TofinoProPersonal-Book.otf') format('opentype');
+  font-style: normal;
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: 'TofinoProItalic';
+  src: url('/fonts/TofinoProPersonal-BookItalic.otf') format('opentype');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'TofinoProRegular';
+  src: url('/fonts/TofinoProPersonal-Regular.otf') format('opentype');
+  font-style: normal;
+}
