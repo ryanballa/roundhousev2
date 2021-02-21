@@ -1,48 +1,56 @@
-<header class="App-header">
+<script>
+  import { Link } from 'svelte-navigator';
+  import Dropdown from '../elements/Dropdown.svelte';
+</script>
+
+<header class="appHeader">
   <div class="topBar">
     <div class="leftBar">
       <h1>
-        <a href="/"> Roundhouse </a>
+        <span class="linkWrapper">
+          <Link class="link" to="/">Roundhouse</Link>
+        </span>
       </h1>
     </div>
     <div class="rightMenu">
-      <div class="userMenu">
-        <span>Ryan</span>
+      <div class="accountContext">
+        <Dropdown title="Ryan">
+          <ul>
+            <li><span>Logout</span></li>
+          </ul>
+        </Dropdown>
       </div>
     </div>
   </div>
 </header>
 
 <style>
+  .appHeader {
+    box-shadow: 1px 1px 1px #ccc;
+  }
+  .accountContext {
+    float: right;
+  }
   .leftBar {
     background: var(--color-navBg);
-    width: 29%;
+    width: 19%;
     padding: 1%;
   }
   .topBar {
     display: flex;
     justify-content: space-between;
   }
-  a,
-  a:link,
-  a:visited {
+  .linkWrapper :global(.link) {
     color: var(--color-links);
     text-decoration: none;
   }
   h1 {
     font-family: 'TofinoProBold';
-    margin-left: 8px;
+    margin: 0;
+    text-align: center;
   }
   .rightMenu {
     background-color: var(--color-bgHighlight);
-    width: 69%;
-  }
-  .userMenu {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: #797979;
-    float: right;
-    margin: 16px 16px 0 0;
-    padding: 8px;
+    width: 79%;
   }
 </style>

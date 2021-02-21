@@ -1,29 +1,60 @@
 <!-- App.svelte -->
 <script>
-  import { colors } from './utils/styling';
+  import { Router } from 'svelte-navigator';
+  import { colors, sizes } from './utils/styling';
   import Header from './components/core/Header.svelte';
   import Navigation from './components/core/Navigation.svelte';
+  import Routes from './Routes.svelte';
+  // import { Magic } from 'magic-sdk';
+
+  //const m = new Magic('pk_test_7326C844E2E9CDF1');
 
   // sets CSS vars for easy use in components
   const setRootColors = (theme) => {
     for (let [prop, color] of Object.entries(colors)) {
       let varString = `--color-${prop}`;
-      console.log(varString, color);
       document.documentElement.style.setProperty(varString, color);
     }
   };
 
+  const setSizes = (theme) => {
+    for (let [prop, size] of Object.entries(sizes)) {
+      let varString = `--size-${prop}`;
+      document.documentElement.style.setProperty(varString, size);
+    }
+  };
+
+  const init = async () => {
+    const email = 'ryan@ryanballa.com';
+
+    // if (await m.user.isLoggedIn()) {
+    //   const didToken = await m.user.getIdToken();
+
+    //   // Do something with the DID token.
+    //   // For instance, this could be a `fetch` call
+    //   // to a protected backend endpoint.
+    //   // document.getElementById('your-access-token').innerHTML = didToken;
+    //   console.log('user is logged in');
+    // } else {
+    //   console.log('user is not logged in');
+    //   // Log in the user
+    //   const user = await m.auth.loginWithMagicLink({ email });
+    // }
+  };
+
+  init();
   setRootColors();
+  setSizes();
 </script>
 
 <div class="app">
-  <Header />
-  <main>
-    <Navigation />
-    <section>
-      <h2>This is a sub page</h2>
-    </section>
-  </main>
+  <Router>
+    <Header />
+    <main>
+      <Navigation />
+      <Routes />
+    </main>
+  </Router>
 </div>
 
 <style>
