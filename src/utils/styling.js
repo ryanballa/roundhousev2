@@ -2,6 +2,7 @@ export const colors = {
     bg: '#E6EBE0',
     bgHighlight: '#fcfcfc',
     navBg: '#9BC1BC',
+    formBg: '#91afad',
     activeLinks: '#000000',
     links: '#424242',
     steel: '#797979',

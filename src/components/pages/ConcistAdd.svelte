@@ -2,6 +2,8 @@
   import { navigate } from 'svelte-navigator';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
+  import Forms from '../layout/Forms.svelte';
+  import Button from '../elements/Button.svelte';
   import { useForm, required, minLength, Hint } from 'svelte-use-form';
   let usersReq = null;
 
@@ -23,7 +25,8 @@
   };
 
   const validateUser = (value) => {
-    return value !== '' ? null : 'A user must be selected';
+    console.log(value);
+    return value !== '' ? null : { validateUser: `${value} is not a user` };
   };
 
   const form = useForm({
@@ -35,7 +38,6 @@
     const query = `*[_type == 'user']{ _id, name }`;
     try {
       usersReq = await sanity.fetch(query);
-      console.log(usersReq);
     } catch (e) {
       console.log(`Error: ${e}`);
     }
@@ -47,28 +49,39 @@
 </script>
 
 <SingleColumn title="Add Concist">
-  <form use:form on:submit={handleSubmit}>
-    <label for="number">
-      Number
-      <input id="number" name="number" />
-    </label>
-    <label for="user">
-      User
-      <select id="user" name="user">
-        <option value="">-- Select --</option>
-        {#if usersReq}
-          {#each usersReq as user}
-            <option value={user._id}>{user.name}</option>
-          {/each}
-        {/if}
-      </select>
-    </label>
-    <button disabled={!$form.valid}>Submit</button> <br />
+  <form id="addConcistForm" use:form on:submit={handleSubmit}>
+    <Forms>
+      <li>
+        <label for="number">
+          <span class="labelWrapper">Number</span>
+          <input id="number" name="number" />
+        </label>
+      </li>
+      <li>
+        <label for="user">
+          <span class="labelWrapper">User</span>
+          <select id="user" name="user">
+            <option value="">-- Select --</option>
+            {#if usersReq}
+              {#each usersReq as user}
+                <option value={user._id}>{user.name}</option>
+              {/each}
+            {/if}
+          </select>
+        </label>
+      </li>
+      <li>
+        <Hint name="number" on="minLength" let:value>
+          The title requires at least {value} characters.
+        </Hint>
 
-    <Hint name="number" on="minLength" let:value>
-      The title requires at least {value} characters.
-    </Hint>
-
-    <Hint name="user" on="validateUser" let:value>You must select a user.</Hint>
+        <Hint name="user" on="validateUser" let:value
+          >You must select a user.</Hint
+        >
+      </li>
+      <li>
+        <Button disabled={!$form.valid} actionText="Add Concist" />
+      </li>
+    </Forms>
   </form>
 </SingleColumn>

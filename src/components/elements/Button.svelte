@@ -1,15 +1,18 @@
 <script>
   import { navigate } from 'svelte-navigator';
   export let actionText = 'Add';
-  export let action = '/';
+  export let action;
+  export let disabled = false;
+  export let type = 'submit';
 
   const handleClick = () => {
-    console.log(action);
-    navigate(action, { replace: true });
+    if (action) {
+      navigate(action, { replace: true });
+    }
   };
 </script>
 
-<button on:click={handleClick}>{actionText}</button>
+<button {disabled} {type} on:click={handleClick}>{actionText}</button>
 
 <style>
   button {
