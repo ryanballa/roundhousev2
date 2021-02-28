@@ -5,6 +5,8 @@
   import Train from '../icons/Train.svelte';
   import Schedule from '../icons/Schedule.svelte';
 
+  let isLoggedIn = false;
+
   function getProps({ location, href, isPartiallyCurrent, isCurrent }) {
     const isActive = href === '/' ? isCurrent : isPartiallyCurrent || isCurrent;
 
@@ -17,51 +19,53 @@
 </script>
 
 <nav>
-  <ul>
-    <li>
-      <span class="linkWrapper">
-        <Link {getProps} class="link" to="tracking"
-          ><Work size={20} /><span>Work Orders</span></Link
-        >
-      </span>
-    </li>
-    <li>
-      <span class="linkWrapper">
-        <Link {getProps} class="link" to="tracking">
-          <span class="iconWrapper"><Train size={20} /></span><span
-            >Inventory</span
+  {#if isLoggedIn}
+    <ul>
+      <li>
+        <span class="linkWrapper">
+          <Link {getProps} class="link" to="tracking"
+            ><Work size={20} /><span>Work Orders</span></Link
           >
-        </Link>
-      </span>
-    </li>
-    <li>
-      <span class="linkWrapper">
-        <Link {getProps} class="link" to="tracking"
-          ><Tracking size={20} /><span>Tracking</span></Link
-        >
-      </span>
-      <ul class="sub">
-        <li>
-          <Link {getProps} class="link" to="tracking/concists">Concists</Link>
-        </li>
-        <li>
-          <Link {getProps} class="link" to="tracking">Cabs</Link>
-        </li>
-        <li>
-          <Link {getProps} class="link" to="tracking">Locomotives</Link>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <span class="linkWrapper">
-        <Link {getProps} class="link" to="schedule">
-          <span class="iconWrapper"><Schedule size={20} /></span><span
-            >Schedule</span
+        </span>
+      </li>
+      <li>
+        <span class="linkWrapper">
+          <Link {getProps} class="link" to="tracking">
+            <span class="iconWrapper"><Train size={20} /></span><span
+              >Inventory</span
+            >
+          </Link>
+        </span>
+      </li>
+      <li>
+        <span class="linkWrapper">
+          <Link {getProps} class="link" to="tracking"
+            ><Tracking size={20} /><span>Tracking</span></Link
           >
-        </Link>
-      </span>
-    </li>
-  </ul>
+        </span>
+        <ul class="sub">
+          <li>
+            <Link {getProps} class="link" to="tracking/concists">Concists</Link>
+          </li>
+          <li>
+            <Link {getProps} class="link" to="tracking">Cabs</Link>
+          </li>
+          <li>
+            <Link {getProps} class="link" to="tracking">Locomotives</Link>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="linkWrapper">
+          <Link {getProps} class="link" to="schedule">
+            <span class="iconWrapper"><Schedule size={20} /></span><span
+              >Schedule</span
+            >
+          </Link>
+        </span>
+      </li>
+    </ul>
+  {/if}
 </nav>
 
 <style>
@@ -102,6 +106,7 @@
   nav {
     background: var(--color-navBg);
     font-family: 'TofinoProBook';
+    min-height: 400px;
     padding: 1%;
     width: 19%;
   }

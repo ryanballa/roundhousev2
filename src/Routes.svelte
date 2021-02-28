@@ -5,8 +5,12 @@
   import Concists from './components/pages/Concists.svelte';
   import ConcistAdd from './components/pages/ConcistAdd.svelte';
   import Schedule from './components/pages/Schedule.svelte';
+  import Login from './components/pages/Login.svelte';
 </script>
 
+<Route path="login">
+  <Login />
+</Route>
 <Route path="home">
   <Home />
 </Route>

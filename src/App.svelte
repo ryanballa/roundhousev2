@@ -9,6 +9,7 @@
 
   //const m = new Magic('pk_test_7326C844E2E9CDF1');
   let shouldShowOverlay = false;
+  let isLoggedIn = false;
 
   // sets CSS vars for easy use in components
   const setRootColors = (theme) => {

@@ -31,7 +31,7 @@
 
   const form = useForm({
     number: { validators: [minLength(1)] },
-    user: { validators: [validateUser] },
+    user: { validators: [validateUser, required] },
   });
 
   const fetchUsers = async function () {
