@@ -8,6 +8,7 @@
   // import { Magic } from 'magic-sdk';
 
   //const m = new Magic('pk_test_7326C844E2E9CDF1');
+  let shouldShowOverlay = false;
 
   // sets CSS vars for easy use in components
   const setRootColors = (theme) => {
@@ -24,8 +25,29 @@
     }
   };
 
+  const handleOverlayClick = () => {
+    const event = new Event('overlayClick');
+    window.dispatchEvent(event);
+  };
+
   const init = async () => {
     const email = 'ryan@ryanballa.com';
+
+    window.addEventListener(
+      'showOverlay',
+      function (e) {
+        shouldShowOverlay = true;
+      },
+      false,
+    );
+
+    window.addEventListener(
+      'overlayClick',
+      function (e) {
+        shouldShowOverlay = false;
+      },
+      false,
+    );
 
     // if (await m.user.isLoggedIn()) {
     //   const didToken = await m.user.getIdToken();
@@ -48,6 +70,10 @@
 </script>
 
 <div class="app">
+  <div
+    class="overlay {shouldShowOverlay ? 'display' : ''}"
+    on:click={handleOverlayClick}
+  />
   <Router>
     <Header />
     <main>
@@ -66,5 +92,18 @@
     background-color: var(--color-bg);
     height: 100%;
     margin: 0 auto;
+  }
+  .overlay {
+    background-color: transparent;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .overlay.display {
+    display: block;
   }
 </style>

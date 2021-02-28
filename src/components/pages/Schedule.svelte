@@ -10,6 +10,15 @@
   let addingDate = null;
   let selectedButton = false;
 
+  window.addEventListener(
+    'overlayClick',
+    function (e) {
+      addingDate = null;
+      selectedButton = null;
+    },
+    false,
+  );
+
   const handleRemove = async (id, dateItem) => {
     try {
       await sanity.delete(id, dateItem);
@@ -22,9 +31,10 @@
   };
 
   const handleAdd = (time) => {
+    // addingDate = format(date, 'yyyy-MM-dd');
     const doc = {
       _type: 'schedule',
-      date: addingDate,
+      date: `${addingDate}T${time}:00Z`,
       membership: {
         _ref: '3370bbfc-6edc-45ab-986e-8362118bdb08',
         _type: 'reference',
@@ -36,29 +46,55 @@
     };
     sanity.create(doc).then((res) => {
       scheduleReq.push(res);
+      addingDate = null;
+      selectedButton = null;
       fetchData();
     });
   };
 
   const handleSubmit = (date) => {
+    const event = new Event('showOverlay');
+    window.dispatchEvent(event);
     addingDate = format(date, 'yyyy-MM-dd');
   };
+
+  function caculateButtonRules() {
+    // figure out if the user is present and if the qutoa is exceeded
+    for (const key in usersByDate) {
+      let quotaLimit = false;
+      if (
+        format(new Date(key), 'EEEE') === 'Wednesday' &&
+        usersByDate[key].length > 3
+      ) {
+        quotaLimit = true;
+      }
+      if (usersByDate[key].length >= 8) {
+        quotaLimit = true;
+      }
+      const userElement = usersByDate[key].find(
+        (item) => item.owner._id === 'b0d59354-8605-48fa-9997-6328a12cf5f0',
+      );
+      if (userElement) {
+        userElement.showRemove = true;
+      }
+      const nonUserElement = usersByDate[key].find(
+        (item) => item.owner._id !== 'b0d59354-8605-48fa-9997-6328a12cf5f0',
+      );
+      if (nonUserElement && !quotaLimit) {
+        nonUserElement.showAdd = true;
+      }
+    }
+  }
 
   function addUsersTodateRange() {
     usersByDate = {};
     scheduleReq.forEach((element) => {
       const elementDate = toDate(new Date(element.date));
-      if (element.owner._id === 'b0d59354-8605-48fa-9997-6328a12cf5f0') {
-        element.showAdd = false;
-        element.showRemove = true;
-      } else {
-        element.showAdd = true;
-        element.showRemove = false;
-      }
       if (!usersByDate[format(elementDate, 'yyyy-MM-dd')]) {
         usersByDate[format(elementDate, 'yyyy-MM-dd')] = [];
       }
       usersByDate[format(elementDate, 'yyyy-MM-dd')].push(element);
+      caculateButtonRules();
     });
   }
 
@@ -113,10 +149,10 @@
             <ul class="users">
               {#each usersByDate[format(date, 'yyyy-MM-dd')] as user}
                 <li>
-                  {user.owner.name} - {format(
-                    toDate(new Date(user.date)),
-                    'HH:MM',
-                  )}
+                  {user.owner.name} : {format(
+                    add(new Date(user.date), { hours: 6 }),
+                    'kk:mm',
+                  )} - {format(add(new Date(user.date), { hours: 9 }), 'kk:mm')}
                 </li>
               {/each}
             </ul>
@@ -132,28 +168,57 @@
               <div class="addOptions">
                 <h4>Pick a Time</h4>
                 <ul>
-                  <li>
+                  <li
+                    on:click={() => {
+                      selectedButton = '10-1';
+                      handleAdd('10:00');
+                    }}
+                  >
                     <button
                       class={selectedButton === '10-1' ? 'selected' : ''}
-                      on:click={() => (selectedButton = '10-1')}>&nbsp;</button
+                      on:click={() => {
+                        selectedButton = '10-1';
+                        handleAdd('10:00');
+                      }}>&nbsp;</button
                     >
                     <span>10AM - 1PM</span>
                   </li>
-                  <li>
+                  <li
+                    on:click={() => {
+                      selectedButton = '1-4';
+                      handleAdd('13:00');
+                    }}
+                  >
                     <button
                       class={selectedButton === '1-4' ? 'selected' : ''}
-                      on:click={() => (selectedButton = '1-4')}>&nbsp;</button
+                      on:click={() => {
+                        selectedButton = '1-4';
+                        handleAdd('13:00');
+                      }}>&nbsp;</button
                     >
                     <span>1PM - 4PM</span>
                   </li>
-                  <li>
+                  <li
+                    on:click={() => {
+                      selectedButton = '4-7';
+                      handleAdd('16:00');
+                    }}
+                  >
                     <button
                       class={selectedButton === '4-7' ? 'selected' : ''}
-                      on:click={() => (selectedButton = '4-7')}>&nbsp;</button
+                      on:click={() => {
+                        selectedButton = '4-7';
+                        handleAdd('16:00');
+                      }}>&nbsp;</button
                     >
                     <span>4PM - 7PM</span>
                   </li>
-                  <li>
+                  <li
+                    on:click={() => {
+                      selectedButton = '7-10';
+                      handleAdd('19:00');
+                    }}
+                  >
                     <button
                       class={selectedButton === '7-10' ? 'selected' : ''}
                       on:click={() => {
@@ -217,6 +282,7 @@
     left: -100px;
     position: absolute;
     width: 300px;
+    z-index: 1001;
   }
   .dayRange .addOptions button {
     background-color: transparent;
