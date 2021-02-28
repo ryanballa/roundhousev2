@@ -4,6 +4,7 @@
   import Tracking from './components/pages/Tracking.svelte';
   import Concists from './components/pages/Concists.svelte';
   import ConcistAdd from './components/pages/ConcistAdd.svelte';
+  import Schedule from './components/pages/Schedule.svelte';
 </script>
 
 <Route path="home">
@@ -19,4 +20,7 @@
     </Route>
     <Route path="/add" component={ConcistAdd} />
   </Route>
+</Route>
+<Route path="schedule">
+  <Schedule />
 </Route>

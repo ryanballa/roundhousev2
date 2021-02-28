@@ -2,17 +2,24 @@
   import { navigate } from 'svelte-navigator';
   export let actionText = 'Add';
   export let action;
+  export let actionEvent;
   export let disabled = false;
   export let type = 'submit';
+  export let variant = 'primary';
 
   const handleClick = () => {
     if (action) {
       navigate(action, { replace: true });
     }
+    if (actionEvent) {
+      actionEvent();
+    }
   };
 </script>
 
-<button {disabled} {type} on:click={handleClick}>{actionText}</button>
+<button class={variant} {disabled} {type} on:click={handleClick}
+  >{actionText}</button
+>
 
 <style>
   button {
@@ -23,6 +30,9 @@
     color: var(--color-bgHighlight);
     font-size: var(--size-button);
     padding: 10px 15px;
+  }
+  button.secondary {
+    background-color: var(--color-buttonsSecondary);
   }
   button:hover {
     cursor: pointer;

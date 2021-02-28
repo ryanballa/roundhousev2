@@ -2,7 +2,7 @@
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import DynamicContent from '../core/DynamicContent.svelte';
-  import TableButton from '../elements/TableButton.svelte';
+  import TableButtonDelete from '../elements/TableButtonDelete.svelte';
   import Table from '../elements/Table.svelte';
   let rows = [];
 
@@ -24,7 +24,7 @@
       key: 'actions',
       title: 'Actions',
       sortable: false,
-      renderComponent: TableButton,
+      renderComponent: TableButtonDelete,
     },
   ];
 

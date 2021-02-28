@@ -8,7 +8,7 @@
     <div class="leftBar">
       <h1>
         <span class="linkWrapper">
-          <Link class="link" to="/">Roundhouse</Link>
+          <Link class="link" to="/">LocomotiveHouse</Link>
         </span>
       </h1>
     </div>
@@ -46,6 +46,7 @@
   }
   h1 {
     font-family: 'TofinoProBold';
+    font-size: 30px;
     margin: 0;
     text-align: center;
   }

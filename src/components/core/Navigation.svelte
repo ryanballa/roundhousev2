@@ -3,6 +3,7 @@
   import Work from '../icons/Work.svelte';
   import Tracking from '../icons/Tracking.svelte';
   import Train from '../icons/Train.svelte';
+  import Schedule from '../icons/Schedule.svelte';
 
   function getProps({ location, href, isPartiallyCurrent, isCurrent }) {
     const isActive = href === '/' ? isCurrent : isPartiallyCurrent || isCurrent;
@@ -50,6 +51,15 @@
           <Link {getProps} class="link" to="tracking">Locomotives</Link>
         </li>
       </ul>
+    </li>
+    <li>
+      <span class="linkWrapper">
+        <Link {getProps} class="link" to="schedule">
+          <span class="iconWrapper"><Schedule size={20} /></span><span
+            >Schedule</span
+          >
+        </Link>
+      </span>
     </li>
   </ul>
 </nav>
