@@ -135,6 +135,8 @@
   };
 
   user.subscribe((value) => {
+    console.log('user found');
+    console.log(value);
     if (value._id) {
       fetchData();
       caculateDate(dateRangeOffset);
