@@ -12,7 +12,8 @@ export const colors = {
     body: '#503c52',
     titles: '#87BBA2',
     buttons: '#87BBA2',
-    buttonsSecondary: '#afb1b1'
+    buttonsSecondary: '#afb1b1',
+    success: '#18bb23',
 }
 
 export const sizes = {

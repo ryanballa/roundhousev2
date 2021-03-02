@@ -32,4 +32,7 @@
     color: var(--color-terraCotta);
     margin-bottom: 16px;
   }
+  .formWrapper :global(.formSuccess) {
+    color: var(--color-success);
+  }
 </style>

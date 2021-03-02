@@ -1,11 +1,10 @@
 <script>
+  import { isAuthenticated } from '../../store/user';
   import { Link } from 'svelte-navigator';
   import Work from '../icons/Work.svelte';
   import Tracking from '../icons/Tracking.svelte';
   import Train from '../icons/Train.svelte';
   import Schedule from '../icons/Schedule.svelte';
-
-  let isLoggedIn = false;
 
   function getProps({ location, href, isPartiallyCurrent, isCurrent }) {
     const isActive = href === '/' ? isCurrent : isPartiallyCurrent || isCurrent;
@@ -19,7 +18,7 @@
 </script>
 
 <nav>
-  {#if isLoggedIn}
+  {#if $isAuthenticated}
     <ul>
       <li>
         <span class="linkWrapper">

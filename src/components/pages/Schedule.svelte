@@ -1,5 +1,6 @@
 <script>
   import { add, format, toDate } from 'date-fns';
+  import { user } from '../../store/user';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
 
@@ -9,6 +10,7 @@
   let usersByDate = {};
   let addingDate = null;
   let selectedButton = false;
+  let working = false;
 
   window.addEventListener(
     'overlayClick',
@@ -31,25 +33,27 @@
   };
 
   const handleAdd = (time) => {
-    // addingDate = format(date, 'yyyy-MM-dd');
-    const doc = {
-      _type: 'schedule',
-      date: `${addingDate}T${time}:00Z`,
-      membership: {
-        _ref: '3370bbfc-6edc-45ab-986e-8362118bdb08',
-        _type: 'reference',
-      },
-      owner: {
-        _ref: 'b0d59354-8605-48fa-9997-6328a12cf5f0',
-        _type: 'reference',
-      },
-    };
-    sanity.create(doc).then((res) => {
-      scheduleReq.push(res);
-      addingDate = null;
-      selectedButton = null;
-      fetchData();
-    });
+    if (!working) {
+      working = true;
+      const doc = {
+        _type: 'schedule',
+        date: `${addingDate}T${time}:00Z`,
+        membership: {
+          _ref: '3370bbfc-6edc-45ab-986e-8362118bdb08',
+          _type: 'reference',
+        },
+        owner: {
+          _ref: $user._id,
+          _type: 'reference',
+        },
+      };
+      sanity.create(doc).then((res) => {
+        scheduleReq.push(res);
+        addingDate = null;
+        selectedButton = null;
+        fetchData();
+      });
+    }
   };
 
   const handleSubmit = (date) => {
@@ -72,16 +76,17 @@
         quotaLimit = true;
       }
       const userElement = usersByDate[key].find(
-        (item) => item.owner._id === 'b0d59354-8605-48fa-9997-6328a12cf5f0',
+        (item) => item.owner._id === $user._id,
       );
       if (userElement) {
         userElement.showRemove = true;
+        userElement.showAdd = false;
       }
       const nonUserElement = usersByDate[key].find(
-        (item) => item.owner._id !== 'b0d59354-8605-48fa-9997-6328a12cf5f0',
+        (item) => item.owner._id !== $user._id,
       );
       if (nonUserElement && !quotaLimit) {
-        nonUserElement.showAdd = true;
+        nonUserElement.showAdd = !userElement ? true : false;
       }
     }
   }
@@ -122,13 +127,19 @@
     try {
       scheduleReq = await sanity.fetch(query);
       addUsersTodateRange();
+      working = false;
     } catch (e) {
       console.log(`Error: ${e}`);
+      working = false;
     }
   };
 
-  fetchData();
-  caculateDate(dateRangeOffset);
+  user.subscribe((value) => {
+    if (value._id) {
+      fetchData();
+      caculateDate(dateRangeOffset);
+    }
+  });
 </script>
 
 <SingleColumn title="Schedule">
@@ -244,8 +255,7 @@
               on:click={() => {
                 handleRemove(
                   usersByDate[format(date, 'yyyy-MM-dd')].find(
-                    (item) =>
-                      item.owner._id === 'b0d59354-8605-48fa-9997-6328a12cf5f0',
+                    (item) => item.owner._id === $user._id,
                   )._id,
                   format(date, 'yyyy-MM-dd'),
                 );
