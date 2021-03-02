@@ -1,5 +1,7 @@
 # New Project
 
+[![Join the chat at https://gitter.im/roundhousev2/community](https://badges.gitter.im/roundhousev2/community.svg)](https://gitter.im/roundhousev2/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > ✨ Bootstrapped with Create Snowpack App (CSA).
 
 ## Available Scripts
