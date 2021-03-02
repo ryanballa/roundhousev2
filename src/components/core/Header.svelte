@@ -24,8 +24,10 @@
     isAuthenticated.set(await auth0Client.isAuthenticated());
 
     const authUser = await auth0Client.getUser();
-    await fetchUser(authUser.email);
-    user.set(usersReq[0]);
+    if (authUser) {
+      await fetchUser(authUser.email);
+      user.set(usersReq[0]);
+    }
   });
 
   function login() {
