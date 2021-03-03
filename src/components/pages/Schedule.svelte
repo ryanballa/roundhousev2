@@ -145,134 +145,139 @@
 
 <SingleColumn title="Schedule">
   <Loader isLoading={working} />
-  <ul class="dayRange">
-    <li class="arrow">
-      <button class="arrowButton" on:click={() => handleAdjust('down')}
-        >&lt;</button
-      >
-    </li>
-    {#each dateRange as date}
-      <li>
-        <span class="date">{format(date, 'E, MMM do')}</span>
-        <div class="scheduled">
-          {#if usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]}
-            <span class="empty">No one scheduled</span>
-          {/if}
-          {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')]}
-            <ul class="users">
-              {#each usersByDate[format(date, 'yyyy-MM-dd')] as user}
-                <li>
-                  {user.owner.name} : {format(
-                    add(new Date(user.date), { hours: 6 }),
-                    'kk:mm',
-                  )} - {format(add(new Date(user.date), { hours: 9 }), 'kk:mm')}
-                </li>
-              {/each}
-            </ul>
-          {/if}
-        </div>
-        <div class="actions">
-          {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true))}
-            <div
-              class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
-                ? 'adding'
-                : 'hidden'}"
-            >
-              <div class="addOptions">
-                <h4>Pick a Time</h4>
-                <ul>
-                  <li
-                    on:click={() => {
-                      selectedButton = '10-1';
-                      handleAdd('10:00');
-                    }}
-                  >
-                    <button
-                      class={selectedButton === '10-1' ? 'selected' : ''}
+  {#if !working}
+    <ul class="dayRange">
+      <li class="arrow">
+        <button class="arrowButton" on:click={() => handleAdjust('down')}
+          >&lt;</button
+        >
+      </li>
+      {#each dateRange as date}
+        <li>
+          <span class="date">{format(date, 'E, MMM do')}</span>
+          <div class="scheduled">
+            {#if usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]}
+              <span class="empty">No one scheduled</span>
+            {/if}
+            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')]}
+              <ul class="users">
+                {#each usersByDate[format(date, 'yyyy-MM-dd')] as user}
+                  <li>
+                    {user.owner.name} : {format(
+                      add(new Date(user.date), { hours: 6 }),
+                      'kk:mm',
+                    )} - {format(
+                      add(new Date(user.date), { hours: 9 }),
+                      'kk:mm',
+                    )}
+                  </li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
+          <div class="actions">
+            {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true))}
+              <div
+                class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
+                  ? 'adding'
+                  : 'hidden'}"
+              >
+                <div class="addOptions">
+                  <h4>Pick a Time</h4>
+                  <ul>
+                    <li
                       on:click={() => {
                         selectedButton = '10-1';
                         handleAdd('10:00');
-                      }}>&nbsp;</button
+                      }}
                     >
-                    <span>10AM - 1PM</span>
-                  </li>
-                  <li
-                    on:click={() => {
-                      selectedButton = '1-4';
-                      handleAdd('13:00');
-                    }}
-                  >
-                    <button
-                      class={selectedButton === '1-4' ? 'selected' : ''}
+                      <button
+                        class={selectedButton === '10-1' ? 'selected' : ''}
+                        on:click={() => {
+                          selectedButton = '10-1';
+                          handleAdd('10:00');
+                        }}>&nbsp;</button
+                      >
+                      <span>10AM - 1PM</span>
+                    </li>
+                    <li
                       on:click={() => {
                         selectedButton = '1-4';
                         handleAdd('13:00');
-                      }}>&nbsp;</button
+                      }}
                     >
-                    <span>1PM - 4PM</span>
-                  </li>
-                  <li
-                    on:click={() => {
-                      selectedButton = '4-7';
-                      handleAdd('16:00');
-                    }}
-                  >
-                    <button
-                      class={selectedButton === '4-7' ? 'selected' : ''}
+                      <button
+                        class={selectedButton === '1-4' ? 'selected' : ''}
+                        on:click={() => {
+                          selectedButton = '1-4';
+                          handleAdd('13:00');
+                        }}>&nbsp;</button
+                      >
+                      <span>1PM - 4PM</span>
+                    </li>
+                    <li
                       on:click={() => {
                         selectedButton = '4-7';
                         handleAdd('16:00');
-                      }}>&nbsp;</button
+                      }}
                     >
-                    <span>4PM - 7PM</span>
-                  </li>
-                  <li
-                    on:click={() => {
-                      selectedButton = '7-10';
-                      handleAdd('19:00');
-                    }}
-                  >
-                    <button
-                      class={selectedButton === '7-10' ? 'selected' : ''}
+                      <button
+                        class={selectedButton === '4-7' ? 'selected' : ''}
+                        on:click={() => {
+                          selectedButton = '4-7';
+                          handleAdd('16:00');
+                        }}>&nbsp;</button
+                      >
+                      <span>4PM - 7PM</span>
+                    </li>
+                    <li
                       on:click={() => {
                         selectedButton = '7-10';
                         handleAdd('19:00');
-                      }}>&nbsp;</button
+                      }}
                     >
-                    <span>7PM - 10PM</span>
-                  </li>
-                </ul>
+                      <button
+                        class={selectedButton === '7-10' ? 'selected' : ''}
+                        on:click={() => {
+                          selectedButton = '7-10';
+                          handleAdd('19:00');
+                        }}>&nbsp;</button
+                      >
+                      <span>7PM - 10PM</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-            <button
-              class="add"
-              on:click={() => {
-                handleSubmit(add(date, { days: 0 }));
-              }}>+</button
-            >
-          {/if}
-          {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true)}
-            <button
-              class="remove"
-              on:click={() => {
-                handleRemove(
-                  usersByDate[format(date, 'yyyy-MM-dd')].find(
-                    (item) => item.owner._id === $user._id,
-                  )._id,
-                  format(date, 'yyyy-MM-dd'),
-                );
-              }}>-</button
-            >
-          {/if}
-        </div>
+              <button
+                class="add"
+                on:click={() => {
+                  handleSubmit(add(date, { days: 0 }));
+                }}>+</button
+              >
+            {/if}
+            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true)}
+              <button
+                class="remove"
+                on:click={() => {
+                  handleRemove(
+                    usersByDate[format(date, 'yyyy-MM-dd')].find(
+                      (item) => item.owner._id === $user._id,
+                    )._id,
+                    format(date, 'yyyy-MM-dd'),
+                  );
+                }}>-</button
+              >
+            {/if}
+          </div>
+        </li>
+      {/each}
+      <li class="arrow">
+        <button class="arrowButton" on:click={() => handleAdjust('up')}
+          >&gt;</button
+        >
       </li>
-    {/each}
-    <li class="arrow">
-      <button class="arrowButton" on:click={() => handleAdjust('up')}
-        >&gt;</button
-      >
-    </li>
-  </ul>
+    </ul>
+  {/if}
 </SingleColumn>
 
 <style>
