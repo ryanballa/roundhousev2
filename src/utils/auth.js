@@ -1,7 +1,9 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
-// import user from "../store/user";
+import sanity from '../lib/sanity';
 import { user, isAuthenticated, popupOpen } from "../store/user";
 import config from "../lib/authConfig";
+
+let usersReq = null;
 
 async function createClient() {
     let auth0Client = await createAuth0Client({
@@ -12,12 +14,22 @@ async function createClient() {
     return auth0Client;
 }
 
+const fetchUser = async function (email) {
+    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email }`;
+    try {
+        usersReq = await sanity.fetch(query);
+        user.set(usersReq[0]);
+    } catch (e) {
+        console.log(`Error: ${e}`);
+    }
+};
+
 async function loginWithPopup(client, options) {
     popupOpen.set(true);
     try {
         await client.loginWithPopup(options);
-
-        user.set(await client.getUser());
+        const theUser = await client.getUser();
+        await fetchUser(theUser.email)
         isAuthenticated.set(true);
     } catch (e) {
         // eslint-disable-next-line

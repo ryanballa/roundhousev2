@@ -9,14 +9,14 @@
   let auth0Client;
   let usersReq;
 
-  const fetchUser = async function (email) {
-    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email }`;
-    try {
-      usersReq = await sanity.fetch(query);
-    } catch (e) {
-      console.log(`Error: ${e}`);
-    }
-  };
+  // const fetchUser = async function (email) {
+  //   const query = `*[_type == 'user' && email == '${email}']{ _id, name, email }`;
+  //   try {
+  //     usersReq = await sanity.fetch(query);
+  //   } catch (e) {
+  //     console.log(`Error: ${e}`);
+  //   }
+  // };
 
   onMount(async () => {
     auth0Client = await auth.createClient();
@@ -24,10 +24,10 @@
     isAuthenticated.set(await auth0Client.isAuthenticated());
 
     const authUser = await auth0Client.getUser();
-    if (authUser) {
-      await fetchUser(authUser.email);
-      user.set(usersReq[0]);
-    }
+    // if (authUser) {
+    //   //await fetchUser(authUser.email);
+    //   user.set(usersReq[0]);
+    // }
   });
 
   function login() {
@@ -50,7 +50,7 @@
     </div>
     <div class="rightMenu">
       <div class="accountContext">
-        <Dropdown title={$isAuthenticated ? $user.name : 'Log In'}>
+        <Dropdown title={$isAuthenticated && $user ? $user.name : 'Log In'}>
           <ul>
             {#if $isAuthenticated}<li on:click={logout}>
                 <span>Logout</span>
