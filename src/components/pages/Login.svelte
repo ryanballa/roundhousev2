@@ -1,6 +1,5 @@
 <script>
   import sanity from '../../lib/sanity';
-  import user from '../../store/userOld';
   import { Link } from 'svelte-navigator';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
