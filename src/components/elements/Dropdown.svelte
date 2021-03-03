@@ -3,7 +3,19 @@
   let isOpen = false;
   export let title;
 
+  window.addEventListener(
+    'overlayClick',
+    function (e) {
+      isOpen = false;
+    },
+    false,
+  );
+
   const handleClick = () => {
+    if (!isOpen) {
+      const event = new Event('showOverlay');
+      window.dispatchEvent(event);
+    }
     isOpen = !isOpen;
   };
 </script>
@@ -16,7 +28,11 @@
     >
   </button>
   {#if isOpen}
-    <nav>
+    <nav
+      on:click={() => {
+        isOpen = false;
+      }}
+    >
       <slot />
     </nav>
   {/if}
@@ -49,6 +65,7 @@
     position: absolute;
     right: 16px;
     width: 300px;
+    z-index: 10001;
   }
 
   nav :global(ul) {
