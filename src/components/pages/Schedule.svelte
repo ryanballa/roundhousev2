@@ -1,5 +1,6 @@
 <script>
   import { add, format, toDate } from 'date-fns';
+  import Loader from '../elements/Loader.svelte';
   import { user } from '../../store/user';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
@@ -10,7 +11,7 @@
   let usersByDate = {};
   let addingDate = null;
   let selectedButton = false;
-  let working = false;
+  let working = true;
 
   window.addEventListener(
     'overlayClick',
@@ -136,7 +137,6 @@
 
   user.subscribe((value) => {
     if (value && value._id) {
-      console.log('fetch data');
       fetchData();
       caculateDate(dateRangeOffset);
     }
@@ -144,6 +144,7 @@
 </script>
 
 <SingleColumn title="Schedule">
+  <Loader isLoading={working} />
   <ul class="dayRange">
     <li class="arrow">
       <button class="arrowButton" on:click={() => handleAdjust('down')}
