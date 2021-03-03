@@ -1,8 +1,8 @@
 <script>
   import { navigate } from 'svelte-navigator';
   export let actionText = 'Add';
-  export let action;
-  export let actionEvent;
+  export let action = null;
+  export let actionEvent = null;
   export let disabled = false;
   export let type = 'submit';
   export let variant = 'primary';

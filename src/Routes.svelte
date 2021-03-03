@@ -6,6 +6,9 @@
   import ConcistAdd from './components/pages/ConcistAdd.svelte';
   import Schedule from './components/pages/Schedule.svelte';
   import Login from './components/pages/Login.svelte';
+  import Cabs from './components/pages/Cabs.svelte';
+  import CabAdd from './components/pages/CabAdd.svelte';
+  import ComingSoon from './components/pages/ComingSoon.svelte';
 </script>
 
 <Route path="login">
@@ -14,9 +17,21 @@
 <Route path="home">
   <Home />
 </Route>
+<Route path="work-orders">
+  <ComingSoon />
+</Route>
+<Route path="inventory">
+  <ComingSoon />
+</Route>
 <Route path="tracking/*">
   <Route path="/">
     <Tracking />
+  </Route>
+  <Route path="cabs/*">
+    <Route path="/">
+      <Cabs />
+    </Route>
+    <Route path="/add" component={CabAdd} />
   </Route>
   <Route path="concists/*">
     <Route path="/">

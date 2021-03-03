@@ -22,14 +22,14 @@
     <ul>
       <li>
         <span class="linkWrapper">
-          <Link {getProps} class="link" to="tracking"
+          <Link {getProps} class="link" to="work-orders"
             ><Work size={20} /><span>Work Orders</span></Link
           >
         </span>
       </li>
       <li>
         <span class="linkWrapper">
-          <Link {getProps} class="link" to="tracking">
+          <Link {getProps} class="link" to="inventory">
             <span class="iconWrapper"><Train size={20} /></span><span
               >Inventory</span
             >
@@ -47,7 +47,7 @@
             <Link {getProps} class="link" to="tracking/concists">Concists</Link>
           </li>
           <li>
-            <Link {getProps} class="link" to="tracking">Cabs</Link>
+            <Link {getProps} class="link" to="tracking/cabs">Cabs</Link>
           </li>
           <li>
             <Link {getProps} class="link" to="tracking">Locomotives</Link>

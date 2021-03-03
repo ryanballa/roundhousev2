@@ -1,6 +1,7 @@
 <script>
   import Button from './Button.svelte';
   export let row;
+  export let col;
   export let deleteAction = () => {};
 </script>
 

@@ -10,7 +10,7 @@
   const handleSubmit = (e) => {
     e.preventDefault();
     const doc = {
-      _type: 'concists',
+      _type: 'cabs',
       number: parseFloat($form.number._value),
       owner: {
         _ref: $form.user._value,
@@ -19,13 +19,12 @@
     };
 
     sanity.create(doc).then((res) => {
-      navigate(`/tracking/concists`);
+      navigate(`/tracking/cabs`);
       //todo:  navigate(`/tracking/concist/${res._id}`);
     });
   };
 
   const validateUser = (value) => {
-    console.log(value);
     return value !== '' ? null : { validateUser: `${value} is not a user` };
   };
 
@@ -48,8 +47,8 @@
   }
 </script>
 
-<SingleColumn title="Add Concist">
-  <form id="addConcistForm" use:form on:submit={handleSubmit}>
+<SingleColumn title="Add Cab">
+  <form id="addCabForm" use:form on:submit={handleSubmit}>
     <Forms>
       <li>
         <label for="number">
@@ -80,7 +79,7 @@
         >
       </li>
       <li>
-        <Button disabled={!$form.valid} actionText="Add Concist" />
+        <Button disabled={!$form.valid} actionText="Add Cab" />
       </li>
     </Forms>
   </form>
