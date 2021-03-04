@@ -3,6 +3,7 @@
   import Loader from '../elements/Loader.svelte';
   import { user } from '../../store/user';
   import sanity from '../../lib/sanity';
+  import Button from '../elements/Button.svelte';
   import SingleColumn from '../layout/SingleColumn.svelte';
 
   let dateRange = [];
@@ -11,8 +12,10 @@
   let usersByDate = {};
   let addingDate = null;
   let selectedButton = false;
+  let selectedTime = null;
   let working = true;
   let error = null;
+  let notes = null;
 
   const quota = 3;
 
@@ -36,24 +39,27 @@
     }
   };
 
-  const handleAdd = async (time) => {
+  const handleAdd = async () => {
     error = null;
     if (!working) {
       working = true;
       const doc = {
         _type: 'schedule',
-        date: `${addingDate}T${time}:00Z`,
+        date: `${addingDate}T${selectedTime}:00Z`,
         membership: {
           _ref: '3370bbfc-6edc-45ab-986e-8362118bdb08',
           _type: 'reference',
         },
+        notes,
         owner: {
           _ref: $user._id,
           _type: 'reference',
         },
       };
 
-      const addingDateFormat = toDate(new Date(`${addingDate}T${time}:00Z`));
+      const addingDateFormat = toDate(
+        new Date(`${addingDate}T${selectedTime}:00Z`),
+      );
       const addedDate = add(new Date(addingDateFormat), { hours: 24 });
       const subtractedDate = add(new Date(addingDateFormat), { hours: -24 });
       const usersOnDateQuery = `*[_type == 'schedule' && date > '${format(
@@ -146,7 +152,7 @@
 
   const fetchData = async function () {
     console.log('fetch');
-    const query = `*[_type == 'schedule']{ _id, date, "membership": membership->name, "owner": owner->{name, _id} }`;
+    const query = `*[_type == 'schedule']{ _id, date, notes, "membership": membership->name, "owner": owner->{name, _id} }`;
     try {
       scheduleReq = await sanity.fetch(query);
       addUsersTodateRange();
@@ -205,7 +211,7 @@
                 {#each usersByDate[format(date, 'yyyy-MM-dd')].sort((a, b) =>
                   a.date > b.date ? 1 : -1,
                 ) as user}
-                  <li>
+                  <li title={user.notes}>
                     {user.owner.name} : {format(
                       add(new Date(user.date), { hours: 6 }),
                       'kk:mm',
@@ -231,14 +237,14 @@
                     <li
                       on:click={() => {
                         selectedButton = '10-1';
-                        handleAdd('10:00');
+                        selectedTime = '10:00';
                       }}
                     >
                       <button
                         class={selectedButton === '10-1' ? 'selected' : ''}
                         on:click={() => {
                           selectedButton = '10-1';
-                          handleAdd('10:00');
+                          selectedTime = '10:00';
                         }}>&nbsp;</button
                       >
                       <span>10AM - 1PM</span>
@@ -246,14 +252,14 @@
                     <li
                       on:click={() => {
                         selectedButton = '1-4';
-                        handleAdd('13:00');
+                        selectedTime = '13:00';
                       }}
                     >
                       <button
                         class={selectedButton === '1-4' ? 'selected' : ''}
                         on:click={() => {
                           selectedButton = '1-4';
-                          handleAdd('13:00');
+                          selectedTime = '13:00';
                         }}>&nbsp;</button
                       >
                       <span>1PM - 4PM</span>
@@ -261,14 +267,14 @@
                     <li
                       on:click={() => {
                         selectedButton = '4-7';
-                        handleAdd('16:00');
+                        selectedTime = '16:00';
                       }}
                     >
                       <button
                         class={selectedButton === '4-7' ? 'selected' : ''}
                         on:click={() => {
                           selectedButton = '4-7';
-                          handleAdd('16:00');
+                          selectedTime = '16:00';
                         }}>&nbsp;</button
                       >
                       <span>4PM - 7PM</span>
@@ -276,19 +282,29 @@
                     <li
                       on:click={() => {
                         selectedButton = '7-10';
-                        handleAdd('19:00');
+                        selectedTime = '19:00';
                       }}
                     >
                       <button
                         class={selectedButton === '7-10' ? 'selected' : ''}
                         on:click={() => {
                           selectedButton = '7-10';
-                          handleAdd('19:00');
+                          selectedTime = '19:00';
                         }}>&nbsp;</button
                       >
                       <span>7PM - 10PM</span>
                     </li>
                   </ul>
+                  <div class="notesWrapper">
+                    <h4>Add Notes</h4>
+                    <input
+                      type="text"
+                      on:change={(e) => {
+                        notes = e.target.value;
+                      }}
+                    />
+                    <Button actionEvent={handleAdd} actionText="Schedule" />
+                  </div>
                 </div>
               </div>
               <button
@@ -469,8 +485,23 @@
   .refresh {
     clear: both;
     display: flex;
+    margin-bottom: 16px;
   }
   .errorMessage {
     color: var(--color-terraCotta);
+  }
+  .notesWrapper {
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .notesWrapper input {
+    border: 1px solid var(--color-steel);
+    border-radius: 4px;
+    padding: 8px;
+    width: 200px;
+  }
+  .notesWrapper :global(button) {
+    display: block;
+    margin: 16px auto 8px auto;
   }
 </style>
