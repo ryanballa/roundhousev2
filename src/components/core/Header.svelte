@@ -1,4 +1,5 @@
 <script>
+  import { navigate } from 'svelte-navigator';
   import sanity from '../../lib/sanity';
   import { onMount } from 'svelte';
   import { Link } from 'svelte-navigator';
@@ -28,6 +29,8 @@
     if (authUser && !$user._id) {
       await fetchUser(authUser.email);
       user.set(usersReq[0]);
+    } else {
+      navigate('/');
     }
   });
 

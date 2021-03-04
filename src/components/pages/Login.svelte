@@ -66,7 +66,7 @@
         {#if loggedIn}
           <li>
             <span class="formSuccess">You are already logged in.</span>
-            <Link to="home">Home</Link>
+            <Link to="/">Home</Link>
           </li>
         {/if}
       </Forms>

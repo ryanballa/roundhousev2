@@ -12,6 +12,9 @@
   let addingDate = null;
   let selectedButton = false;
   let working = true;
+  let error = null;
+
+  const quota = 3;
 
   window.addEventListener(
     'overlayClick',
@@ -33,7 +36,8 @@
     }
   };
 
-  const handleAdd = (time) => {
+  const handleAdd = async (time) => {
+    error = null;
     if (!working) {
       working = true;
       const doc = {
@@ -48,12 +52,28 @@
           _type: 'reference',
         },
       };
-      sanity.create(doc).then((res) => {
-        scheduleReq.push(res);
-        addingDate = null;
-        selectedButton = null;
-        fetchData();
-      });
+
+      const addingDateFormat = toDate(new Date(`${addingDate}T${time}:00Z`));
+      const addedDate = add(new Date(addingDateFormat), { hours: 24 });
+      const subtractedDate = add(new Date(addingDateFormat), { hours: -24 });
+      const usersOnDateQuery = `*[_type == 'schedule' && date > '${format(
+        new Date(subtractedDate),
+        'yyyy-MM-dd',
+      )}' && date < '${format(
+        new Date(addedDate),
+        'yyyy-MM-dd',
+      )}']{ _id, date, "membership": membership->name, "owner": owner->{name, _id} }`;
+      const usersOnAddingDate = await sanity.fetch(usersOnDateQuery);
+      if (usersOnAddingDate.length >= quota) {
+        error = 'Oops, a user beat you and this day is now full.';
+      } else {
+        sanity.create(doc).then((res) => {
+          scheduleReq.push(res);
+          addingDate = null;
+          selectedButton = null;
+          fetchData();
+        });
+      }
     }
   };
 
@@ -73,7 +93,7 @@
       ) {
         quotaLimit = true;
       }
-      if (usersByDate[key].length >= 8) {
+      if (usersByDate[key].length >= quota) {
         quotaLimit = true;
       }
       const userElement = usersByDate[key].find(
@@ -88,6 +108,7 @@
       );
       if (nonUserElement && !quotaLimit) {
         nonUserElement.showAdd = !userElement ? true : false;
+        nonUserElement.quotaLimit = quotaLimit;
       }
     }
   }
@@ -124,6 +145,7 @@
   }
 
   const fetchData = async function () {
+    console.log('fetch');
     const query = `*[_type == 'schedule']{ _id, date, "membership": membership->name, "owner": owner->{name, _id} }`;
     try {
       scheduleReq = await sanity.fetch(query);
@@ -143,15 +165,34 @@
   });
 </script>
 
-<SingleColumn title="Schedule">
-  <Loader isLoading={working} />
+<SingleColumn
+  description="Reserve time at the club and coordinate visits with others."
+  title="Schedule"
+>
+  {#if working}
+    <Loader isLoading={working} />
+  {/if}
+  {#if error}
+    <div class="errorMessage">{error}</div>
+  {/if}
   {#if !working}
+    <div class="refresh">
+      <button
+        on:click={() => {
+          working = true;
+          fetchData();
+        }}>Refresh</button
+      >
+    </div>
+    <div class="dayRangeActions">
+      <button class="arrowButton" on:click={() => handleAdjust('down')}
+        >&lt;</button
+      >
+      <button class="arrowButton" on:click={() => handleAdjust('up')}
+        >&gt;</button
+      >
+    </div>
     <ul class="dayRange">
-      <li class="arrow">
-        <button class="arrowButton" on:click={() => handleAdjust('down')}
-          >&lt;</button
-        >
-      </li>
       {#each dateRange as date}
         <li>
           <span class="date">{format(date, 'E, MMM do')}</span>
@@ -161,7 +202,9 @@
             {/if}
             {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')]}
               <ul class="users">
-                {#each usersByDate[format(date, 'yyyy-MM-dd')] as user}
+                {#each usersByDate[format(date, 'yyyy-MM-dd')].sort((a, b) =>
+                  a.date > b.date ? 1 : -1,
+                ) as user}
                   <li>
                     {user.owner.name} : {format(
                       add(new Date(user.date), { hours: 6 }),
@@ -268,14 +311,12 @@
                 }}>-</button
               >
             {/if}
+            <!-- {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaLimit === true)}
+              <span>Capacity Reached</span>
+            {/if} -->
           </div>
         </li>
       {/each}
-      <li class="arrow">
-        <button class="arrowButton" on:click={() => handleAdjust('up')}
-          >&gt;</button
-        >
-      </li>
     </ul>
   {/if}
 </SingleColumn>
@@ -286,6 +327,11 @@
   }
   .dayRange h4 {
     margin: 16px 0 16px 0;
+  }
+  .dayRangeActions {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 16px 0;
   }
   .addWrapper.adding {
     display: block;
@@ -324,6 +370,7 @@
   }
   .dayRange .addOptions li {
     border: none;
+    list-style: none;
     margin: 0 0 8px 0;
     padding: 16px;
   }
@@ -370,7 +417,6 @@
     color: var(--color-snow);
     font-size: 20px;
     padding: 10px 15px;
-    margin-top: 50px;
   }
   .arrowButton:hover {
     cursor: pointer;
@@ -380,13 +426,11 @@
     margin: 0;
     padding: 0;
   }
-  .dayRange li {
+  .dayRange > li {
     border-left: 1px solid var(--color-steel);
     list-style: none;
     padding: 0 16px;
-  }
-  .dayRange .arrow {
-    border: none;
+    width: 14%;
   }
   .date {
     font-weight: bold;
@@ -408,7 +452,25 @@
   }
   .users li {
     border: none;
+    list-style: none;
     padding: 0;
     margin: 0;
+  }
+  .refresh button {
+    background-color: var(--color-buttonsSecondary);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border: none;
+    border-radius: 4px;
+    color: var(--color-snow);
+    font-size: 14px;
+    padding: 10px 15px;
+    margin-left: auto;
+  }
+  .refresh {
+    clear: both;
+    display: flex;
+  }
+  .errorMessage {
+    color: var(--color-terraCotta);
   }
 </style>
