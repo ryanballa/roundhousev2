@@ -17,7 +17,7 @@
   let error = null;
   let notes = null;
 
-  const quota = 3;
+  const quota = 8;
 
   window.addEventListener(
     'overlayClick',
@@ -112,9 +112,9 @@
       const nonUserElement = usersByDate[key].find(
         (item) => item.owner._id !== $user._id,
       );
-      if (nonUserElement && !quotaLimit) {
+      if (nonUserElement) {
         nonUserElement.showAdd = !userElement ? true : false;
-        nonUserElement.quotaLimit = quotaLimit;
+        nonUserElement.quotaReached = quotaLimit;
       }
     }
   }
@@ -225,7 +225,7 @@
             {/if}
           </div>
           <div class="actions">
-            {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true))}
+            {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaReached)))}
               <div
                 class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
                   ? 'adding'
@@ -327,9 +327,15 @@
                 }}>-</button
               >
             {/if}
-            <!-- {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaLimit === true)}
+            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find(
+                (item) => {
+                  console.log('test');
+                  console.log(item.quotaReached);
+                  return item.quotaReached == true;
+                },
+              )}
               <span>Capacity Reached</span>
-            {/if} -->
+            {/if}
           </div>
         </li>
       {/each}
