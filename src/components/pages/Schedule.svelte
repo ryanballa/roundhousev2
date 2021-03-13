@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { add, format, toDate } from 'date-fns';
   import Loader from '../elements/Loader.svelte';
   import { user } from '../../store/user';
@@ -16,8 +17,13 @@
   let working = true;
   let error = null;
   let notes = null;
+  let twentyFourHRTime = false;
 
   const quota = 8;
+
+  onMount(async () => {
+    twentyFourHRTime = $user.profile.timePreference;
+  });
 
   window.addEventListener(
     'overlayClick',
@@ -225,10 +231,10 @@
                   <li title={user.notes}>
                     {user.owner.name} : {format(
                       add(new Date(user.date), { hours: 6 }),
-                      'kk:mm',
+                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
                     )} - {format(
                       add(new Date(user.date), { hours: 9 }),
-                      'kk:mm',
+                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
                     )}
                   </li>
                 {/each}

@@ -17,7 +17,7 @@
   let usersReq;
 
   const fetchUser = async function (email) {
-    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email }`;
+    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email, "userProfile":userProfile->{bio,timePreference} }`;
     try {
       usersReq = await sanity.fetch(query);
     } catch (e) {
@@ -35,10 +35,12 @@
     // In DEV we load the user from settings
     if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
       isAuthenticated.set(true);
+      await fetchUser(SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL);
       user.set({
         _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
         email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
         name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+        profile: usersReq[0].userProfile,
       });
     }
 
