@@ -348,6 +348,14 @@
   resolved "https://registry.yarnpkg.com/@sanity/timed-out/-/timed-out-4.0.2.tgz#c9f61f9a1609baa1eb3e4235a24ea2a775022cdf"
   integrity sha512-NBDKGj14g9Z+bopIvZcQKWCzJq5JSrdmzRR1CS+iyA3Gm8SnIWBfZa7I3mTg2X6Nu8LQXG0EPKXdOGozLS4i3w==
 
+"@snowpack/plugin-dotenv@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@snowpack/plugin-dotenv/-/plugin-dotenv-2.0.5.tgz#e8bcc5cb59c951f7d560e36397960dd2252a56ee"
+  integrity sha512-y54lwYRDpTfDTU3uopHLND0DKIjjyWiYxhvOPfZvC4OpOd7UIRwMdSOd5XLZJPEBJ4BD38lDLiXh+ODfNDqhnQ==
+  dependencies:
+    dotenv "^8.2.0"
+    dotenv-expand "^5.1.0"
+
 "@snowpack/plugin-svelte@^3.5.2":
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/@snowpack/plugin-svelte/-/plugin-svelte-3.5.2.tgz#144d6ff9716ce6878ffeba67811e98b2c3744e7d"
@@ -1108,6 +1116,11 @@ dicer@0.3.0:
   integrity sha512-MdceRRWqltEG2dZqO769g27N/3PXfcKl04VhYnBlo2YhH7zPi88VebsjTKclaOyiuMaGU72hTfw3VkUitGcVCA==
   dependencies:
     streamsearch "0.1.2"
+
+dotenv-expand@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
+  integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
 
 dotenv@^8.2.0:
   version "8.2.0"

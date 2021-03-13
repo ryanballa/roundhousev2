@@ -11,6 +11,20 @@ async function createClient() {
         client_id: config.clientId
     });
 
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.has('error')) {
+        window.history.replaceState({}, document.title, '/login');
+        console.log(`Error: ${params.get('error_description')}`)
+        // authError.set(new Error(params.get('error_description')));
+    }
+
+    if (params.has('code')) {
+        await auth0Client.handleRedirectCallback();
+        window.history.replaceState({}, document.title, '/');
+        // authError.set(null);
+    }
+
     return auth0Client;
 }
 
@@ -27,7 +41,10 @@ const fetchUser = async function (email) {
 async function loginWithPopup(client, options) {
     popupOpen.set(true);
     try {
-        await client.loginWithPopup(options);
+        await client.loginWithRedirect({
+            redirect_uri: window.location.origin,
+            prompt: 'login' // Force login prompt. No silence auth for you!
+        });
         const theUser = await client.getUser();
         await fetchUser(theUser.email)
         isAuthenticated.set(true);

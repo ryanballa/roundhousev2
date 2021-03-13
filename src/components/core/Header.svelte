@@ -7,6 +7,12 @@
   import { isAuthenticated, user } from '../../store/user';
   import Dropdown from '../elements/Dropdown.svelte';
 
+  const {
+    SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
+    SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+    SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+  } = import.meta.env;
+
   let auth0Client;
   let usersReq;
 
@@ -25,6 +31,16 @@
     isAuthenticated.set(await auth0Client.isAuthenticated());
 
     const authUser = await auth0Client.getUser();
+
+    // In DEV we load the user from settings
+    if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
+      isAuthenticated.set(true);
+      user.set({
+        _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
+        email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+        name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+      });
+    }
 
     if (authUser && !$user._id) {
       await fetchUser(authUser.email);

@@ -46,20 +46,6 @@
       },
       false,
     );
-
-    // if (await m.user.isLoggedIn()) {
-    //   const didToken = await m.user.getIdToken();
-
-    //   // Do something with the DID token.
-    //   // For instance, this could be a `fetch` call
-    //   // to a protected backend endpoint.
-    //   // document.getElementById('your-access-token').innerHTML = didToken;
-    //   console.log('user is logged in');
-    // } else {
-    //   console.log('user is not logged in');
-    //   // Log in the user
-    //   const user = await m.auth.loginWithMagicLink({ email });
-    // }
   };
 
   init();

@@ -191,16 +191,27 @@
       >
     </div>
     <div class="dayRangeActions">
-      <button class="arrowButton" on:click={() => handleAdjust('down')}
-        >&lt;</button
-      >
-      <button class="arrowButton" on:click={() => handleAdjust('up')}
-        >&gt;</button
-      >
+      {#if dateRangeOffset > 0}<button
+          class="arrowButton"
+          on:click={() => handleAdjust('down')}>&lt;</button
+        >
+      {/if}
+      {#if dateRangeOffset <= 0}
+        <div />
+      {/if}
+      {#if dateRangeOffset < 21}
+        <button class="arrowButton" on:click={() => handleAdjust('up')}
+          >&gt;</button
+        >
+      {/if}
     </div>
     <ul class="dayRange">
       {#each dateRange as date}
-        <li>
+        <li
+          class={format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
+            ? 'currentDay'
+            : ''}
+        >
           <span class="date">{format(date, 'E, MMM do')}</span>
           <div class="scheduled">
             {#if usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]}
@@ -329,8 +340,6 @@
             {/if}
             {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find(
                 (item) => {
-                  console.log('test');
-                  console.log(item.quotaReached);
                   return item.quotaReached == true;
                 },
               )}
@@ -451,8 +460,11 @@
   .dayRange > li {
     border-left: 1px solid var(--color-steel);
     list-style: none;
-    padding: 0 16px;
+    padding: 0 16px 8px 16px;
     width: 14%;
+  }
+  .currentDay {
+    background-color: rgba(255, 255, 255, 0.5);
   }
   .date {
     font-weight: bold;
