@@ -62,6 +62,7 @@
           <span class="labelWrapper">User</span>
           <select id="user" name="user">
             <option value="">-- Select --</option>
+            <option value="Unassigned">Unassigned</option>
             {#if usersReq}
               {#each usersReq as user}
                 <option value={user._id}>{user.name}</option>

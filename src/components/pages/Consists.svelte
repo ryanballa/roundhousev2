@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { format } from 'date-fns';
   import consists from '../../store/consists';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
@@ -20,15 +21,27 @@
 
   const columns = [
     {
+      key: 'number',
+      title: 'Number',
+      value: (v) => v.number,
+      sortable: true,
+    },
+    {
       key: 'concistOwner',
       title: 'Owner',
       value: (v) => v.concistOwner.name,
       sortable: true,
     },
     {
-      key: 'number',
-      title: 'Number',
-      value: (v) => v.number,
+      key: 'locomotiveAddresses',
+      title: 'Locomotive Addresses',
+      value: (v) => v.locomotiveAddresses || '',
+      sortable: true,
+    },
+    {
+      key: 'lastUsed',
+      title: 'Last Used',
+      value: (v) => format(new Date(v._updatedAt), 'yyyy-MM-dd'),
       sortable: true,
     },
     {
@@ -49,7 +62,7 @@
   let consistReqError = false;
 
   const fetchData = async function () {
-    const query = `*[_type == 'concists']{ _id, number, "concistOwner": owner->{name,_id} }`;
+    const query = `*[_type == 'concists']{ _id, _updatedAt, number, locomotiveAddresses, "concistOwner": owner->{name,_id} }`;
     try {
       consitsReq = await sanity.fetch(query);
       consists.addConsists(consitsReq);
