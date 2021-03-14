@@ -18,7 +18,12 @@ class api {
             console.log(e);
         }
         try {
-            this.response = await fetch(`${apiURL}api/user/ryan@ryanballa.com`);
+            this.response = await fetch(`${apiURL}api/user/ryan@ryanballa.com`, {
+                method: "GET",
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                }
+            });
             const user = await this.response.json();
             return user[0];
         } catch (e) {
