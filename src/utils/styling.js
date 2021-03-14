@@ -13,7 +13,8 @@ export const colors = {
     titles: '#87BBA2',
     buttons: '#87BBA2',
     buttonsSecondary: '#afb1b1',
-    success: '#18bb23',
+    buttonsSecondaryDisabled: '#d0ccd1',
+    success: '#18bb23'
 }
 
 export const sizes = {

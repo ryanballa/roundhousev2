@@ -30,6 +30,6 @@
     "svelte-loading-spinners": "^0.1.4",
     "svelte-navigator": "^3.1.5",
     "svelte-table": "^0.1.17",
-    "svelte-use-form": "^1.1.5"
+    "svelte-use-form": "^2.2.0"
   }
 }

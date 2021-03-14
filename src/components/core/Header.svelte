@@ -1,11 +1,11 @@
 <script>
   import { navigate } from 'svelte-navigator';
-  import sanity from '../../lib/sanity';
   import { onMount } from 'svelte';
   import { Link } from 'svelte-navigator';
   import auth from '../../utils/auth';
   import { isAuthenticated, user } from '../../store/user';
   import Dropdown from '../elements/Dropdown.svelte';
+  import apiService from '../../lib/API';
 
   const {
     SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
@@ -14,12 +14,11 @@
   } = import.meta.env;
 
   let auth0Client;
-  let usersReq;
+  let usersReq = null;
 
   const fetchUser = async function (email) {
-    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email, "userProfile":userProfile->{bio,timePreference} }`;
     try {
-      usersReq = await sanity.fetch(query);
+      usersReq = await apiService.userGet(email);
     } catch (e) {
       console.log(`Error: ${e}`);
     }
@@ -40,13 +39,13 @@
         _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
         email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
         name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-        profile: usersReq[0].userProfile,
+        profile: usersReq.userProfile,
       });
     }
 
     if (authUser && !$user._id) {
       await fetchUser(authUser.email);
-      user.set(usersReq[0]);
+      user.set(usersReq);
     } else {
       navigate('/');
     }

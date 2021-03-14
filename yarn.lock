@@ -2736,10 +2736,10 @@ svelte-table@^0.1.17:
   resolved "https://registry.yarnpkg.com/svelte-table/-/svelte-table-0.1.17.tgz#dd5faadf652cc867931850924bb7b4f219742519"
   integrity sha512-NsharOKXSyNyMJcmiDvR781dRk8QZW7wxJzEWygFPJ/cPkqGpgh0TwnDXrLFE+ydrmmhSAXe9vB2HrEzdo2+ng==
 
-svelte-use-form@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/svelte-use-form/-/svelte-use-form-1.1.5.tgz#04cdfa5813e8a047daf71cd97c74ca6a8c1d983b"
-  integrity sha512-FVipNPEQsFOioR9k53j5cPZMfsoavmTCSQeAdB+zevHXnf7xxnPjH1XkxkGtTVxpQEu1d4KTvHYUOyIxeAE5og==
+svelte-use-form@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/svelte-use-form/-/svelte-use-form-2.2.0.tgz#50f3298f9c17cdf403ad1f1f65523ab703990bd5"
+  integrity sha512-L2+eynxHOSY8Dt9UYCLIjyuJO/53RKR2R9jphjTjmRgSZoaTL/lnXziohGQLJUPF6GkhysxzaCKMHYgaxWQEhQ==
 
 svelte2tsx@^0.1.151:
   version "0.1.167"

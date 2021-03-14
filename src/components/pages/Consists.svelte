@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import concists from '../../store/consists';
+  import consists from '../../store/consists';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import DynamicContent from '../core/DynamicContent.svelte';
@@ -12,7 +12,7 @@
     try {
       await sanity.delete(id);
       const updatedRows = rows.filter((r) => r._id !== id);
-      concists.addConsists(updatedRows);
+      consists.addConsists(updatedRows);
     } catch (e) {
       console.log(`Error: ${e}`);
     }
@@ -22,7 +22,7 @@
     {
       key: 'concistOwner',
       title: 'Owner',
-      value: (v) => v.concistOwner,
+      value: (v) => v.concistOwner.name,
       sortable: true,
     },
     {
@@ -39,6 +39,7 @@
         component: TableButtonDelete,
         props: {
           deleteAction: handleDelete,
+          rowOwner: 'concistOwner',
         },
       },
     },
@@ -48,17 +49,17 @@
   let consistReqError = false;
 
   const fetchData = async function () {
-    const query = `*[_type == 'concists']{ _id, number, "concistOwner": owner->name }`;
+    const query = `*[_type == 'concists']{ _id, number, "concistOwner": owner->{name,_id} }`;
     try {
       consitsReq = await sanity.fetch(query);
-      concists.addConsists(consitsReq);
+      consists.addConsists(consitsReq);
     } catch (e) {
       console.log(`Error: ${e}`);
       consistReqError = e;
     }
   };
 
-  concists.subscribe((value) => {
+  consists.subscribe((value) => {
     rows = value;
   });
 
@@ -67,10 +68,10 @@
   });
 </script>
 
-<SingleColumn title="Concists">
+<SingleColumn title="Consists">
   <DynamicContent
-    addRoute="/tracking/concists/add"
-    addMessage="Add new Concist"
+    addRoute="/tracking/consists/add"
+    addMessage="Add new Consist"
     isEmpty={rows.length === 0}
     isLoading={!consitsReq}
     error={consistReqError}

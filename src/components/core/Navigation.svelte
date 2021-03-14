@@ -44,13 +44,15 @@
         </span>
         <ul class="sub">
           <li>
-            <Link {getProps} class="link" to="tracking/concists">Concists</Link>
+            <Link {getProps} class="link" to="tracking/consists">Consists</Link>
           </li>
           <li>
             <Link {getProps} class="link" to="tracking/cabs">Cabs</Link>
           </li>
           <li>
-            <Link {getProps} class="link" to="tracking">Locomotives</Link>
+            <Link {getProps} class="link" to="tracking/locomotives"
+              >Locomotives</Link
+            >
           </li>
         </ul>
       </li>

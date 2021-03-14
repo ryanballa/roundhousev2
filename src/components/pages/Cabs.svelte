@@ -22,7 +22,7 @@
     {
       key: 'cabOwner',
       title: 'Owner',
-      value: (v) => v.cabOwner,
+      value: (v) => v.cabOwner.name,
       sortable: true,
     },
     {
@@ -39,6 +39,7 @@
         component: TableButtonDelete,
         props: {
           deleteAction: handleDelete,
+          rowOwner: 'cabOwner',
         },
       },
     },
@@ -48,7 +49,7 @@
   let cabsReqError = false;
 
   const fetchData = async function () {
-    const query = `*[_type == 'cabs']{ _id, number, "cabOwner": owner->name }`;
+    const query = `*[_type == 'cabs']{ _id, number, "cabOwner": owner->{name,_id} }`;
     try {
       cabsReq = await sanity.fetch(query);
       console.log(cabsReq);

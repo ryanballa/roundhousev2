@@ -2,13 +2,15 @@
   import { Route } from 'svelte-navigator';
   import Home from './components/pages/Home.svelte';
   import Tracking from './components/pages/Tracking.svelte';
-  import Concists from './components/pages/Concists.svelte';
-  import ConcistAdd from './components/pages/ConcistAdd.svelte';
+  import Consists from './components/pages/Consists.svelte';
+  import ConsistAdd from './components/pages/ConsistAdd.svelte';
   import Schedule from './components/pages/Schedule.svelte';
   import Login from './components/pages/Login.svelte';
   import Cabs from './components/pages/Cabs.svelte';
   import CabAdd from './components/pages/CabAdd.svelte';
   import ComingSoon from './components/pages/ComingSoon.svelte';
+  import Locomotives from './components/pages/Locomotives.svelte';
+  import LocomotiveAdd from './components/pages/LocomotiveAdd.svelte';
 </script>
 
 <Route path="login">
@@ -33,11 +35,17 @@
     </Route>
     <Route path="/add" component={CabAdd} />
   </Route>
-  <Route path="concists/*">
+  <Route path="locomotives/*">
     <Route path="/">
-      <Concists />
+      <Locomotives />
     </Route>
-    <Route path="/add" component={ConcistAdd} />
+    <Route path="/add" component={LocomotiveAdd} />
+  </Route>
+  <Route path="consists/*">
+    <Route path="/">
+      <Consists />
+    </Route>
+    <Route path="/add" component={ConsistAdd} />
   </Route>
 </Route>
 <Route path="schedule">

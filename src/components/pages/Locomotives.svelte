@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import cabs from '../../store/cabs';
+  import locomotives from '../../store/locomotives';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import DynamicContent from '../core/DynamicContent.svelte';
@@ -12,7 +12,7 @@
     try {
       await sanity.delete(id);
       const updatedRows = rows.filter((r) => r._id !== id);
-      cabs.addCabs(updatedRows);
+      locomotives.addLocomotives(updatedRows);
     } catch (e) {
       console.log(`Error: ${e}`);
     }
@@ -22,13 +22,31 @@
     {
       key: 'cabOwner',
       title: 'Owner',
-      value: (v) => v.cabOwner,
+      value: (v) => v.locomotiveOwner.name,
       sortable: true,
     },
     {
-      key: 'number',
-      title: 'Number',
-      value: (v) => v.number,
+      key: 'address',
+      title: 'Addresss',
+      value: (v) => v.address,
+      sortable: true,
+    },
+    {
+      key: 'engineType',
+      title: 'Engine Type',
+      value: (v) => v.engineType,
+      sortable: true,
+    },
+    {
+      key: 'road',
+      title: 'Road',
+      value: (v) => v.road,
+      sortable: true,
+    },
+    {
+      key: 'roadNumber',
+      title: 'Road Number',
+      value: (v) => v.roadNumber,
       sortable: true,
     },
     {
@@ -39,27 +57,27 @@
         component: TableButtonDelete,
         props: {
           deleteAction: handleDelete,
+          rowOwner: 'locomotiveOwner',
         },
       },
     },
   ];
 
-  let cabsReq = null;
-  let cabsReqError = false;
+  let locomotivesReq = null;
+  let locomotivesReqError = false;
 
   const fetchData = async function () {
-    const query = `*[_type == 'cabs']{ _id, number, "cabOwner": owner->name }`;
+    const query = `*[_type == 'locomotive']{ _id, address, engineType, road, roadNumber, "locomotiveOwner": owner->{_id, name} }`;
     try {
-      cabsReq = await sanity.fetch(query);
-      console.log(cabsReq);
-      cabs.addCabs(cabsReq);
+      locomotivesReq = await sanity.fetch(query);
+      locomotives.addLocomotives(locomotivesReq);
     } catch (e) {
       console.log(`Error: ${e}`);
-      cabsReqError = e;
+      locomotivesReqError = e;
     }
   };
 
-  cabs.subscribe((value) => {
+  locomotives.subscribe((value) => {
     rows = value;
   });
 
@@ -71,10 +89,10 @@
 <SingleColumn title="Locomotives">
   <DynamicContent
     addRoute="/tracking/locomotives/add"
-    addMessage="Add New Cab"
+    addMessage="Add New Locomotive"
     isEmpty={rows.length === 0}
-    isLoading={!cabsReq}
-    error={cabsReqError}
+    isLoading={!locomotivesReq}
+    error={locomotivesReqError}
   />
   {#if rows.length > 0}<Table {columns} {rows} />{/if}
 </SingleColumn>

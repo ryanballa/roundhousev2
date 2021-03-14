@@ -19,7 +19,7 @@
     };
 
     sanity.create(doc).then((res) => {
-      navigate(`/tracking/concists`);
+      navigate(`/tracking/consists`);
       //todo:  navigate(`/tracking/concist/${res._id}`);
     });
   };
@@ -48,7 +48,7 @@
   }
 </script>
 
-<SingleColumn title="Add Concist">
+<SingleColumn title="Add Consist">
   <form id="addConcistForm" use:form on:submit={handleSubmit}>
     <Forms>
       <li>
