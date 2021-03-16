@@ -6,5 +6,6 @@ export const popupOpen = writable(false);
 export const error = writable();
 
 export default {
-    isAuthenticated
+    isAuthenticated,
+    user
 }

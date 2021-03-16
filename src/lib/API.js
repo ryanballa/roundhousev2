@@ -1,31 +1,17 @@
-import auth from '../utils/auth';
-
-const apiURL = "https://sandingtowerapi.herokuapp.com/";
+// const apiURL = "https://sandingtowerapi.herokuapp.com/";
+const apiURL = "http://localhost:4000/"
 
 class api {
-    async userGet(email) {
-        let auth0Client
+    async userGet(email, token) {
         try {
-            auth0Client = await auth.createClient();
-            auth0Client
-                .getTokenSilently()
-                .then(accessToken => {
-                    console.log(accessToken);
-                }).catch(e => {
-                    console.log(e);
-                });
-        } catch (e) {
-            console.log(e);
-        }
-        try {
-            this.response = await fetch(`${apiURL}api/user/ryan@ryanballa.com`, {
+            this.response = await fetch(`${apiURL}api/user/${email}`, {
                 method: "GET",
                 headers: {
-                    Authorization: 'Bearer ' + accessToken
+                    Authorization: 'Bearer ' + token
                 }
             });
             const user = await this.response.json();
-            return user[0];
+            return { _id: user[0]._id, email: user[0].email, name: user[0].name, profile: user[0].profiles[0] };
         } catch (e) {
             return e;
         }

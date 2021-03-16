@@ -11,16 +11,22 @@
     SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
     SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
     SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+    SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
   } = import.meta.env;
 
   let auth0Client;
   let usersReq = null;
+  let accessToken = null;
 
-  const fetchUser = async function (email) {
+  const fetchUser = async function (email, token) {
     try {
-      usersReq = await apiService.userGet(email);
+      if (!token) {
+        accessToken = await auth0Client.getIdTokenClaims();
+        accessToken = accessToken.__raw;
+      }
+      usersReq = await apiService.userGet(email, token || accessToken);
     } catch (e) {
-      console.log(`Error: ${e}`);
+      console.log(`Fetch User Error: ${e}`);
     }
   };
 
@@ -34,18 +40,29 @@
     // In DEV we load the user from settings
     if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
       isAuthenticated.set(true);
-      await fetchUser(SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL);
+      await fetchUser(
+        SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+        SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+      );
       user.set({
         _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
         email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
         name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-        profile: usersReq.userProfile,
+        profile: {
+          timePreference: true,
+        },
+        token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
       });
     }
 
     if (authUser && !$user._id) {
-      await fetchUser(authUser.email);
+      await fetchUser(authUser.email, accessToken);
+      usersReq.token = accessToken;
+      console.log(usersReq);
       user.set(usersReq);
+      if (!usersReq.profile) {
+        navigate('/profile/add');
+      }
     } else {
       navigate('/');
     }

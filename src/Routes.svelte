@@ -11,6 +11,7 @@
   import ComingSoon from './components/pages/ComingSoon.svelte';
   import Locomotives from './components/pages/Locomotives.svelte';
   import LocomotiveAdd from './components/pages/LocomotiveAdd.svelte';
+  import ProfileAdd from './components/pages/ProfileAdd.svelte';
 </script>
 
 <Route path="login">
@@ -50,4 +51,9 @@
 </Route>
 <Route path="schedule">
   <Schedule />
+</Route>
+<Route path="profile/*">
+  <Route path="/add">
+    <ProfileAdd />
+  </Route>
 </Route>

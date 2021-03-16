@@ -157,7 +157,6 @@
   }
 
   const fetchData = async function () {
-    console.log('fetch');
     const query = `*[_type == 'schedule']{ _id, date, notes, "membership": membership->name, "owner": owner->{name, _id} }`;
     try {
       scheduleReq = await sanity.fetch(query);
