@@ -1,11 +1,15 @@
 <script>
-  import { navigate, useResolvable } from 'svelte-navigator';
+  import { onMount } from 'svelte';
+  import { navigate } from 'svelte-navigator';
   import { user } from '../../store/user';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
+  import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
   import { useForm, Hint } from 'svelte-use-form';
+
+  let isLoading = true;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,7 +25,7 @@
     };
 
     sanity.create(doc).then((res) => {
-      user.set({ ...user, profile: res });
+      user.set({ ...$user, profile: res });
       navigate(`/`);
     });
   };
@@ -33,9 +37,18 @@
   const form = useForm({
     timePreference: { validators: [validateTime] },
   });
+
+  onMount(async () => {
+    user.subscribe((value) => {
+      if (value && value._id) {
+        isLoading = false;
+      }
+    });
+  });
 </script>
 
 <SingleColumn title="Create Your Profile">
+  {#if isLoading}<Loader />{/if}
   <form id="addProfileForm" use:form on:submit={handleSubmit}>
     <Forms>
       <li>

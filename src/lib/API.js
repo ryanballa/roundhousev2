@@ -1,5 +1,5 @@
-// const apiURL = "https://sandingtowerapi.herokuapp.com/";
-const apiURL = "http://localhost:4000/"
+const { SNOWPACK_PUBLIC_LOGGED_IN_USER_ID } = import.meta.env;
+const apiURL = SNOWPACK_PUBLIC_LOGGED_IN_USER_ID ? "http://localhost:4000/" : "https://sandingtowerapi.herokuapp.com/";
 
 class api {
     async userGet(email, token) {
