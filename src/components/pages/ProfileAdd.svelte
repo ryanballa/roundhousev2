@@ -75,7 +75,7 @@
               id="time24HR"
               name="timePreference"
               value="true"
-            /><label for="time24HR">12 HR</label>
+            /><label for="time24HR">24 HR</label>
           </div>
         </div>
         <Hint name="timePreference" on="validateTime"
