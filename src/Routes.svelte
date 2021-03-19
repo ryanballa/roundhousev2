@@ -12,6 +12,7 @@
   import Locomotives from './components/pages/Locomotives.svelte';
   import LocomotiveAdd from './components/pages/LocomotiveAdd.svelte';
   import ProfileAdd from './components/pages/ProfileAdd.svelte';
+  import UserAdd from './components/pages/UserAdd.svelte';
 </script>
 
 <Route path="login">
@@ -55,5 +56,10 @@
 <Route path="profile/*">
   <Route path="/add">
     <ProfileAdd />
+  </Route>
+</Route>
+<Route path="user/*">
+  <Route path="/add">
+    <UserAdd />
   </Route>
 </Route>

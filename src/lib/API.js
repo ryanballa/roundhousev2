@@ -16,6 +16,33 @@ class api {
             return e;
         }
     }
+    async userPost(doc, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/user/`, {
+                method: "post",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const user = await this.response.json();
+            return user;
+        } catch (e) {
+            return e;
+        }
+    }
+    async clubsGet() {
+        try {
+            this.response = await fetch(`${apiURL}api/clubs`, {
+                method: "GET",
+            });
+            const clubs = await this.response.json();
+            return clubs;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();

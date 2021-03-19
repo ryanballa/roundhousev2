@@ -7,9 +7,11 @@
   import Forms from '../layout/Forms.svelte';
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
+  import Banner from '../elements/Banner.svelte';
   import { useForm, Hint } from 'svelte-use-form';
 
   let isLoading = true;
+  let hasError = false;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,51 +42,55 @@
 
   onMount(async () => {
     user.subscribe((value) => {
-      if (value && value._id) {
+      if (value && value._id && !value.profile) {
         isLoading = false;
+      } else {
+        hasError = true;
       }
     });
   });
 </script>
 
 <SingleColumn title="Create Your Profile">
-  {#if isLoading}<Loader />{/if}
-  <form id="addProfileForm" use:form on:submit={handleSubmit}>
-    <Forms>
-      <li>
-        <label for="bio">
-          <span class="labelWrapper">Bio</span>
-          <textarea id="bio" name="bio" />
-        </label>
-      </li>
-      <li>
-        <div>
-          Time Preference
+  {#if isLoading && !hasError}<Loader />{/if}
+  {#if hasError}<Banner text="An error has occured." />{/if}
+  {#if !isLoading && !hasError}
+    <form id="addProfileForm" use:form on:submit={handleSubmit}>
+      <Forms>
+        <li>
+          <label for="bio">
+            <span class="labelWrapper">Bio</span>
+            <textarea id="bio" name="bio" />
+          </label>
+        </li>
+        <li>
           <div>
-            <input
-              type="radio"
-              id="time12HR"
-              name="timePreference"
-              value="false"
-            />
-            <label for="time12HR">12 HR</label>
+            Time Preference
+            <div>
+              <input
+                type="radio"
+                id="time12HR"
+                name="timePreference"
+                value="false"
+              />
+              <label for="time12HR">12 HR</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                id="time24HR"
+                name="timePreference"
+                value="true"
+              /><label for="time24HR">24 HR</label>
+            </div>
           </div>
-          <div>
-            <input
-              type="radio"
-              id="time24HR"
-              name="timePreference"
-              value="true"
-            /><label for="time24HR">24 HR</label>
-          </div>
-        </div>
-        <Hint name="timePreference" on="validateTime"
-          >You must select an option.</Hint
-        >
-      </li>
-      <li>
-        <Button disabled={!$form.valid} actionText="Add Profile" />
-      </li>
-    </Forms>
-  </form>
+          <Hint name="timePreference" on="validateTime"
+            >You must select an option.</Hint
+          >
+        </li>
+        <li>
+          <Button disabled={!$form.valid} actionText="Add Profile" />
+        </li>
+      </Forms>
+    </form>{/if}
 </SingleColumn>
