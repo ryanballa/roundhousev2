@@ -1,11 +1,13 @@
 <script>
   import { onMount } from 'svelte';
+  import { user } from '../../store/user';
   import locomotives from '../../store/locomotives';
   import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import DynamicContent from '../core/DynamicContent.svelte';
   import TableButtonDelete from '../elements/TableButtonDelete.svelte';
   import Table from '../elements/Table.svelte';
+  import apiService from '../../lib/API';
   let rows = [];
 
   const handleDelete = async (id) => {
@@ -66,10 +68,10 @@
   let locomotivesReq = null;
   let locomotivesReqError = false;
 
-  const fetchData = async function () {
-    const query = `*[_type == 'locomotive']{ _id, address, engineType, road, roadNumber, "locomotiveOwner": owner->{_id, name} }`;
+  const fetchData = async function (token) {
     try {
-      locomotivesReq = await sanity.fetch(query);
+      locomotivesReq = await apiService.locomotivesGet(token);
+
       locomotives.addLocomotives(locomotivesReq);
     } catch (e) {
       console.log(`Error: ${e}`);
@@ -82,7 +84,9 @@
   });
 
   onMount(async () => {
-    fetchData();
+    user.subscribe((value) => {
+      fetchData(value.token);
+    });
   });
 </script>
 

@@ -43,6 +43,36 @@ class api {
             return e;
         }
     }
+    async locomotivesGet(token) {
+        try {
+            this.response = await fetch(`${apiURL}api/locomotives`, {
+                method: "GET",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
+            const locomotives = await this.response.json();
+            return locomotives;
+        } catch (e) {
+            return e;
+        }
+    }
+    async locomotivePost(doc, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/locomotives`, {
+                method: "post",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const locomotive = await this.response.json();
+            return locomotive;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();
