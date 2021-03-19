@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import { user } from '../../store/user';
   import locomotives from '../../store/locomotives';
-  import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import DynamicContent from '../core/DynamicContent.svelte';
   import TableButtonDelete from '../elements/TableButtonDelete.svelte';
@@ -12,7 +11,7 @@
 
   const handleDelete = async (id) => {
     try {
-      await sanity.delete(id);
+      await apiService.locomotiveDelete(id, $user.token);
       const updatedRows = rows.filter((r) => r._id !== id);
       locomotives.addLocomotives(updatedRows);
     } catch (e) {

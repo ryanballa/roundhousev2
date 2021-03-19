@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import { navigate } from 'svelte-navigator';
-  import sanity from '../../lib/sanity';
   import locomotives from '../../store/locomotives';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
@@ -67,19 +66,20 @@
   });
 
   const fetchUsers = async function () {
-    const query = `*[_type == 'user']{ _id, name }`;
+    // TODO: store this club ID in state
     try {
-      usersReq = await sanity.fetch(query);
+      usersReq = await apiService.usersGet(
+        '3370bbfc-6edc-45ab-986e-8362118bdb08',
+      );
     } catch (e) {
-      console.log(`Error: ${e}`);
+      hasError = true;
     }
   };
 
   onMount(async () => {
     user.subscribe((value) => {
-      if (!value._id) {
-        hasError = true;
-      } else {
+      if (value._id) {
+        hasError = false;
         isLoading = false;
         if (!usersReq) {
           fetchUsers();
@@ -91,7 +91,7 @@
 
 <SingleColumn title="Add Locomotive">
   {#if hasError}<Banner text="An error has occured." />{/if}
-  {#if !isLoading}<form id="addConcistForm" use:form>
+  {#if !isLoading && usersReq}<form id="addConcistForm" use:form>
       <Forms>
         <li>
           <label for="address">

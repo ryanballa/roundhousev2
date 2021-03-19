@@ -32,6 +32,17 @@ class api {
             return e;
         }
     }
+    async usersGet(clubId) {
+        try {
+            this.response = await fetch(`${apiURL}api/users/${clubId}`, {
+                method: "GET",
+            });
+            const users = await this.response.json();
+            return users;
+        } catch (e) {
+            return e;
+        }
+    }
     async clubsGet() {
         try {
             this.response = await fetch(`${apiURL}api/clubs`, {
@@ -73,6 +84,23 @@ class api {
             return e;
         }
     }
+    async locomotiveDelete(locomotiveId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/locomotives/${locomotiveId}`, {
+                method: "delete",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const locomotive = await this.response.json();
+            console.log(locomotive);
+            return locomotive;
+        } catch (e) {
+            return e;
+        }
+    }
+
 }
 
 const apiService = new api();
