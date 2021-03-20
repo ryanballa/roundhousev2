@@ -1,5 +1,4 @@
 <script>
-  import sanity from '../../lib/sanity';
   import { Link } from 'svelte-navigator';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
@@ -20,20 +19,6 @@
     const user = await m.auth.loginWithMagicLink({ email: selectedEmail });
     console.log(user);
   };
-
-  const fetchUsers = async function (email) {
-    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email }`;
-    try {
-      usersReq = await sanity.fetch(query);
-      user.addUser(usersReq[0]);
-    } catch (e) {
-      console.log(`Error: ${e}`);
-    }
-  };
-
-  const init = async () => {};
-
-  init();
 </script>
 
 <SingleColumn title="Log In">

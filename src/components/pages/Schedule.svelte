@@ -64,19 +64,6 @@
       };
 
       const addingDateFormat = `${addingDate}T${selectedTime}:00Z`;
-      // const addingDateFormat = toDate(
-      //   new Date(`${addingDate}T${selectedTime}:00Z`),
-      // );
-      // const addedDate = add(new Date(addingDateFormat), { hours: 24 });
-      // const subtractedDate = add(new Date(addingDateFormat), { hours: -24 });
-      // const usersOnDateQuery = `*[_type == 'schedule' && date > '${format(
-      //   new Date(subtractedDate),
-      //   'yyyy-MM-dd',
-      // )}' && date < '${format(
-      //   new Date(addedDate),
-      //   'yyyy-MM-dd',
-      // )}']{ _id, date, "membership": membership->name, "owner": owner->{name, _id} }`;
-      // const usersOnAddingDate = await sanity.fetch(usersOnDateQuery);
       const usersOnAddingDate = await apiService.scheduleGetUsersByDate(
         '3370bbfc-6edc-45ab-986e-8362118bdb08',
         $user.token,

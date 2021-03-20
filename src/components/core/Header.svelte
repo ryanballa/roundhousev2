@@ -38,23 +38,23 @@
     const authUser = await auth0Client.getUser();
 
     // In DEV we load the user from settings
-    if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
-      isAuthenticated.set(true);
-      await fetchUser(
-        SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-        SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-      );
-      user.set({
-        _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
-        email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-        name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-        isAdmin: true,
-        profile: {
-          timePreference: true,
-        },
-        token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-      });
-    }
+    // if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
+    //   isAuthenticated.set(true);
+    //   await fetchUser(
+    //     SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+    //     SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+    //   );
+    //   user.set({
+    //     _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
+    //     email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+    //     name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+    //     isAdmin: true,
+    //     profile: {
+    //       timePreference: true,
+    //     },
+    //     token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+    //   });
+    // }
 
     if (authUser && !$user._id) {
       await fetchUser(authUser.email, accessToken);

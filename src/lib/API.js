@@ -248,6 +248,22 @@ class api {
             return e;
         }
     }
+    async profilePost(doc, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/profile`, {
+                method: "post",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const profile = await this.response.json();
+            return profile;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();

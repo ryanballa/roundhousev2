@@ -1,7 +1,7 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
-import sanity from '../lib/sanity';
 import { user, isAuthenticated, popupOpen } from "../store/user";
 import config from "../lib/authConfig";
+import apiService from '../lib/API';
 
 let usersReq = null;
 
@@ -28,10 +28,9 @@ async function createClient() {
     return auth0Client;
 }
 
-const fetchUser = async function (email) {
-    const query = `*[_type == 'user' && email == '${email}']{ _id, name, email }`;
+const fetchUser = async function (email, token) {
     try {
-        usersReq = await sanity.fetch(query);
+        usersReq = await apiService.userGet(email, token);
         user.set(usersReq[0]);
     } catch (e) {
         console.log(`Error: ${e}`);
@@ -46,7 +45,9 @@ async function loginWithPopup(client, options) {
             prompt: 'login' // Force login prompt. No silence auth for you!
         });
         const theUser = await client.getUser();
-        await fetchUser(theUser.email)
+        const accessToken = await auth0Client.getIdTokenClaims();
+        accessToken = accessToken.__raw;
+        await fetchUser(theUser.email, accessToken);
         isAuthenticated.set(true);
     } catch (e) {
         // eslint-disable-next-line

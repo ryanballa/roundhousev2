@@ -2,13 +2,13 @@
   import { onMount } from 'svelte';
   import { navigate } from 'svelte-navigator';
   import { user } from '../../store/user';
-  import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
   import Banner from '../elements/Banner.svelte';
   import { useForm, Hint } from 'svelte-use-form';
+  import apiService from '../../lib/API';
 
   let isLoading = true;
   let hasError = false;
@@ -26,7 +26,7 @@
       },
     };
 
-    sanity.create(doc).then((res) => {
+    apiService.profileAdd(doc, $user.token).then((res) => {
       user.set({ ...$user, profile: res });
       navigate(`/`);
     });
