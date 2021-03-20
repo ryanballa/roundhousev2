@@ -58,7 +58,9 @@ async function loginWithPopup(client, options) {
 }
 
 function logout(client) {
-    return client.logout();
+    return client.logout({
+        returnTo: window.location.origin,
+    });
 }
 
 const auth = {

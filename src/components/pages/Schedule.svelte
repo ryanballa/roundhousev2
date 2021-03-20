@@ -22,7 +22,9 @@
   const quota = 8;
 
   onMount(async () => {
-    twentyFourHRTime = $user.profile.timePreference;
+    user.subscribe((value) => {
+      twentyFourHRTime = value.profile.timePreference;
+    });
   });
 
   window.addEventListener(
