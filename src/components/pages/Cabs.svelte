@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import cabs from '../../store/cabs';
-  import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import DynamicContent from '../core/DynamicContent.svelte';
   import TableButtonDelete from '../elements/TableButtonDelete.svelte';

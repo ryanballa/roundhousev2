@@ -1,10 +1,12 @@
 <script>
   import { navigate } from 'svelte-navigator';
-  import sanity from '../../lib/sanity';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
   import Button from '../elements/Button.svelte';
   import { useForm, required, minLength, Hint } from 'svelte-use-form';
+  import apiService from '../../lib/API';
+  import { user } from '../../store/user';
+
   let usersReq = null;
 
   const handleSubmit = (e) => {
@@ -12,15 +14,15 @@
     const doc = {
       _type: 'concists',
       number: parseFloat($form.number._value),
+      locomotiveAddresses: $form.locomotiveAddresses._value,
       owner: {
-        _ref: $form.user._value,
+        _ref: $user.isAdmin ? $form.user._value : $user._id,
         _type: 'reference',
       },
     };
 
-    sanity.create(doc).then((res) => {
+    apiService.consistPost(doc).then((res) => {
       navigate(`/tracking/consists`);
-      //todo:  navigate(`/tracking/concist/${res._id}`);
     });
   };
 
@@ -29,17 +31,20 @@
     return value !== '' ? null : { validateUser: `${value} is not a user` };
   };
 
+  const userValidations = $user.isAdmin ? [validateUser, required] : [];
+
   const form = useForm({
     number: { validators: [minLength(1)] },
-    user: { validators: [validateUser, required] },
+    user: { validators: userValidations },
   });
 
   const fetchUsers = async function () {
-    const query = `*[_type == 'user']{ _id, name }`;
     try {
-      usersReq = await sanity.fetch(query);
+      usersReq = await apiService.usersGet(
+        '3370bbfc-6edc-45ab-986e-8362118bdb08',
+      );
     } catch (e) {
-      console.log(`Error: ${e}`);
+      hasError = true;
     }
   };
 
@@ -58,19 +63,27 @@
         </label>
       </li>
       <li>
-        <label for="user">
-          <span class="labelWrapper">User</span>
-          <select id="user" name="user">
-            <option value="">-- Select --</option>
-            <option value="Unassigned">Unassigned</option>
-            {#if usersReq}
-              {#each usersReq as user}
-                <option value={user._id}>{user.name}</option>
-              {/each}
-            {/if}
-          </select>
+        <label for="locomotiveAddresses">
+          <span class="labelWrapper">Locomotive Addresses</span>
+          <input id="locomotiveAddresses" name="locomotiveAddresses" />
         </label>
       </li>
+      {#if $user.isAdmin}
+        <li>
+          <label for="user">
+            <span class="labelWrapper">User</span>
+            <select id="user" name="user">
+              <option value="">-- Select --</option>
+              <option value="Unassigned">Unassigned</option>
+              {#if usersReq}
+                {#each usersReq as user}
+                  <option value={user._id}>{user.name}</option>
+                {/each}
+              {/if}
+            </select>
+          </label>
+        </li>
+      {/if}
       <li>
         <Hint name="number" on="minLength" let:value>
           The number requires at least {value} characters.

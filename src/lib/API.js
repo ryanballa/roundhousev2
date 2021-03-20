@@ -144,6 +144,51 @@ class api {
             return e;
         }
     }
+    async consistsGet(clubId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/consists/${clubId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
+            const consists = await this.response.json();
+            return consists;
+        } catch (e) {
+            return e;
+        }
+    }
+    async consistPost(doc, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/consist`, {
+                method: "post",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const consist = await this.response.json();
+            return consist;
+        } catch (e) {
+            return e;
+        }
+    }
+    async consistsDelete(consistId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/consists/${consistId}`, {
+                method: "delete",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const consist = await this.response.json();
+            return consist;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();
