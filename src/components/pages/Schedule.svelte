@@ -3,9 +3,9 @@
   import { add, format, toDate } from 'date-fns';
   import Loader from '../elements/Loader.svelte';
   import { user } from '../../store/user';
-  import sanity from '../../lib/sanity';
   import Button from '../elements/Button.svelte';
   import SingleColumn from '../layout/SingleColumn.svelte';
+  import apiService from '../../lib/API';
 
   let dateRange = [];
   let dateRangeOffset = 0;
@@ -36,7 +36,7 @@
 
   const handleRemove = async (id, dateItem) => {
     try {
-      await sanity.delete(id, dateItem);
+      await apiService.scheduleDelete(id, $user.token);
       usersByDate[dateItem] = usersByDate[dateItem].filter(
         (item) => item._id !== id,
       );
@@ -63,23 +63,29 @@
         },
       };
 
-      const addingDateFormat = toDate(
-        new Date(`${addingDate}T${selectedTime}:00Z`),
+      const addingDateFormat = `${addingDate}T${selectedTime}:00Z`;
+      // const addingDateFormat = toDate(
+      //   new Date(`${addingDate}T${selectedTime}:00Z`),
+      // );
+      // const addedDate = add(new Date(addingDateFormat), { hours: 24 });
+      // const subtractedDate = add(new Date(addingDateFormat), { hours: -24 });
+      // const usersOnDateQuery = `*[_type == 'schedule' && date > '${format(
+      //   new Date(subtractedDate),
+      //   'yyyy-MM-dd',
+      // )}' && date < '${format(
+      //   new Date(addedDate),
+      //   'yyyy-MM-dd',
+      // )}']{ _id, date, "membership": membership->name, "owner": owner->{name, _id} }`;
+      // const usersOnAddingDate = await sanity.fetch(usersOnDateQuery);
+      const usersOnAddingDate = await apiService.scheduleGetUsersByDate(
+        '3370bbfc-6edc-45ab-986e-8362118bdb08',
+        $user.token,
+        addingDateFormat,
       );
-      const addedDate = add(new Date(addingDateFormat), { hours: 24 });
-      const subtractedDate = add(new Date(addingDateFormat), { hours: -24 });
-      const usersOnDateQuery = `*[_type == 'schedule' && date > '${format(
-        new Date(subtractedDate),
-        'yyyy-MM-dd',
-      )}' && date < '${format(
-        new Date(addedDate),
-        'yyyy-MM-dd',
-      )}']{ _id, date, "membership": membership->name, "owner": owner->{name, _id} }`;
-      const usersOnAddingDate = await sanity.fetch(usersOnDateQuery);
       if (usersOnAddingDate.length >= quota) {
         error = 'Oops, a user beat you and this day is now full.';
       } else {
-        sanity.create(doc).then((res) => {
+        apiService.schedulePost(doc).then((res) => {
           scheduleReq.push(res);
           addingDate = null;
           selectedButton = null;
@@ -157,9 +163,11 @@
   }
 
   const fetchData = async function () {
-    const query = `*[_type == 'schedule']{ _id, date, notes, "membership": membership->name, "owner": owner->{name, _id} }`;
     try {
-      scheduleReq = await sanity.fetch(query);
+      scheduleReq = await apiService.scheduleGet(
+        '3370bbfc-6edc-45ab-986e-8362118bdb08',
+        $user.token,
+      );
       addUsersTodateRange();
       working = false;
     } catch (e) {

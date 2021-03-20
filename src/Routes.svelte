@@ -1,7 +1,6 @@
 <script>
   import { Route } from 'svelte-navigator';
   import Home from './components/pages/Home.svelte';
-  import Tracking from './components/pages/Tracking.svelte';
   import Consists from './components/pages/Consists.svelte';
   import ConsistAdd from './components/pages/ConsistAdd.svelte';
   import Schedule from './components/pages/Schedule.svelte';
@@ -29,7 +28,7 @@
 </Route>
 <Route path="tracking/*">
   <Route path="/">
-    <Tracking />
+    <ComingSoon />
   </Route>
   <Route path="cabs/*">
     <Route path="/">

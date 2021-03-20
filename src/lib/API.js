@@ -189,6 +189,65 @@ class api {
             return e;
         }
     }
+    async scheduleGet(clubId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/schedule/${clubId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
+            const schedule = await this.response.json();
+            return schedule;
+        } catch (e) {
+            return e;
+        }
+    }
+    async scheduleGetUsersByDate(clubId, token, date) {
+        try {
+            this.response = await fetch(`${apiURL}api/schedule/${clubId}/users/${date}`, {
+                method: "GET",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
+            const scheduleByUser = await this.response.json();
+            return scheduleByUser;
+        } catch (e) {
+            return e;
+        }
+    }
+    async schedulePost(doc, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/schedule`, {
+                method: "post",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const schedule = await this.response.json();
+            return schedule;
+        } catch (e) {
+            return e;
+        }
+    }
+    async scheduleDelete(scheduleId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/schedule/${scheduleId}`, {
+                method: "delete",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const schedule = await this.response.json();
+            return schedule;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();
