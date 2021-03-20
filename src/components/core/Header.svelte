@@ -48,6 +48,7 @@
         _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
         email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
         name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+        isAdmin: true,
         profile: {
           timePreference: true,
         },

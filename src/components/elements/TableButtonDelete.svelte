@@ -8,7 +8,7 @@
 </script>
 
 <Button
-  disabled={row[rowOwner]._id !== $user._id}
+  disabled={$user.isAdmin ? false : row[rowOwner]._id !== $user._id}
   actionText="Delete"
   variant="secondary"
   actionEvent={() => deleteAction(row._id)}>Delete</Button

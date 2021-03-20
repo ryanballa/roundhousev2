@@ -30,7 +30,7 @@
       road: $form.road._value,
       roadNumber: $form.roadNumber._value,
       owner: {
-        _ref: $form.user._value,
+        _ref: $user.isAdmin ? $form.user._value : $user._id,
         _type: 'reference',
       },
     };
@@ -60,9 +60,11 @@
       : { validateAddress: `${value} is already used` };
   };
 
+  const userValidations = $user.isAdmin ? [validateUser, required] : [];
+
   const form = useForm({
     address: { validators: [validateAddress, minLength(3)] },
-    user: { validators: [validateUser, required] },
+    user: { validators: userValidations },
   });
 
   const fetchUsers = async function () {
@@ -130,24 +132,26 @@
             <input id="roadNumber" name="roadNumber" />
           </label>
         </li>
-        <li>
-          <label for="user">
-            <span class="labelWrapper">User</span>
-            <select id="user" name="user">
-              <option value="">-- Select --</option>
-              {#if usersReq}
-                {#each usersReq as user}
-                  <option value={user._id}>{user.name}</option>
-                {/each}
-              {/if}
-            </select>
-          </label>
-          <HintGroup for="user">
-            <Hint name="user" on="validateUser" let:value
-              >You must select a user.</Hint
-            >
-          </HintGroup>
-        </li>
+        {#if $user.isAdmin}
+          <li>
+            <label for="user">
+              <span class="labelWrapper">User</span>
+              <select id="user" name="user">
+                <option value="">-- Select --</option>
+                {#if usersReq}
+                  {#each usersReq as user}
+                    <option value={user._id}>{user.name}</option>
+                  {/each}
+                {/if}
+              </select>
+            </label>
+            <HintGroup for="user">
+              <Hint name="user" on="validateUser" let:value
+                >You must select a user.</Hint
+              >
+            </HintGroup>
+          </li>
+        {/if}
         <li>
           <Button
             actionEvent={(e) => {

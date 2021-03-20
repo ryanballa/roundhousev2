@@ -6,11 +6,13 @@
   import DynamicContent from '../core/DynamicContent.svelte';
   import TableButtonDelete from '../elements/TableButtonDelete.svelte';
   import Table from '../elements/Table.svelte';
+  import apiService from '../../lib/API';
+  import { user } from '../../store/user';
   let rows = [];
 
   const handleDelete = async (id) => {
     try {
-      await sanity.delete(id);
+      await apiService.cabsDelete(id);
       const updatedRows = rows.filter((r) => r._id !== id);
       cabs.addCabs(updatedRows);
     } catch (e) {
@@ -49,10 +51,11 @@
   let cabsReqError = false;
 
   const fetchData = async function () {
-    const query = `*[_type == 'cabs']{ _id, number, "cabOwner": owner->{name,_id} }`;
     try {
-      cabsReq = await sanity.fetch(query);
-      console.log(cabsReq);
+      cabsReq = await apiService.cabsGet(
+        '3370bbfc-6edc-45ab-986e-8362118bdb08',
+        $user.token,
+      );
       cabs.addCabs(cabsReq);
     } catch (e) {
       console.log(`Error: ${e}`);
@@ -65,7 +68,11 @@
   });
 
   onMount(async () => {
-    fetchData();
+    user.subscribe((value) => {
+      if (value._id) {
+        fetchData();
+      }
+    });
   });
 </script>
 

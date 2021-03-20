@@ -94,13 +94,56 @@ class api {
                 }
             });
             const locomotive = await this.response.json();
-            console.log(locomotive);
             return locomotive;
         } catch (e) {
             return e;
         }
     }
-
+    async cabsGet(clubId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/cabs/${clubId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
+            const cabs = await this.response.json();
+            return cabs;
+        } catch (e) {
+            return e;
+        }
+    }
+    async cabPost(doc, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/cab`, {
+                method: "post",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const cab = await this.response.json();
+            return cab;
+        } catch (e) {
+            return e;
+        }
+    }
+    async cabsDelete(cabId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/cabs/${cabId}`, {
+                method: "delete",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const cab = await this.response.json();
+            return cab;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();
