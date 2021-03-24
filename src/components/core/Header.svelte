@@ -64,6 +64,7 @@
         });
         navigate('/user/add');
       } else if (!usersReq.profile) {
+        user.set(usersReq);
         navigate('/profile/add');
       } else {
         usersReq.token = accessToken;
@@ -97,6 +98,11 @@
             {#if $isAuthenticated}<li on:click={logout}>
                 <span>Logout</span>
               </li>{/if}
+            {#if $isAuthenticated}
+              <li>
+                <Link to="/profile/edit">Profile</Link>
+              </li>
+            {/if}
             {#if !$isAuthenticated}<li on:click={login}>
                 <span>Login</span>
               </li>{/if}

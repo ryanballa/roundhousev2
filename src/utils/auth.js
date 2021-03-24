@@ -28,15 +28,6 @@ async function createClient() {
     return auth0Client;
 }
 
-const fetchUser = async function (email, token) {
-    try {
-        usersReq = await apiService.userGet(email, token);
-        user.set(usersReq[0]);
-    } catch (e) {
-        console.log(`Error: ${e}`);
-    }
-};
-
 async function loginWithPopup(client, options) {
     popupOpen.set(true);
     try {
@@ -44,10 +35,8 @@ async function loginWithPopup(client, options) {
             redirect_uri: window.location.origin,
             prompt: 'login' // Force login prompt. No silence auth for you!
         });
-        const theUser = await client.getUser();
-        const accessToken = await auth0Client.getIdTokenClaims();
-        accessToken = accessToken.__raw;
-        await fetchUser(theUser.email, accessToken);
+        // const theUser = await client.getUser();
+        //await fetchUser(theUser.email)
         isAuthenticated.set(true);
     } catch (e) {
         // eslint-disable-next-line

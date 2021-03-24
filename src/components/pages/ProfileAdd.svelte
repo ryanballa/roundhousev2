@@ -7,7 +7,7 @@
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
   import Banner from '../elements/Banner.svelte';
-  import { useForm, Hint } from 'svelte-use-form';
+  import { useForm, Hint, required } from 'svelte-use-form';
   import apiService from '../../lib/API';
 
   let isLoading = true;
@@ -20,13 +20,14 @@
       _type: 'profile',
       bio: $form.bio._value,
       timePreference: $form.timePreference._value === 'true',
+      fontSize: $form.fontSize._value,
       owner: {
         _ref: $user._id,
         _type: 'reference',
       },
     };
 
-    apiService.profileAdd(doc, $user.token).then((res) => {
+    apiService.profilePost(doc, $user.token).then((res) => {
       user.set({ ...$user, profile: res });
       navigate(`/`);
     });
@@ -38,14 +39,18 @@
 
   const form = useForm({
     timePreference: { validators: [validateTime] },
+    fontSize: { validators: [required] },
   });
 
   onMount(async () => {
     user.subscribe((value) => {
-      if (value && value._id && !value.profile) {
+      console.log(value);
+      if (value && value._id) {
+        console.log(value);
         isLoading = false;
-      } else {
-        hasError = true;
+        if (value.profile || value.profile.length > 0) {
+          hasError = true;
+        }
       }
     });
   });
@@ -87,6 +92,12 @@
           <Hint name="timePreference" on="validateTime"
             >You must select an option.</Hint
           >
+        </li>
+        <li>
+          <label for="fontSize">
+            <span class="labelWrapper">Font Size</span>
+            <input id="fontSize" name="fontSize" value="1" />
+          </label>
         </li>
         <li>
           <Button disabled={!$form.valid} actionText="Add Profile" />
