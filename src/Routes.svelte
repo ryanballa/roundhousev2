@@ -12,10 +12,14 @@
   import LocomotiveAdd from './components/pages/LocomotiveAdd.svelte';
   import ProfileAdd from './components/pages/ProfileAdd.svelte';
   import UserAdd from './components/pages/UserAdd.svelte';
+  import Changelog from './components/pages/Changelog.svelte';
 </script>
 
 <Route path="login">
   <Login />
+</Route>
+<Route path="changelog">
+  <Changelog />
 </Route>
 <Route path="/">
   <Home />

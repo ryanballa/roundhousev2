@@ -264,6 +264,17 @@ class api {
             return e;
         }
     }
+    async changelogGet() {
+        try {
+            this.response = await fetch(`${apiURL}api/changelog`, {
+                method: "GET",
+            });
+            const changelog = await this.response.json();
+            return changelog;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();

@@ -38,23 +38,23 @@
     const authUser = await auth0Client.getUser();
 
     // In DEV we load the user from settings
-    // if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
-    //   isAuthenticated.set(true);
-    //   await fetchUser(
-    //     SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-    //     SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-    //   );
-    //   user.set({
-    //     _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
-    //     email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-    //     name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-    //     isAdmin: true,
-    //     profile: {
-    //       timePreference: true,
-    //     },
-    //     token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-    //   });
-    // }
+    if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
+      isAuthenticated.set(true);
+      await fetchUser(
+        SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+        SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+      );
+      user.set({
+        _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
+        email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+        name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
+        isAdmin: true,
+        profile: {
+          timePreference: true,
+        },
+        token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+      });
+    }
 
     if (authUser && !$user._id) {
       await fetchUser(authUser.email, accessToken);
@@ -93,18 +93,23 @@
     </div>
     <div class="rightMenu">
       <div class="accountContext">
+        {#if $isAuthenticated}
+          <span class="accountLinkWrapper">
+            <Link class="changelog" to="/changelog">What's New</Link>
+          </span>
+        {/if}
         <Dropdown title={$isAuthenticated && $user ? $user.name : 'Log In'}>
           <ul>
-            {#if $isAuthenticated}<li on:click={logout}>
-                <span>Logout</span>
-              </li>{/if}
             {#if $isAuthenticated}
               <li>
                 <Link to="/profile/edit">Profile</Link>
               </li>
             {/if}
-            {#if !$isAuthenticated}<li on:click={login}>
-                <span>Login</span>
+            {#if $isAuthenticated}<li>
+                <button on:click={logout}>Logout</button>
+              </li>{/if}
+            {#if !$isAuthenticated}<li>
+                <button on:click={login}>Login</button>
               </li>{/if}
           </ul>
         </Dropdown>
@@ -118,8 +123,23 @@
     box-shadow: 1px 1px 1px #ccc;
   }
   .accountContext {
+    display: flex;
     float: right;
   }
+  .accountLinkWrapper {
+    display: block;
+    margin-top: 25px;
+    margin-right: 16px;
+  }
+  .accountLinkWrapper :global(a:link, a:visited) {
+    color: var(--color-links);
+    text-decoration: none;
+  }
+  .accountLinkWrapper :global(a:hover) {
+    color: var(--color-links);
+    text-decoration: underline;
+  }
+
   .leftBar {
     background: var(--color-navBg);
     width: 19%;
