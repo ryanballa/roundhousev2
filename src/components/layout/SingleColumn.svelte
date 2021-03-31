@@ -21,6 +21,14 @@
   h2:focus {
     outline: none;
   }
+  :global(h3) {
+    font-size: var(--size-h3);
+    font-weight: bold;
+  }
+  :global(h4) {
+    font-size: var(--size-h4);
+    font-weight: bold;
+  }
   .pageDescription {
     color: var(--color-body);
     padding-top: 0;

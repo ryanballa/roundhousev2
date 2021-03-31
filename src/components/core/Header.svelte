@@ -30,6 +30,11 @@
     }
   };
 
+  const setFontSize = (userProfile) => {
+    const bodyTag = document.querySelector('.app');
+    bodyTag.style.fontSize = `${userProfile.fontSize}em`;
+  };
+
   onMount(async () => {
     auth0Client = await auth.createClient();
 
@@ -50,10 +55,13 @@
         name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
         isAdmin: true,
         profile: {
+          bio: 'test',
           timePreference: true,
+          fontSize: 1,
         },
         token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
       });
+      setFontSize({ fontSize: 1 });
     }
 
     if (authUser && !$user._id) {
@@ -67,6 +75,8 @@
         user.set(usersReq);
         navigate('/profile/add');
       } else {
+        // Set user's font size selection
+        setFontSize(usersReq.profile);
         usersReq.token = accessToken;
         user.set(usersReq);
       }
@@ -87,7 +97,7 @@
     <div class="leftBar">
       <h1>
         <span class="linkWrapper">
-          <Link class="link" to="/">LocomotiveHouse</Link>
+          <Link class="link" to="/">Locomotive House</Link>
         </span>
       </h1>
     </div>
@@ -161,6 +171,6 @@
   }
   .rightMenu {
     background-color: var(--color-bgHighlight);
-    width: 79%;
+    width: 81%;
   }
 </style>

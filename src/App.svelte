@@ -1,7 +1,7 @@
 <!-- App.svelte -->
 <script>
   import { Router } from 'svelte-navigator';
-  import { colors, sizes } from './utils/styling';
+  import { colors, sizes, forms } from './utils/styling';
   import Header from './components/core/Header.svelte';
   import Navigation from './components/core/Navigation.svelte';
   import Routes from './Routes.svelte';
@@ -9,16 +9,23 @@
   let shouldShowOverlay = false;
 
   // sets CSS vars for easy use in components
-  const setRootColors = (theme) => {
+  const setRootColors = () => {
     for (let [prop, color] of Object.entries(colors)) {
       let varString = `--color-${prop}`;
       document.documentElement.style.setProperty(varString, color);
     }
   };
 
-  const setSizes = (theme) => {
+  const setSizes = () => {
     for (let [prop, size] of Object.entries(sizes)) {
       let varString = `--size-${prop}`;
+      document.documentElement.style.setProperty(varString, size);
+    }
+  };
+
+  const setFormSettings = () => {
+    for (let [prop, size] of Object.entries(forms)) {
+      let varString = `--forms-${prop}`;
       document.documentElement.style.setProperty(varString, size);
     }
   };
@@ -29,8 +36,6 @@
   };
 
   const init = async () => {
-    const email = 'ryan@ryanballa.com';
-
     window.addEventListener(
       'showOverlay',
       function (e) {
@@ -51,6 +56,7 @@
   init();
   setRootColors();
   setSizes();
+  setFormSettings();
 </script>
 
 <div class="app">

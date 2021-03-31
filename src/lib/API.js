@@ -275,6 +275,36 @@ class api {
             return e;
         }
     }
+    async towersGet(token, clubId) {
+        try {
+            this.response = await fetch(`${apiURL}api/towers/${clubId}`, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const towers = await this.response.json();
+            return towers;
+        } catch (e) {
+            return e;
+        }
+    }
+    async issuesGet(token, clubId) {
+        try {
+            this.response = await fetch(`${apiURL}api/issues/${clubId}`, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const issues = await this.response.json();
+            return issues;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();

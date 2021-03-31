@@ -22,8 +22,8 @@
     <ul>
       <li>
         <span class="linkWrapper">
-          <Link {getProps} class="link" to="work-orders"
-            ><Work size={20} /><span>Work Orders</span></Link
+          <Link {getProps} class="link" to="towers"
+            ><Work size={20} /><span>Towers</span></Link
           >
         </span>
       </li>
