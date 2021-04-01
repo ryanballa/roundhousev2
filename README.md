@@ -1,24 +1,11 @@
-# New Project
+## Locomotive House
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+The definitive model railroad club managment tool.
 
-## Available Scripts
+<img width="1635" alt="Screen Shot 2021-03-31 at 9 15 32 PM" src="https://user-images.githubusercontent.com/728326/113234189-685a4d00-9266-11eb-92c5-8a4f3f891e94.png">
 
-### npm start
+This tool will all you to manage consists, locomotive addresses, defects, and more. Currently a work-in-progress.
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+### Work In Progress
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
-
-### npm run build
-
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
-
-**For the best production performance:** Add a build bundler plugin like [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/main/plugins/plugin-webpack) or [snowpack-plugin-rollup-bundle](https://github.com/ParamagicDev/snowpack-plugin-rollup-bundle) to your `snowpack.config.json` config file.
-
-### Q: What about Eject?
-
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
+More infomration to follow including a public beta.
