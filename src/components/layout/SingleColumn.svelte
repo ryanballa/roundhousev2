@@ -1,9 +1,13 @@
 <script>
   export let title = 'Page Tile';
+  export let description = null;
 </script>
 
 <section>
   <h2>{title}</h2>
+  {#if description}
+    <p class="pageDescription">{description}</p>
+  {/if}
   <slot />
 </section>
 
@@ -12,9 +16,23 @@
     color: var(--color-titles);
     font-size: var(--size-h2);
     margin-top: 0;
+    margin-bottom: 8px;
   }
   h2:focus {
     outline: none;
+  }
+  :global(h3) {
+    font-size: var(--size-h3);
+    font-weight: bold;
+  }
+  :global(h4) {
+    font-size: var(--size-h4);
+    font-weight: bold;
+  }
+  .pageDescription {
+    color: var(--color-body);
+    padding-top: 0;
+    margin-top: 0;
   }
   section {
     color: var(--color-body);

@@ -6,7 +6,8 @@ module.exports = {
     src: '/dist',
   },
   plugins: [
-    '@snowpack/plugin-svelte'
+    '@snowpack/plugin-svelte',
+    '@snowpack/plugin-dotenv'
   ],
   "routes": [
     { "match": "routes", "src": ".*", "dest": "/index.html" }
@@ -19,7 +20,7 @@ module.exports = {
     /* ... */
   },
   devOptions: {
-    /* ... */
+    port: 5000,
   },
   buildOptions: {
     /* ... */

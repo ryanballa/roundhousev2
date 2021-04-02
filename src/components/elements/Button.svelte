@@ -1,18 +1,18 @@
 <script>
   import { navigate } from 'svelte-navigator';
   export let actionText = 'Add';
-  export let action;
-  export let actionEvent;
+  export let action = null;
+  export let actionEvent = null;
   export let disabled = false;
   export let type = 'submit';
   export let variant = 'primary';
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (action) {
       navigate(action, { replace: true });
     }
     if (actionEvent) {
-      actionEvent();
+      actionEvent(e);
     }
   };
 </script>
@@ -37,5 +37,15 @@
   button:hover {
     cursor: pointer;
     filter: brightness(0.9);
+  }
+  button:disabled {
+    background-color: var(--color-buttonsSecondaryDisabled);
+    box-shadow: none;
+    border: 1px solid var(--color-buttonsSecondary);
+    color: var(--color-buttonsSecondary);
+  }
+  button:disabled:hover {
+    cursor: default;
+    filter: none;
   }
 </style>

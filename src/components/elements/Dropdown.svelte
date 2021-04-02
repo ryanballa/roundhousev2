@@ -3,7 +3,19 @@
   let isOpen = false;
   export let title;
 
+  window.addEventListener(
+    'overlayClick',
+    function (e) {
+      isOpen = false;
+    },
+    false,
+  );
+
   const handleClick = () => {
+    if (!isOpen) {
+      const event = new Event('showOverlay');
+      window.dispatchEvent(event);
+    }
     isOpen = !isOpen;
   };
 </script>
@@ -16,7 +28,11 @@
     >
   </button>
   {#if isOpen}
-    <nav>
+    <nav
+      on:click={() => {
+        isOpen = false;
+      }}
+    >
       <slot />
     </nav>
   {/if}
@@ -45,10 +61,39 @@
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
-    top: 36px;
+    top: 50px;
     position: absolute;
     right: 16px;
     width: 300px;
+    z-index: 10001;
+  }
+
+  nav :global(a:link, a:visited) {
+    color: var(--color-links);
+    display: block;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  nav :global(a:hover) {
+    color: var(--color-links);
+    text-decoration: underline;
+  }
+
+  nav :global(button) {
+    background: none;
+    border: none;
+    color: var(--color-links);
+    display: block;
+    font-size: var(--size-small);
+    text-align: left;
+    padding: 0;
+    width: 100%;
+  }
+
+  nav :global(button:hover) {
+    cursor: pointer;
+    text-decoration: underline;
   }
 
   nav :global(ul) {
@@ -58,7 +103,13 @@
   }
 
   nav :global(li) {
+    border-bottom: 1px solid #f6f0f7;
     color: #797979;
     font-size: 14px;
+    padding: 8px 0;
+  }
+
+  nav :global(li:last-child) {
+    border-bottom: none;
   }
 </style>
