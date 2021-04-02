@@ -109,7 +109,7 @@
     font-family: 'TofinoProBook';
     min-height: 400px;
     padding: 1%;
-    width: 19%;
+    width: 15%;
   }
   li {
     align-items: center;

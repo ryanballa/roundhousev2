@@ -28,6 +28,12 @@
     margin: 0 8px 8px 0;
     text-align: center;
   }
+  .user-wrapper:last-child .name {
+    margin-bottom: 0;
+  }
+  .user-wrapper:last-child .user {
+    margin-bottom: 0;
+  }
   .name {
     display: inline-block;
     margin-bottom: 10px;

@@ -7,6 +7,7 @@
   import Table from '../elements/Table.svelte';
   import Indicators from '../elements/tables/Indicators.svelte';
   import Users from '../elements/tables/Users.svelte';
+  import Button from '../elements/Button.svelte';
 
   let towersReq = null;
   let issuesReq = null;
@@ -97,9 +98,9 @@
 
 <SingleColumn title="Towers">
   {#if towersReq && issuesReq}
-    <div class="columns">
+    <div class="columns is-multiline">
       {#each towersReq as tower}
-        <div class="column">
+        <div class="column is-half">
           <Block>
             <h3>
               {#if issuesGroupedByTower[tower._id].urgent.length}
@@ -113,10 +114,20 @@
             </h3>
             <p>{tower.description}</p>
             <h4>Issues</h4>
-            <Table
-              {columns}
-              rows={issuesReq.filter((iss) => iss.membership._id === tower._id)}
-            />
+            {#if issuesReq.filter((iss) => iss.membership._id === tower._id).length > 0}
+              <Table
+                {columns}
+                rows={issuesReq.filter(
+                  (iss) => iss.membership._id === tower._id,
+                )}
+              />
+            {/if}
+            {#if issuesReq.filter((iss) => iss.membership._id === tower._id).length === 0}
+              <div class="noIssues">None Reported</div>
+            {/if}
+            <div class="actions">
+              <Button actionText="Add Issue" variant="secondary" />
+            </div>
           </Block>
         </div>
       {/each}
@@ -125,9 +136,15 @@
 </SingleColumn>
 
 <style>
+  .actions {
+    margin-bottom: 16px;
+  }
   h3 {
     display: flex;
     align-items: center;
+  }
+  :global(table) {
+    margin-bottom: 16px;
   }
   .light {
     border-radius: 10px;
@@ -144,5 +161,12 @@
   }
   .light.green {
     background-color: var(--color-success);
+  }
+  .noIssues {
+    background: #ffffff;
+    border: 1px solid #dbdddd;
+    margin-bottom: 16px;
+    padding: 12px;
+    text-align: center;
   }
 </style>

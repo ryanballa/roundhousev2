@@ -1,6 +1,7 @@
 <script>
   import { navigate } from 'svelte-navigator';
   export let actionText = 'Add';
+  export let additionalClasses = '';
   export let action = null;
   export let actionEvent = null;
   export let disabled = false;
@@ -17,8 +18,11 @@
   };
 </script>
 
-<button class={variant} {disabled} {type} on:click={handleClick}
-  >{actionText}</button
+<button
+  class={`${variant} ${additionalClasses}`}
+  {disabled}
+  {type}
+  on:click={handleClick}>{actionText}</button
 >
 
 <style>

@@ -6,6 +6,7 @@
   import { isAuthenticated, user } from '../../store/user';
   import Dropdown from '../elements/Dropdown.svelte';
   import apiService from '../../lib/API';
+  import Logo from '../icons/Logo.svelte';
 
   const {
     SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
@@ -97,7 +98,7 @@
     <div class="leftBar">
       <h1>
         <span class="linkWrapper">
-          <Link class="link" to="/">Locomotive House</Link>
+          <Link class="link" to="/"><Logo /></Link>
         </span>
       </h1>
     </div>
@@ -152,7 +153,7 @@
 
   .leftBar {
     background: var(--color-navBg);
-    width: 19%;
+    width: 15%;
     padding: 1%;
   }
   .topBar {
@@ -163,6 +164,10 @@
     color: var(--color-links);
     text-decoration: none;
   }
+  .linkWrapper :global(svg) {
+    overflow: hidden;
+    width: 150px;
+  }
   h1 {
     font-family: 'TofinoProBold';
     font-size: 30px;
@@ -171,6 +176,10 @@
   }
   .rightMenu {
     background-color: var(--color-bgHighlight);
-    width: 81%;
+    width: 85%;
+  }
+
+  .rightMenu .accountContext {
+    margin-top: 10px;
   }
 </style>
