@@ -154,7 +154,7 @@
   .leftBar {
     background: var(--color-navBg);
     width: 15%;
-    padding: 1%;
+    padding: 1% 0 0 0;
   }
   .topBar {
     display: flex;
