@@ -13,8 +13,8 @@
     Hint,
     HintGroup,
   } from 'svelte-use-form';
-  import { user } from '../../store/user';
   import apiService from '../../lib/API';
+  import conditionalStores from '../../utils/conditionalStores';
 
   let usersReq = null;
   let isLoading = true;
@@ -30,13 +30,18 @@
       road: $form.road._value,
       roadNumber: $form.roadNumber._value,
       owner: {
-        _ref: $user.isAdmin ? $form.user._value : $user._id,
+        _ref: $conditionalStores.user.isAdmin
+          ? $form.user._value
+          : $conditionalStores.user._id,
         _type: 'reference',
       },
     };
 
     if ($form.valid) {
-      const locomotiveRes = await apiService.locomotivePost(doc, $user.token);
+      const locomotiveRes = await apiService.locomotivePost(
+        doc,
+        $conditionalStores.user.token,
+      );
       if (locomotiveRes._id) {
         navigate(`/tracking/locomotives`);
       } else {
@@ -53,38 +58,37 @@
     const existingAddresses = $locomotives.filter(
       (val) =>
         val.address === parseInt(value) &&
-        val.locomotiveOwner._id !== $user._id,
+        val.locomotiveOwner._id !== $conditionalStores.user._id,
     );
     return existingAddresses.length === 0
       ? null
       : { validateAddress: `${value} is already used` };
   };
 
-  const userValidations = $user.isAdmin ? [validateUser, required] : [];
+  const userValidations = $conditionalStores.user.isAdmin
+    ? [validateUser, required]
+    : [];
 
   const form = useForm({
     address: { validators: [validateAddress, minLength(3)] },
     user: { validators: userValidations },
   });
 
-  const fetchUsers = async function () {
-    // TODO: store this club ID in state
+  const fetchUsers = async (clubId) => {
     try {
-      usersReq = await apiService.usersGet(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-      );
+      usersReq = await apiService.usersGet(clubId);
     } catch (e) {
       hasError = true;
     }
   };
 
   onMount(async () => {
-    user.subscribe((value) => {
-      if (value._id) {
+    conditionalStores.subscribe((value) => {
+      if (value && value.user._id && value.club._id) {
         hasError = false;
         isLoading = false;
         if (!usersReq) {
-          fetchUsers();
+          fetchUsers(value.club._id);
         }
       }
     });
@@ -132,7 +136,7 @@
             <input id="roadNumber" name="roadNumber" />
           </label>
         </li>
-        {#if $user.isAdmin}
+        {#if $conditionalStores.user.isAdmin}
           <li>
             <label for="user">
               <span class="labelWrapper">User</span>

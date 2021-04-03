@@ -8,6 +8,7 @@
   import Table from '../elements/Table.svelte';
   import apiService from '../../lib/API';
   import { user } from '../../store/user';
+  import clubs from '../../store/clubs';
   let rows = [];
 
   const handleDelete = async (id) => {
@@ -62,12 +63,9 @@
   let consitsReq = null;
   let consistReqError = false;
 
-  const fetchData = async function () {
+  const fetchData = async function (clubId) {
     try {
-      consitsReq = await apiService.consistsGet(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-        $user.token,
-      );
+      consitsReq = await apiService.consistsGet(clubId, $user.token);
       consists.addConsists(consitsReq);
     } catch (e) {
       console.log(`Error: ${e}`);
@@ -80,7 +78,9 @@
   });
 
   onMount(async () => {
-    fetchData();
+    clubs.subscribe((value) => {
+      fetchData(value._id);
+    });
   });
 </script>
 

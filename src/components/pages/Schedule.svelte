@@ -2,10 +2,10 @@
   import { onMount } from 'svelte';
   import { add, format, toDate } from 'date-fns';
   import Loader from '../elements/Loader.svelte';
-  import { user } from '../../store/user';
   import Button from '../elements/Button.svelte';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import apiService from '../../lib/API';
+  import conditionalStores from '../../utils/conditionalStores';
 
   let dateRange = [];
   let dateRangeOffset = 0;
@@ -21,12 +21,6 @@
 
   const quota = 8;
 
-  onMount(async () => {
-    user.subscribe((value) => {
-      twentyFourHRTime = value.profile.timePreference;
-    });
-  });
-
   window.addEventListener(
     'overlayClick',
     function (e) {
@@ -38,7 +32,7 @@
 
   const handleRemove = async (id, dateItem) => {
     try {
-      await apiService.scheduleDelete(id, $user.token);
+      await apiService.scheduleDelete(id, $conditionalStores.user.token);
       usersByDate[dateItem] = usersByDate[dateItem].filter(
         (item) => item._id !== id,
       );
@@ -55,20 +49,20 @@
         _type: 'schedule',
         date: `${addingDate}T${selectedTime}:00Z`,
         membership: {
-          _ref: '3370bbfc-6edc-45ab-986e-8362118bdb08',
+          _ref: $conditionalStores.club._id,
           _type: 'reference',
         },
         notes,
         owner: {
-          _ref: $user._id,
+          _ref: $conditionalStores.user._id,
           _type: 'reference',
         },
       };
 
       const addingDateFormat = `${addingDate}T${selectedTime}:00Z`;
       const usersOnAddingDate = await apiService.scheduleGetUsersByDate(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-        $user.token,
+        $conditionalStores.club._id,
+        $conditionalStores.user.token,
         addingDateFormat,
       );
       if (usersOnAddingDate.length >= quota) {
@@ -104,14 +98,14 @@
         quotaLimit = true;
       }
       const userElement = usersByDate[key].find(
-        (item) => item.owner._id === $user._id,
+        (item) => item.owner._id === $conditionalStores.user._id,
       );
       if (userElement) {
         userElement.showRemove = true;
         userElement.showAdd = false;
       }
       const nonUserElement = usersByDate[key].find(
-        (item) => item.owner._id !== $user._id,
+        (item) => item.owner._id !== $conditionalStores.user._id,
       );
       if (nonUserElement) {
         nonUserElement.showAdd = !userElement ? true : false;
@@ -154,8 +148,8 @@
   const fetchData = async function () {
     try {
       scheduleReq = await apiService.scheduleGet(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-        $user.token,
+        $conditionalStores.club._id,
+        $conditionalStores.user.token,
       );
       addUsersTodateRange();
       working = false;
@@ -165,11 +159,14 @@
     }
   };
 
-  user.subscribe((value) => {
-    if (value && value._id) {
-      fetchData();
-      caculateDate(dateRangeOffset);
-    }
+  onMount(async () => {
+    conditionalStores.subscribe((value) => {
+      if (value && value.user._id && value.club._id) {
+        twentyFourHRTime = value.user.profile.timePreference;
+        fetchData();
+        caculateDate(dateRangeOffset);
+      }
+    });
   });
 </script>
 
@@ -333,7 +330,7 @@
                 on:click={() => {
                   handleRemove(
                     usersByDate[format(date, 'yyyy-MM-dd')].find(
-                      (item) => item.owner._id === $user._id,
+                      (item) => item.owner._id === $conditionalStores.user._id,
                     )._id,
                     format(date, 'yyyy-MM-dd'),
                   );

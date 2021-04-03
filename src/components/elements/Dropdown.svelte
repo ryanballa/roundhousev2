@@ -22,7 +22,7 @@
 
 <div class="dropdownwrapper">
   <button on:click={handleClick}>
-    {title}
+    <span class="textWrapper">{title}</span>
     <span class="arrowWrapper"
       ><Arrow direction={isOpen ? 'down' : 'up'} /></span
     >
@@ -50,18 +50,28 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     color: #797979;
-    font-size: 14px;
+    font-size: var(--size-button);
     display: flex;
     justify-content: space-between;
-    margin: 16px 16px 0 0;
+    margin: 0 16px 0 0;
     padding: 8px 10px;
-    width: 100px;
+    width: 200px;
   }
+  .textWrapper {
+    display: inline-block;
+    margin-right: 8px;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+  }
+
   nav {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
-    top: 50px;
+    top: 35px;
     position: absolute;
     right: 16px;
     width: 300px;
@@ -70,6 +80,7 @@
 
   nav :global(a:link, a:visited) {
     color: var(--color-links);
+    font-size: var(--size-button);
     display: block;
     text-decoration: none;
     width: 100%;
@@ -85,7 +96,7 @@
     border: none;
     color: var(--color-links);
     display: block;
-    font-size: var(--size-small);
+    font-size: var(--size-button);
     text-align: left;
     padding: 0;
     width: 100%;
@@ -105,7 +116,7 @@
   nav :global(li) {
     border-bottom: 1px solid #f6f0f7;
     color: #797979;
-    font-size: 14px;
+    font-size: var(--size-button);
     padding: 8px 0;
   }
 

@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import { user } from '../../store/user';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import apiService from '../../lib/API';
   import Block from '../elements/Block.svelte';
@@ -8,6 +7,7 @@
   import Indicators from '../elements/tables/Indicators.svelte';
   import Users from '../elements/tables/Users.svelte';
   import Button from '../elements/Button.svelte';
+  import conditionalStores from '../../utils/conditionalStores';
 
   let towersReq = null;
   let issuesReq = null;
@@ -71,17 +71,10 @@
     return issuesByTower;
   };
 
-  const fetchData = async function (token) {
+  const fetchData = async function (token, clubId) {
     try {
-      // TODO: Don't hard-code club ID
-      towersReq = await apiService.towersGet(
-        token,
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-      );
-      issuesReq = await apiService.issuesGet(
-        token,
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-      );
+      towersReq = await apiService.towersGet(token, clubId);
+      issuesReq = await apiService.issuesGet(token, clubId);
       issuesGroupedByTower = filterDataByIssueType(issuesReq, towersReq);
       console.log(issuesGroupedByTower);
     } catch (e) {
@@ -90,8 +83,10 @@
   };
 
   onMount(async () => {
-    user.subscribe((value) => {
-      fetchData(value.token);
+    conditionalStores.subscribe((value) => {
+      if (value && value.user._id && value.club._id) {
+        fetchData(value.user.token, value.club.id);
+      }
     });
   });
 </script>

@@ -6,7 +6,7 @@
   import TableButtonDelete from '../elements/TableButtonDelete.svelte';
   import Table from '../elements/Table.svelte';
   import apiService from '../../lib/API';
-  import { user } from '../../store/user';
+  import conditionalStores from '../../utils/conditionalStores';
   let rows = [];
 
   const handleDelete = async (id) => {
@@ -52,8 +52,8 @@
   const fetchData = async function () {
     try {
       cabsReq = await apiService.cabsGet(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-        $user.token,
+        $conditionalStores.club._id,
+        $conditionalStores.user.token,
       );
       cabs.addCabs(cabsReq);
     } catch (e) {
@@ -62,13 +62,12 @@
     }
   };
 
-  cabs.subscribe((value) => {
-    rows = value;
-  });
-
   onMount(async () => {
-    user.subscribe((value) => {
-      if (value._id) {
+    cabs.subscribe((value) => {
+      rows = value;
+    });
+    conditionalStores.subscribe((value) => {
+      if (value && value.user._id && value.club._id) {
         fetchData();
       }
     });

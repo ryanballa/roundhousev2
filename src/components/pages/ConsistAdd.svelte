@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { navigate } from 'svelte-navigator';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
@@ -6,6 +7,7 @@
   import { useForm, required, minLength, Hint } from 'svelte-use-form';
   import apiService from '../../lib/API';
   import { user } from '../../store/user';
+  import clubs from '../../store/clubs';
 
   let usersReq = null;
 
@@ -38,19 +40,21 @@
     user: { validators: userValidations },
   });
 
-  const fetchUsers = async function () {
+  const fetchUsers = async function (clubId) {
     try {
-      usersReq = await apiService.usersGet(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-      );
+      usersReq = await apiService.usersGet(clubId);
     } catch (e) {
       hasError = true;
     }
   };
 
-  if (!usersReq) {
-    fetchUsers();
-  }
+  onMount(async () => {
+    clubs.subscribe((value) => {
+      if (!usersReq) {
+        fetchUsers(value._id);
+      }
+    });
+  });
 </script>
 
 <SingleColumn title="Add Consist">

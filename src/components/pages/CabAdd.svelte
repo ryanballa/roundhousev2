@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { navigate } from 'svelte-navigator';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
@@ -12,7 +13,7 @@
     HintGroup,
   } from 'svelte-use-form';
   import apiService from '../../lib/API';
-  import { user } from '../../store/user';
+  import conditionalStores from '../../utils/conditionalStores';
 
   let usersReq = null;
 
@@ -22,7 +23,9 @@
       _type: 'cabs',
       number: parseFloat($form.number._value),
       owner: {
-        _ref: $user.isAdmin ? $form.user._value : $user._id,
+        _ref: $conditionalStores.user.isAdmin
+          ? $form.user._value
+          : $conditionalStores.user._id,
         _type: 'reference',
       },
     };
@@ -36,7 +39,9 @@
     return value !== '' ? null : { validateUser: `${value} is not a user` };
   };
 
-  const userValidations = $user.isAdmin ? [validateUser, required] : [];
+  const userValidations = $conditionalStores.user.isAdmin
+    ? [validateUser, required]
+    : [];
 
   const form = useForm({
     number: { validators: [minLength(1), maxLength(2)] },
@@ -45,17 +50,24 @@
 
   const fetchUsers = async function () {
     try {
-      usersReq = await apiService.usersGet(
-        '3370bbfc-6edc-45ab-986e-8362118bdb08',
-      );
+      usersReq = await apiService.usersGet($conditionalStores.club._id);
     } catch (e) {
       hasError = true;
     }
   };
 
-  if (!usersReq) {
-    fetchUsers();
-  }
+  onMount(async () => {
+    cabs.subscribe((value) => {
+      rows = value;
+    });
+    conditionalStores.subscribe((value) => {
+      if (value && value.user._id && value.club._id) {
+        if (!usersReq) {
+          fetchUsers();
+        }
+      }
+    });
+  });
 </script>
 
 <SingleColumn title="Add Cab">
@@ -75,7 +87,7 @@
           </Hint>
         </HintGroup>
       </li>
-      {#if $user.isAdmin}
+      {#if $conditionalStores.user.isAdmin}
         <li>
           <label for="user">
             <span class="labelWrapper">User</span>

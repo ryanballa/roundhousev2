@@ -4,6 +4,7 @@
   import { Link } from 'svelte-navigator';
   import auth from '../../utils/auth';
   import { isAuthenticated, user } from '../../store/user';
+  import clubs from '../../store/clubs';
   import Dropdown from '../elements/Dropdown.svelte';
   import apiService from '../../lib/API';
   import Logo from '../icons/Logo.svelte';
@@ -54,15 +55,11 @@
         _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
         email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
         name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-        isAdmin: true,
-        profile: {
-          bio: 'test',
-          timePreference: true,
-          fontSize: 1,
-        },
         token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+        ...usersReq,
       });
       setFontSize({ fontSize: 1 });
+      clubs.addClubs({ _id: usersReq.clubs[0]._id });
     }
 
     if (authUser && !$user._id) {
@@ -103,13 +100,26 @@
       </h1>
     </div>
     <div class="rightMenu">
+      <div class="clubContext">
+        {#if $isAuthenticated && $user && $user.clubs.length > 1}
+          <Dropdown title={$user.clubs[0].name}>
+            <ul>
+              {#each $user.clubs as club}
+                <li>{club.name}</li>
+              {/each}
+            </ul>
+          </Dropdown>
+        {/if}
+      </div>
       <div class="accountContext">
         {#if $isAuthenticated}
           <span class="accountLinkWrapper">
             <Link class="changelog" to="/changelog">What's New</Link>
           </span>
         {/if}
-        <Dropdown title={$isAuthenticated && $user ? $user.name : 'Log In'}>
+        <Dropdown
+          title={$isAuthenticated && $user.name ? $user.name : 'Log In'}
+        >
           <ul>
             {#if $isAuthenticated}
               <li>
@@ -136,10 +146,11 @@
   .accountContext {
     display: flex;
     float: right;
+    margin-top: 8px;
   }
   .accountLinkWrapper {
     display: block;
-    margin-top: 25px;
+    margin-top: 8px;
     margin-right: 16px;
   }
   .accountLinkWrapper :global(a:link, a:visited) {
@@ -150,7 +161,9 @@
     color: var(--color-links);
     text-decoration: underline;
   }
-
+  .clubContext {
+    margin-left: 2%;
+  }
   .leftBar {
     background: var(--color-navBg);
     width: 15%;
@@ -175,11 +188,10 @@
     text-align: center;
   }
   .rightMenu {
+    align-items: center;
     background-color: var(--color-bgHighlight);
+    display: flex;
+    justify-content: space-between;
     width: 85%;
-  }
-
-  .rightMenu .accountContext {
-    margin-top: 10px;
   }
 </style>
