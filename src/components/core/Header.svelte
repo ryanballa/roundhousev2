@@ -101,7 +101,7 @@
     </div>
     <div class="rightMenu">
       <div class="clubContext">
-        {#if $isAuthenticated && $user && $user.clubs.length > 1}
+        {#if $isAuthenticated && $user.clubs && $user.clubs.length > 1}
           <Dropdown title={$user.clubs[0].name}>
             <ul>
               {#each $user.clubs as club}
