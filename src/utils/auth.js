@@ -85,6 +85,7 @@ const checkAuthUser = async () => {
     isAuthenticated.set(await auth0Client.isAuthenticated());
 
     const authUser = await auth0Client.getUser();
+    const token = await auth0Client.getIdTokenClaims();
 
     // In DEV we load the user from settings
     if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
@@ -106,7 +107,7 @@ const checkAuthUser = async () => {
         isAuthenticated.subscribe(isLoggedIn => {
             if (isLoggedIn && authUser) {
                 if (!user._id) {
-                    setAuthUser(authUser);
+                    setAuthUser(authUser, token);
                 }
             } else {
                 navigate('/');
