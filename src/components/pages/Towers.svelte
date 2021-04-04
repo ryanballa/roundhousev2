@@ -108,7 +108,7 @@
               <span>{tower.name}</span>
             </h3>
             <p>
-              {#if tower.maintainer.length}
+              {#if tower.maintainer && tower.maintainer.length}
                 Owners: {#each tower.maintainer as maintainer}
                   <span>{maintainer.name}</span>
                 {/each}
