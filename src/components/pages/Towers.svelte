@@ -74,9 +74,9 @@
   const fetchData = async function (token, clubId) {
     try {
       towersReq = await apiService.towersGet(token, clubId);
+      console.log(towersReq);
       issuesReq = await apiService.issuesGet(token, clubId);
       issuesGroupedByTower = filterDataByIssueType(issuesReq, towersReq);
-      console.log(issuesGroupedByTower);
     } catch (e) {
       console.log(`Error: ${e}`);
     }
@@ -85,7 +85,7 @@
   onMount(async () => {
     conditionalStores.subscribe((value) => {
       if (value && value.user._id && value.club._id) {
-        fetchData(value.user.token, value.club.id);
+        fetchData(value.user.token, value.club._id);
       }
     });
   });
@@ -107,7 +107,17 @@
               {/if}
               <span>{tower.name}</span>
             </h3>
-            <p>{tower.description}</p>
+            <p>
+              Owners: {#each tower.maintainer as maintainer}
+                <span>{maintainer.name}</span>
+              {/each}
+            </p>
+            <div class="imageWrapper">
+              {#if tower.imageUrl}
+                <img src={`${tower.imageUrl}`} alt={tower.imageCaption} />
+              {/if}
+              <p>{tower.description}</p>
+            </div>
             <h4>Issues</h4>
             {#if issuesReq.filter((iss) => iss.membership._id === tower._id).length > 0}
               <Table
@@ -140,6 +150,40 @@
   }
   :global(table) {
     margin-bottom: 16px;
+  }
+  .imageWrapper {
+    border: 1px solid #dbdddd;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+  .imageWrapper:hover:before {
+    opacity: 0;
+  }
+  .imageWrapper img {
+    position: absolute;
+    z-index: 2;
+  }
+  .imageWrapper p {
+    background-color: rgba(255, 255, 255, 0.8);
+    bottom: 0;
+    height: 30px;
+    margin: 0;
+    padding-top: 4px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 5;
+  }
+  .imageWrapper:before {
+    background-color: rgba(255, 255, 255, 0.4);
+    content: '';
+    display: block;
+    position: absolute;
+    height: 100%;
+    transition: opacity 0.3s;
+    width: 100%;
+    z-index: 4;
   }
   .light {
     border-radius: 10px;
