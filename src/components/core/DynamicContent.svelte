@@ -14,7 +14,10 @@
     <div class="actionsWrapper">
       <Button action={addRoute} actionText={addMessage} />
     </div>{/if}
-  {#if isLoading}<Circle2 />{/if}
+  {#if isLoading}
+    <div class="loadingWrapper">
+      <Circle2 />
+    </div>{/if}
   {#if error}<p>
       An error has occurred, please try again. More details: {error}
     </p>{/if}
@@ -23,5 +26,13 @@
 <style>
   .actionsWrapper {
     margin-bottom: 16px;
+  }
+  .loadingWrapper {
+    margin: 60px auto;
+  }
+
+  .loadingWrapper :global(div) {
+    margin: 60px auto;
+    width: 60px;
   }
 </style>

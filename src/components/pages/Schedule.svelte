@@ -161,7 +161,6 @@
 
   onMount(async () => {
     conditionalStores.subscribe((value) => {
-      console.log(value);
       if (value && value.user._id && value.club._id) {
         twentyFourHRTime = value.user.profile.timePreference;
         fetchData();

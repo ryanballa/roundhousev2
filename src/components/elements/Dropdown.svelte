@@ -24,7 +24,7 @@
   <button on:click={handleClick}>
     <span class="textWrapper">{title}</span>
     <span class="arrowWrapper"
-      ><Arrow direction={isOpen ? 'down' : 'up'} /></span
+      ><Arrow direction={isOpen ? 'up' : 'down'} /></span
     >
   </button>
   {#if isOpen}
@@ -39,13 +39,20 @@
 </div>
 
 <style>
+  .arrowWrapper {
+    position: relative;
+  }
   .arrowWrapper :global(.arrow) {
     border-color: #797979;
+    position: absolute;
+    top: -5px;
+    right: 0;
   }
   .dropdownwrapper {
     position: relative;
   }
   button {
+    align-items: center;
     background-color: transparent;
     border: 1px solid #ccc;
     border-radius: 5px;

@@ -1,36 +1,11 @@
 <script>
-  import { navigate } from 'svelte-navigator';
   import { onMount } from 'svelte';
   import { Link } from 'svelte-navigator';
   import auth from '../../utils/auth';
   import { isAuthenticated, user } from '../../store/user';
-  import clubs from '../../store/clubs';
   import Dropdown from '../elements/Dropdown.svelte';
   import apiService from '../../lib/API';
   import Logo from '../icons/Logo.svelte';
-
-  const {
-    SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
-    SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-    SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-    SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-  } = import.meta.env;
-
-  let auth0Client;
-  let usersReq = null;
-  let accessToken = null;
-
-  const fetchUser = async function (email, token) {
-    try {
-      if (!token) {
-        accessToken = await auth0Client.getIdTokenClaims();
-        accessToken = accessToken.__raw;
-      }
-      usersReq = await apiService.userGet(email, token || accessToken);
-    } catch (e) {
-      console.log(`Fetch User Error: ${e}`);
-    }
-  };
 
   const setFontSize = (userProfile) => {
     const bodyTag = document.querySelector('.app');
@@ -38,58 +13,8 @@
   };
 
   onMount(async () => {
-    auth0Client = await auth.createClient();
-
-    isAuthenticated.set(await auth0Client.isAuthenticated());
-
-    const authUser = await auth0Client.getUser();
-
-    // In DEV we load the user from settings
-    if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
-      isAuthenticated.set(true);
-      await fetchUser(
-        SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-        SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-      );
-      user.set({
-        _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
-        email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-        name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
-        token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-        ...usersReq,
-      });
-      setFontSize({ fontSize: 1 });
-      clubs.addClubs({ _id: usersReq.clubs[0]._id });
-    }
-
-    if (isAuthenticated && !$user._id) {
-      await fetchUser(authUser.email, accessToken);
-      clubs.addClubs({ _id: usersReq.clubs[0]._id });
-      if (!usersReq._id) {
-        user.set({
-          email: authUser.email,
-        });
-        navigate('/user/add');
-      } else if (!usersReq.profile) {
-        user.set(usersReq);
-        navigate('/profile/add');
-      } else {
-        // Set user's font size selection
-        setFontSize(usersReq.profile);
-        user.set({ ...usersReq, token: accessToken });
-      }
-    } else {
-      navigate('/');
-    }
+    auth.checkAuthUser();
   });
-
-  function login() {
-    auth.loginWithPopup(auth0Client);
-  }
-
-  function logout() {
-    auth.logout(auth0Client);
-  }
 </script>
 
 <header class="appHeader">
@@ -129,10 +54,10 @@
               </li>
             {/if}
             {#if $isAuthenticated}<li>
-                <button on:click={logout}>Logout</button>
+                <button on:click={auth.handleLogout}>Logout</button>
               </li>{/if}
             {#if !$isAuthenticated}<li>
-                <button on:click={login}>Login</button>
+                <button on:click={auth.handleLogin}>Login</button>
               </li>{/if}
           </ul>
         </Dropdown>
