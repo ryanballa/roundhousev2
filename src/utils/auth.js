@@ -37,7 +37,7 @@ const createClient = async () => {
         const authUser = await auth0Client.getUser();
         const token = await auth0Client.getIdTokenClaims();
         isAuthenticated.set(true);
-        setAuthUser(authUser, token);
+        setAuthUser(authUser, token.id_token);
     }
 
     return auth0Client;
@@ -86,7 +86,7 @@ const checkAuthUser = async () => {
 
     const authUser = await auth0Client.getUser();
     const token = await auth0Client.getIdTokenClaims();
-    console.log(token.id_token);
+
     // In DEV we load the user from settings
     if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
         isAuthenticated.set(true);
@@ -105,7 +105,7 @@ const checkAuthUser = async () => {
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
     } else {
         isAuthenticated.subscribe(isLoggedIn => {
-            if (isLoggedIn && authUser) {
+            if (isLoggedIn && authUser && token.id_token) {
                 if (!user._id) {
                     setAuthUser(authUser, token);
                 }
