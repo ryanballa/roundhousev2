@@ -14,7 +14,7 @@
   import ProfileEdit from './components/pages/ProfileEdit.svelte';
   import UserAdd from './components/pages/UserAdd.svelte';
   import Changelog from './components/pages/Changelog.svelte';
-  import Towers from './components/pages/Towers.svelte';
+  import Towers from './components/pages/towers/Towers.svelte';
 </script>
 
 <Route path="login">

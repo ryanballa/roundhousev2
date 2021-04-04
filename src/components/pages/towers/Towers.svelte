@@ -1,13 +1,13 @@
 <script>
   import { onMount } from 'svelte';
-  import SingleColumn from '../layout/SingleColumn.svelte';
-  import apiService from '../../lib/API';
-  import Block from '../elements/Block.svelte';
-  import Table from '../elements/Table.svelte';
-  import Indicators from '../elements/tables/Indicators.svelte';
-  import Users from '../elements/tables/Users.svelte';
-  import Button from '../elements/Button.svelte';
-  import conditionalStores from '../../utils/conditionalStores';
+  import SingleColumn from '../../layout/SingleColumn.svelte';
+  import apiService from '../../../lib/API';
+  import Block from '../../elements/Block.svelte';
+  import Table from '../../elements/Table.svelte';
+  import Indicators from '../../elements/tables/Indicators.svelte';
+  import Users from '../../elements/tables/Users.svelte';
+  import conditionalStores from '../../../utils/conditionalStores';
+  import AddIssue from './AddIssue.svelte';
 
   let towersReq = null;
   let issuesReq = null;
@@ -135,7 +135,7 @@
               <div class="noIssues">None Reported</div>
             {/if}
             <div class="actions">
-              <Button actionText="Add Issue" variant="secondary" />
+              <AddIssue />
             </div>
           </Block>
         </div>

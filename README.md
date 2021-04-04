@@ -1,13 +1,13 @@
-# New Project
+# AKA LocomotiveHouse
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+Model railroad clubs have a lot of information to organize. This application helps make it easy so you can focus more time on doing what you love, running trains. Use LocomotiveHouse to keep track of consist numbers, locomotive numbers, cab numbers, defects and maintence issues, and more.
 
 ## Available Scripts
 
 ### npm start
 
 Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+Open http://localhost:5000 to view it in the browser.
 
 The page will reload if you make edits.
 You will also see any lint errors in the console.
@@ -17,8 +17,10 @@ You will also see any lint errors in the console.
 Builds a static copy of your site to the `build/` folder.
 Your app is ready to be deployed!
 
-**For the best production performance:** Add a build bundler plugin like [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/main/plugins/plugin-webpack) or [snowpack-plugin-rollup-bundle](https://github.com/ParamagicDev/snowpack-plugin-rollup-bundle) to your `snowpack.config.json` config file.
+## Dependencies
 
-### Q: What about Eject?
+This project uses Sanity.io and an API called SandingtowerAPI. 
 
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
+## Helping Out
+
+If you'd like to help out, please contact me, Ryan Balla.
