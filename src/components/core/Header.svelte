@@ -45,7 +45,7 @@
     const authUser = await auth0Client.getUser();
 
     // In DEV we load the user from settings
-    if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
+    /*if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
       isAuthenticated.set(true);
       await fetchUser(
         SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
@@ -60,10 +60,11 @@
       });
       setFontSize({ fontSize: 1 });
       clubs.addClubs({ _id: usersReq.clubs[0]._id });
-    }
+    }*/
 
     if (authUser && !$user._id) {
       await fetchUser(authUser.email, accessToken);
+      clubs.addClubs({ _id: usersReq.clubs[0]._id });
       if (!usersReq._id) {
         user.set({
           email: authUser.email,
