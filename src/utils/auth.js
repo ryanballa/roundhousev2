@@ -105,6 +105,7 @@ const checkAuthUser = async () => {
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
     } else {
         isAuthenticated.subscribe(isLoggedIn => {
+            console.log(token);
             if (isLoggedIn && authUser) {
                 if (!user._id) {
                     setAuthUser(authUser, token);
