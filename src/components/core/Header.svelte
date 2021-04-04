@@ -62,7 +62,7 @@
       clubs.addClubs({ _id: usersReq.clubs[0]._id });
     }*/
 
-    if (authUser && !$user._id) {
+    if (isAuthenticated && !$user._id) {
       await fetchUser(authUser.email, accessToken);
       clubs.addClubs({ _id: usersReq.clubs[0]._id });
       if (!usersReq._id) {
@@ -76,9 +76,10 @@
       } else {
         // Set user's font size selection
         setFontSize(usersReq.profile);
-        usersReq.token = accessToken;
-        user.set(usersReq);
+        user.set({ ...usersReq, token: accessToken });
       }
+    } else {
+      navigate('/');
     }
   });
 
