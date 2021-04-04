@@ -2,6 +2,8 @@
 
 Model railroad clubs have a lot of information to organize. This application helps make it easy so you can focus more time on doing what you love, running trains. Use LocomotiveHouse to keep track of consist numbers, locomotive numbers, cab numbers, defects and maintence issues, and more.
 
+<img width="1635" alt="Screen Shot 2021-03-31 at 9 15 32 PM" src="https://user-images.githubusercontent.com/728326/113518363-7e5c5c00-954b-11eb-82b7-dadf6885f79a.png">
+
 ## Available Scripts
 
 ### npm start
