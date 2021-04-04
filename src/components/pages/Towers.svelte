@@ -108,9 +108,13 @@
               <span>{tower.name}</span>
             </h3>
             <p>
-              Owners: {#each tower.maintainer as maintainer}
-                <span>{maintainer.name}</span>
-              {/each}
+              {#if tower.maintainer.length}
+                Owners: {#each tower.maintainer as maintainer}
+                  <span>{maintainer.name}</span>
+                {/each}
+              {:else}
+                <em>Maintainer needed</em>
+              {/if}
             </p>
             <div class="imageWrapper">
               {#if tower.imageUrl}
