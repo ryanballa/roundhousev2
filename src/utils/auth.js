@@ -107,7 +107,7 @@ const checkAuthUser = async () => {
         isAuthenticated.subscribe(isLoggedIn => {
             if (isLoggedIn && authUser && token.id_token) {
                 if (!user._id) {
-                    setAuthUser(authUser, token);
+                    setAuthUser(authUser, token.__raw);
                 }
             } else {
                 navigate('/');
