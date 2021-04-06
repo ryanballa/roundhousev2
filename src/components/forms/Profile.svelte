@@ -14,7 +14,7 @@
 <li>
   <label for="bio">
     <span class="labelWrapper">Bio</span>
-    <textarea id="bio" name="bio" value={values.profile.bio} />
+    <textarea class="textarea" id="bio" name="bio" value={values.profile.bio} />
   </label>
 </li>
 <li>
@@ -46,13 +46,11 @@
 <li>
   <NumberTicker
     name="fontSize"
-    value={parseInt(values.profile.fontSize)}
+    value={isNaN(parseInt(values.profile.fontSize))
+      ? 1
+      : parseInt(values.profile.fontSize)}
     handleUpdate={(value) => {
       handleFontSizeUpdate(value);
     }}
   />
-  <!-- <label for="fontSize">
-    <span class="labelWrapper">Font Size</span>
-    <input id="fontSize" name="fontSize" value="1" />
-  </label> -->
 </li>

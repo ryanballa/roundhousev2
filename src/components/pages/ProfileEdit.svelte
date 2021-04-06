@@ -16,31 +16,30 @@
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log($form.fontSize._value);
-    // const doc = {
-    //   _id: $form._id._value,
-    //   bio: $form.bio._value,
-    //   timePreference: $form.timePreference._value === 'true',
-    //   fontSize: $form.fontSize._value,
-    //   owner: {
-    //     _ref: $user._id,
-    //     _type: 'reference',
-    //   },
-    // };
+    const doc = {
+      _id: $form._id._value,
+      bio: $form.bio._value,
+      timePreference: $form.timePreference._value === 'true',
+      fontSize: JSON.stringify($form.fontSize._value),
+      owner: {
+        _ref: $user._id,
+        _type: 'reference',
+      },
+    };
 
-    // apiService.profilePost(doc, $user.token).then((res) => {
-    //   if (res) {
-    //     user.set({
-    //       ...$user,
-    //       profile: {
-    //         bio: res.bio,
-    //         fontSize: parseInt(res.fontSize),
-    //         timePreference: res.timePreference,
-    //       },
-    //     });
-    //   }
-    //   navigate(`/`);
-    // });
+    apiService.profilePost(doc, $user.token).then((res) => {
+      if (res) {
+        user.set({
+          ...$user,
+          profile: {
+            bio: res.bio,
+            fontSize: parseInt(res.fontSize),
+            timePreference: res.timePreference,
+          },
+        });
+      }
+      navigate(`/`);
+    });
   };
 
   const validateTime = (value) => {
