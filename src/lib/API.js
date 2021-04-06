@@ -306,6 +306,37 @@ class api {
             return e;
         }
     }
+    async issuesPost(doc, token, clubId) {
+        try {
+            this.response = await fetch(`${apiURL}api/issues/${clubId}`, {
+                method: "POST",
+                body: JSON.stringify(doc),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const issue = await this.response.json();
+            return issue;
+        } catch (e) {
+            return e;
+        }
+    }
+    async issueDelete(issueId, token) {
+        try {
+            this.response = await fetch(`${apiURL}api/issue/${issueId}`, {
+                method: "delete",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const issue = await this.response.json();
+            return issue;
+        } catch (e) {
+            return e;
+        }
+    }
 }
 
 const apiService = new api();

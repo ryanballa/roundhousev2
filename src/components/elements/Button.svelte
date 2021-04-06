@@ -22,8 +22,13 @@
   class={`${variant} ${additionalClasses}`}
   {disabled}
   {type}
-  on:click={handleClick}>{actionText}</button
+  on:click={handleClick}
 >
+  {#if variant !== 'empty'}
+    {actionText}
+  {/if}
+  <slot />
+</button>
 
 <style>
   button {
@@ -37,6 +42,25 @@
   }
   button.secondary {
     background-color: var(--color-buttonsSecondary);
+  }
+  button.empty {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+  button.linkLike {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: var(--color-buttons);
+    font-size: var(--size-p);
+    padding: 0;
+    text-decoration: underline;
+  }
+  button.linkLike:hover {
+    text-decoration: none;
   }
   button:hover {
     cursor: pointer;

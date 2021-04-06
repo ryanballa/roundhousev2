@@ -1,16 +1,25 @@
 <script>
+  import Button from '../Button.svelte';
+
   export let row;
+  export let handleAddUser;
 </script>
 
 <div>
   <ul>
-    {#if row && row.responder}
+    {#if row && row.responder && row.responder.length > 0}
       {#each row.responder as responder}
         <li class="user-wrapper">
           <span class="user">{responder.name[0]}</span>
           <span class="name">{responder.name}</span>
         </li>
       {/each}
+    {:else}
+      <Button
+        actionEvent={() => handleAddUser(row)}
+        actionText="Help Out"
+        variant="linkLike"
+      />
     {/if}
   </ul>
 </div>

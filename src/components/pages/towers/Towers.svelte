@@ -8,53 +8,58 @@
   import Users from '../../elements/tables/Users.svelte';
   import conditionalStores from '../../../utils/conditionalStores';
   import AddIssue from './AddIssue.svelte';
+  import towers from '../../../store/towers';
+  import TableActions from './TableActions.svelte';
 
+  let clubId = null;
   let towersReq = null;
   let issuesReq = null;
   let issuesGroupedByTower = {};
+  let isLoading = true;
 
-  const columns = [
-    {
-      key: 'urgency',
-      title: 'Urgency',
-      sortable: true,
-      renderComponent: {
-        component: Indicators,
-      },
-    },
-    {
-      key: 'name',
-      title: 'Title',
-      value: (v) => v.name,
-      sortable: true,
-    },
-    {
-      key: 'name',
-      title: 'Responders',
-      renderComponent: {
-        component: Users,
-      },
-      sortable: true,
-    },
-    {
-      key: 'status',
-      title: 'Status',
-      value: (v) => v.status,
-      sortable: true,
-    },
-    // {
-    //   key: 'actions',
-    //   title: 'Actions',
-    //   sortable: false,
-    //   renderComponent: {
-    //     component: TableButtonDelete,
-    //     props: {
-    //       deleteAction: handleDelete,
-    //       rowOwner: 'locomotiveOwner',
-    //     },
-    //   },
-    // },
-  ];
+  const handleAddUser = async (row) => {
+    const issueRes = await apiService.issuesPost({
+      _id: row._id,
+      name: row.name,
+      status: row.status,
+      urgency: row.urgency,
+      responder: [
+        {
+          _key: Math.random()
+            .toString(36)
+            .replace(/[^a-z]+/g, '')
+            .substr(0, 5),
+          _ref: $conditionalStores.user._id,
+          _type: 'reference',
+        },
+      ],
+    });
+    towers.reset();
+    fetchData($conditionalStores.user.token, $conditionalStores.club._id);
+  };
+
+  const handleRemoveUser = async (row) => {
+    const issueRes = await apiService.issuesPost({
+      _id: row._id,
+      name: row.name,
+      status: row.status,
+      urgency: row.urgency,
+      responder: [],
+    });
+    towers.reset();
+    fetchData($conditionalStores.user.token, $conditionalStores.club._id);
+  };
+
+  const handleRemoveIssue = async (row) => {
+    const issueRes = await apiService.issueDelete(
+      row._id,
+      $conditionalStores.user.token,
+    );
+    towers.reset();
+    fetchData($conditionalStores.user.token, $conditionalStores.club._id);
+  };
+
+  let columns = [];
 
   const filterDataByIssueType = (issues, towers) => {
     let issuesByTower = {};
@@ -71,12 +76,27 @@
     return issuesByTower;
   };
 
+  const issuesByTowerId = (towers, issues) => {
+    const theIssues = {};
+    towers.forEach((tower) => {
+      const items = issues.filter((iss) => iss.membership._id === tower._id);
+      theIssues[tower._id] = items;
+    });
+    return theIssues;
+  };
+
   const fetchData = async function (token, clubId) {
     try {
       towersReq = await apiService.towersGet(token, clubId);
-      console.log(towersReq);
       issuesReq = await apiService.issuesGet(token, clubId);
       issuesGroupedByTower = filterDataByIssueType(issuesReq, towersReq);
+      towers.addTowers({
+        towers: towersReq,
+        issues: issuesReq,
+        issuesGroupedByTower,
+        issuesByTowerId: issuesByTowerId(towersReq, issuesReq),
+      });
+      isLoading = false;
     } catch (e) {
       console.log(`Error: ${e}`);
     }
@@ -85,22 +105,76 @@
   onMount(async () => {
     conditionalStores.subscribe((value) => {
       if (value && value.user._id && value.club._id) {
+        clubId = value.club._id;
         fetchData(value.user.token, value.club._id);
+      }
+
+      if (columns.length === 0) {
+        columns.push(
+          {
+            key: 'urgency',
+            title: 'Urgency',
+            sortable: true,
+            renderComponent: {
+              component: Indicators,
+            },
+          },
+          {
+            key: 'name',
+            title: 'Title',
+            value: (v) => v.name,
+            sortable: true,
+          },
+          {
+            key: 'name',
+            title: 'Responders',
+            renderComponent: {
+              component: Users,
+              props: {
+                handleAddUser,
+              },
+            },
+            sortable: true,
+          },
+          {
+            key: 'status',
+            title: 'Status',
+            value: (v) => v.status,
+            sortable: true,
+          },
+          {
+            key: 'actions',
+            title: 'Actions',
+            sortable: false,
+            renderComponent: {
+              component: TableActions,
+              props: {
+                userId: $conditionalStores.user._id,
+                handleDelete: (row) => {
+                  handleRemoveIssue(row);
+                },
+                handleLeave: (row) => {
+                  handleRemoveUser(row);
+                },
+              },
+            },
+          },
+        );
       }
     });
   });
 </script>
 
 <SingleColumn title="Towers">
-  {#if towersReq && issuesReq}
+  {#if !isLoading && $towers.issuesByTowerId}
     <div class="columns is-multiline">
-      {#each towersReq as tower}
-        <div class="column is-half">
+      {#each $towers.towers as tower}
+        <div class="column is-full">
           <Block>
             <h3>
-              {#if issuesGroupedByTower[tower._id].urgent.length}
+              {#if $towers.issuesGroupedByTower[tower._id].urgent.length}
                 <span class="light red" />
-              {:else if issuesGroupedByTower[tower._id].important.length}
+              {:else if $towers.issuesGroupedByTower[tower._id].important.length}
                 <span class="light yellow" />
               {:else}
                 <span class="light green" />
@@ -122,21 +196,32 @@
               {/if}
               <p>{tower.description}</p>
             </div>
-            <h4>Issues</h4>
-            {#if issuesReq.filter((iss) => iss.membership._id === tower._id).length > 0}
-              <Table
-                {columns}
-                rows={issuesReq.filter(
-                  (iss) => iss.membership._id === tower._id,
-                )}
-              />
+            {#if $towers.issuesByTowerId && $towers.issuesByTowerId[tower._id]}
+              <h4>
+                Issues ({$towers.issuesByTowerId[tower._id] &&
+                  $towers.issuesByTowerId[tower._id].length})
+              </h4>
+              {#if $towers.issuesByTowerId[tower._id] && $towers.issuesByTowerId[tower._id].length > 0}
+                <Table {columns} rows={$towers.issuesByTowerId[tower._id]} />
+              {/if}
+              {#if $towers.issues.filter((iss) => iss.membership._id === tower._id).length === 0}
+                <div class="noIssues">None Reported</div>
+              {/if}
+              <div class="actions">
+                <AddIssue
+                  {clubId}
+                  user={$conditionalStores.user}
+                  towerId={tower._id}
+                  handleUpdate={(res) => {
+                    towers.reset();
+                    fetchData(
+                      $conditionalStores.user.token,
+                      $conditionalStores.club._id,
+                    );
+                  }}
+                />
+              </div>
             {/if}
-            {#if issuesReq.filter((iss) => iss.membership._id === tower._id).length === 0}
-              <div class="noIssues">None Reported</div>
-            {/if}
-            <div class="actions">
-              <AddIssue />
-            </div>
           </Block>
         </div>
       {/each}
