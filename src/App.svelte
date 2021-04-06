@@ -5,6 +5,7 @@
   import Header from './components/core/Header.svelte';
   import Navigation from './components/core/Navigation.svelte';
   import Routes from './Routes.svelte';
+  import { user } from './store/user';
 
   let shouldShowOverlay = false;
 
@@ -30,6 +31,11 @@
     }
   };
 
+  const setFontSize = (userProfile) => {
+    const bodyTag = document.querySelector('.app');
+    bodyTag.style.fontSize = `${userProfile.fontSize}em`;
+  };
+
   const handleOverlayClick = () => {
     const event = new Event('overlayClick');
     window.dispatchEvent(event);
@@ -52,6 +58,12 @@
       false,
     );
   };
+
+  user.subscribe((value) => {
+    if (value.profile) {
+      setFontSize(value.profile);
+    }
+  });
 
   init();
   setRootColors();

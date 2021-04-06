@@ -46,9 +46,7 @@
 <li>
   <NumberTicker
     name="fontSize"
-    value={isNaN(parseInt(values.profile.fontSize))
-      ? 1
-      : parseInt(values.profile.fontSize)}
+    value={parseFloat(values.profile.fontSize)}
     handleUpdate={(value) => {
       handleFontSizeUpdate(value);
     }}

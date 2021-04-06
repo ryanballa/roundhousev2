@@ -33,7 +33,7 @@
           ...$user,
           profile: {
             bio: res.bio,
-            fontSize: parseInt(res.fontSize),
+            fontSize: res.fontSize,
             timePreference: res.timePreference,
           },
         });

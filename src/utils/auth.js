@@ -101,7 +101,6 @@ const checkAuthUser = async () => {
             token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
             ...usersReq,
         });
-        // setFontSize({ fontSize: 1 });
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
     } else {
         isAuthenticated.subscribe(isLoggedIn => {

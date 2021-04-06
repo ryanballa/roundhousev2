@@ -4,13 +4,7 @@
   import auth from '../../utils/auth';
   import { isAuthenticated, user } from '../../store/user';
   import Dropdown from '../elements/Dropdown.svelte';
-  import apiService from '../../lib/API';
   import Logo from '../icons/Logo.svelte';
-
-  const setFontSize = (userProfile) => {
-    const bodyTag = document.querySelector('.app');
-    bodyTag.style.fontSize = `${userProfile.fontSize}em`;
-  };
 
   onMount(async () => {
     auth.checkAuthUser();
