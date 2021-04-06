@@ -10,6 +10,7 @@
   import AddIssue from './AddIssue.svelte';
   import towers from '../../../store/towers';
   import TableActions from './TableActions.svelte';
+  import Loader from '../../elements/Loader.svelte';
 
   let clubId = null;
   let towersReq = null;
@@ -166,6 +167,9 @@
 </script>
 
 <SingleColumn title="Towers">
+  {#if isLoading}
+    <Loader {isLoading} />
+  {/if}
   {#if !isLoading && $towers.issuesByTowerId}
     <div class="columns is-multiline">
       {#each $towers.towers as tower}
