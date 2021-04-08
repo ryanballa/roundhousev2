@@ -1,7 +1,9 @@
 <script>
   import Arrow from '../icons/Arrow.svelte';
+
   let isOpen = false;
   export let title;
+  export let direction = 'right';
 
   window.addEventListener(
     'overlayClick',
@@ -29,6 +31,7 @@
   </button>
   {#if isOpen}
     <nav
+      class={direction === 'right' ? 'right' : 'left'}
       on:click={() => {
         isOpen = false;
       }}
@@ -80,9 +83,16 @@
     border-radius: 5px;
     top: 35px;
     position: absolute;
-    right: 16px;
     width: 300px;
     z-index: 10001;
+  }
+
+  nav.right {
+    right: 16px;
+  }
+
+  nav.left {
+    left: 0px;
   }
 
   nav :global(a:link, a:visited) {

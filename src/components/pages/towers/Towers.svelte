@@ -150,7 +150,7 @@
             renderComponent: {
               component: TableActions,
               props: {
-                userId: $conditionalStores.user._id,
+                userId: value.user._id,
                 handleDelete: (row) => {
                   handleRemoveIssue(row);
                 },
