@@ -66,17 +66,19 @@ const fetchUser = async function (email, token) {
 const setAuthUser = async (authUser, accessToken) => {
     await fetchUser(authUser.email, accessToken);
     clubs.addClubs({ _id: usersReq.clubs[0]._id });
-    if (!usersReq._id) {
-        user.set({
-            email: authUser.email,
-        });
-        navigate('/user/add');
-    } else if (!usersReq.profile) {
-        user.set(usersReq);
-        navigate('/profile/add');
-    } else {
-        user.set({ ...usersReq, token: accessToken });
-    }
+    user.subscribe((value) => {
+        if (!value._id) {
+            user.set({
+                email: authUser.email,
+            });
+            navigate('/user/add');
+        } else if (!usersReq.profile) {
+            user.set(usersReq);
+            navigate('/profile/add');
+        } else {
+            user.set({ ...usersReq, token: accessToken });
+        }
+    });
 }
 
 const checkAuthUser = async () => {
