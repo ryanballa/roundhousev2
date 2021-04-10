@@ -7,6 +7,7 @@
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
   import { useForm, Hint, required, HintGroup } from 'svelte-use-form';
+  import clubs from '../../store/clubs';
   import apiService from '../../lib/API';
 
   let isLoading = true;
@@ -32,6 +33,7 @@
     };
     const userReq = await apiService.userPost(doc, $user.token);
     user.set(userReq);
+    clubs.addClubs({ _id: $form.club._value });
     navigate('/profile/add');
   };
 
