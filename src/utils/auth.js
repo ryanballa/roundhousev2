@@ -68,10 +68,11 @@ const setAuthUser = async (authUser, accessToken) => {
     if (!usersReq._id) {
         user.set({
             email: authUser.email,
+            token: accessToken
         });
         navigate('/user/add');
     } else if (!usersReq.profile) {
-        user.set(usersReq);
+        user.set({ ...usersReq, token: accessToken });
         navigate('/profile/add');
     } else {
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
