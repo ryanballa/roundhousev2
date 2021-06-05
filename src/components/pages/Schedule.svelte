@@ -55,11 +55,6 @@
       },
     );
     const formattedUtcTime = UtcZonedTime;
-    // const formattedUtcTime = `${format(UtcZonedTime, 'yyyy-MM-dd')}T${format(
-    //   UtcZonedTime,
-    //   'HH:mm',
-    // )}:00Z`;
-    console.log(formattedUtcTime);
     if (!working) {
       working = true;
       const doc = {
@@ -83,12 +78,14 @@
       if (usersOnAddingDate.length >= quota) {
         error = 'Oops, a user beat you and this day is now full.';
       } else {
-        apiService.schedulePost(doc).then((res) => {
-          scheduleReq.push(res);
-          addingDate = null;
-          selectedButton = null;
-          fetchData();
-        });
+        apiService
+          .schedulePost(doc, $conditionalStores.user.token)
+          .then((res) => {
+            scheduleReq.push(res);
+            addingDate = null;
+            selectedButton = null;
+            fetchData();
+          });
       }
     }
   };
