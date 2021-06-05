@@ -1,5 +1,6 @@
 <script>
   export let size;
+
 </script>
 
 <svg
@@ -67,12 +68,13 @@
 
 <style>
   svg {
-    fill: var(--color-links);
+    fill: var(--color-navLinks);
     position: relative;
     top: 3px;
     left: 3px;
   }
   path {
-    fill: var(--color-links);
+    fill: var(--color-navLinks);
   }
+
 </style>

@@ -1,11 +1,14 @@
 <script>
   import { onMount } from 'svelte';
-  import { add, format, toDate } from 'date-fns';
+  import { add, sub, format, toDate } from 'date-fns';
+  import { convertToLocalTime } from 'date-fns-timezone';
+  import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
   import SingleColumn from '../layout/SingleColumn.svelte';
   import apiService from '../../lib/API';
   import conditionalStores from '../../utils/conditionalStores';
+  import daylightSavings from '../../utils/daylightSavings';
 
   let dateRange = [];
   let dateRangeOffset = 0;
@@ -18,6 +21,8 @@
   let error = null;
   let notes = null;
   let twentyFourHRTime = false;
+
+  daylightSavings();
 
   const quota = 8;
 
@@ -43,11 +48,23 @@
 
   const handleAdd = async () => {
     error = null;
+    const UtcZonedTime = zonedTimeToUtc(
+      new Date(`${addingDate}T${selectedTime}`),
+      {
+        timeZone,
+      },
+    );
+    const formattedUtcTime = UtcZonedTime;
+    // const formattedUtcTime = `${format(UtcZonedTime, 'yyyy-MM-dd')}T${format(
+    //   UtcZonedTime,
+    //   'HH:mm',
+    // )}:00Z`;
+    console.log(formattedUtcTime);
     if (!working) {
       working = true;
       const doc = {
         _type: 'schedule',
-        date: `${addingDate}T${selectedTime}:00Z`,
+        date: formattedUtcTime,
         membership: {
           _ref: $conditionalStores.club._id,
           _type: 'reference',
@@ -58,12 +75,10 @@
           _type: 'reference',
         },
       };
-
-      const addingDateFormat = `${addingDate}T${selectedTime}:00Z`;
       const usersOnAddingDate = await apiService.scheduleGetUsersByDate(
         $conditionalStores.club._id,
         $conditionalStores.user.token,
-        addingDateFormat,
+        formattedUtcTime,
       );
       if (usersOnAddingDate.length >= quota) {
         error = 'Oops, a user beat you and this day is now full.';
@@ -117,7 +132,20 @@
   function addUsersTodateRange() {
     usersByDate = {};
     scheduleReq.forEach((element) => {
-      const elementDate = toDate(new Date(element.date));
+      const isDST = new Date(element.date).isDstObserved();
+      const elementDate = isDST
+        ? toDate(sub(new Date(element.date), { hours: 1 }))
+        : toDate(new Date(element.date));
+      const zonedTime = utcToZonedTime(
+        format(new Date(elementDate), 'yyyy-MM-dd kk:mm'),
+        {
+          timeZone,
+        },
+      );
+      element.date = isDST
+        ? add(new Date(zonedTime), { hours: 1 })
+        : new Date(zonedTime);
+
       if (!usersByDate[format(elementDate, 'yyyy-MM-dd')]) {
         usersByDate[format(elementDate, 'yyyy-MM-dd')] = [];
       }
@@ -168,6 +196,9 @@
       }
     });
   });
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 </script>
 
 <SingleColumn
@@ -218,15 +249,13 @@
             {/if}
             {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')]}
               <ul class="users">
-                {#each usersByDate[format(date, 'yyyy-MM-dd')].sort((a, b) =>
-                  a.date > b.date ? 1 : -1,
-                ) as user}
+                {#each usersByDate[format(date, 'yyyy-MM-dd')].sort( (a, b) => (a.date > b.date ? 1 : -1), ) as user}
                   <li title={user.notes}>
                     {user.owner.name} : {format(
-                      add(new Date(user.date), { hours: 6 }),
+                      new Date(user.date),
                       twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
                     )} - {format(
-                      add(new Date(user.date), { hours: 9 }),
+                      add(new Date(user.date), { hours: 2 }),
                       twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
                     )}
                   </li>
@@ -246,63 +275,48 @@
                   <ul>
                     <li
                       on:click={() => {
-                        selectedButton = '10-1';
-                        selectedTime = '10:00';
-                      }}
-                    >
-                      <button
-                        class={selectedButton === '10-1' ? 'selected' : ''}
-                        on:click={() => {
-                          selectedButton = '10-1';
-                          selectedTime = '10:00';
-                        }}>&nbsp;</button
-                      >
-                      <span>10AM - 1PM</span>
-                    </li>
-                    <li
-                      on:click={() => {
-                        selectedButton = '1-4';
-                        selectedTime = '13:00';
-                      }}
-                    >
-                      <button
-                        class={selectedButton === '1-4' ? 'selected' : ''}
-                        on:click={() => {
-                          selectedButton = '1-4';
-                          selectedTime = '13:00';
-                        }}>&nbsp;</button
-                      >
-                      <span>1PM - 4PM</span>
-                    </li>
-                    <li
-                      on:click={() => {
-                        selectedButton = '4-7';
+                        selectedButton = '4-6';
                         selectedTime = '16:00';
                       }}
                     >
                       <button
-                        class={selectedButton === '4-7' ? 'selected' : ''}
+                        class={selectedButton === '4-6' ? 'selected' : ''}
                         on:click={() => {
-                          selectedButton = '4-7';
+                          selectedButton = '4-6';
                           selectedTime = '16:00';
                         }}>&nbsp;</button
                       >
-                      <span>4PM - 7PM</span>
+                      <span>4PM - 6PM</span>
                     </li>
                     <li
                       on:click={() => {
-                        selectedButton = '7-10';
-                        selectedTime = '19:00';
+                        selectedButton = '6-8';
+                        selectedTime = '18:00';
                       }}
                     >
                       <button
-                        class={selectedButton === '7-10' ? 'selected' : ''}
+                        class={selectedButton === '6-8' ? 'selected' : ''}
                         on:click={() => {
-                          selectedButton = '7-10';
-                          selectedTime = '19:00';
+                          selectedButton = '6-8';
+                          selectedTime = '18:00';
                         }}>&nbsp;</button
                       >
-                      <span>7PM - 10PM</span>
+                      <span>6PM - 8PM</span>
+                    </li>
+                    <li
+                      on:click={() => {
+                        selectedButton = '8-10';
+                        selectedTime = '20:00';
+                      }}
+                    >
+                      <button
+                        class={selectedButton === '8-10' ? 'selected' : ''}
+                        on:click={() => {
+                          selectedButton = '8-10';
+                          selectedTime = '20:00';
+                        }}>&nbsp;</button
+                      >
+                      <span>8PM - 9:30PM</span>
                     </li>
                   </ul>
                   <div class="notesWrapper">
@@ -337,11 +351,9 @@
                 }}>-</button
               >
             {/if}
-            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find(
-                (item) => {
+            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find( (item) => {
                   return item.quotaReached == true;
-                },
-              )}
+                }, )}
               <span>Capacity Reached</span>
             {/if}
           </div>
@@ -396,7 +408,7 @@
     margin: 0 auto 16px auto;
     padding: 0;
     text-align: left;
-    width: 150px;
+    width: 170px;
   }
   .dayRange .addOptions li {
     border: none;
@@ -521,4 +533,5 @@
     display: block;
     margin: 16px auto 8px auto;
   }
+
 </style>

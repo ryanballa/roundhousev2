@@ -15,6 +15,7 @@
     }
     return {};
   }
+
 </script>
 
 <nav>
@@ -79,14 +80,19 @@
     display: flex;
   }
   .linkWrapper :global(.link) {
-    color: var(--color-links);
+    color: var(--color-navLinks);
+    font-weight: bold;
     text-decoration: none;
   }
   .linkWrapper :global(.active) {
-    color: var(--color-activeLinks);
+    color: var(--color-navLinksActive);
+    font-weight: bold;
+  }
+  .linkWrapper :global(svg) {
+    fill: var(--color-navLinks);
   }
   .linkWrapper :global(.active svg) {
-    fill: var(--color-activeLinks);
+    fill: var(--color-navLinksActive);
   }
   .sub {
     margin: 0 0 0 35px;
@@ -95,12 +101,13 @@
     margin: 0;
   }
   .sub :global(.link) {
-    color: var(--color-links);
+    color: var(--color-navLinks);
     font-size: 16px;
+    font-weight: bold;
     text-decoration: none;
   }
   .sub :global(.active) {
-    color: var(--color-links);
+    color: var(--color-navLinksActive);
     font-size: 16px;
     text-decoration: none;
   }
@@ -127,4 +134,5 @@
     margin: 0;
     padding: 0;
   }
+
 </style>

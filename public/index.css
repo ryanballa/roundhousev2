@@ -1,12 +1,14 @@
 @import "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css";
 
 body {
-  background: #5D737E;
+  background: #494848;
   color: #87BBA2;
   font-family: sans-serif;
   margin: 0;
   padding: 0;
 }
+
+body { min-height: 100vh; }
 
 @font-face {
   font-family: 'TofinoProBold';

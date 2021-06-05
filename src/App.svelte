@@ -3,6 +3,7 @@
   import { Router } from 'svelte-navigator';
   import { colors, sizes, forms } from './utils/styling';
   import Header from './components/core/Header.svelte';
+  import Footer from './components/core/Footer.svelte';
   import Navigation from './components/core/Navigation.svelte';
   import Routes from './Routes.svelte';
   import { user } from './store/user';
@@ -69,6 +70,7 @@
   setRootColors();
   setSizes();
   setFormSettings();
+
 </script>
 
 <div class="app">
@@ -82,6 +84,7 @@
       <Navigation />
       <Routes />
     </main>
+    <Footer />
   </Router>
 </div>
 
@@ -108,4 +111,5 @@
   .overlay.display {
     display: block;
   }
+
 </style>

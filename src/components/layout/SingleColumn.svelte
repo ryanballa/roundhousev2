@@ -1,6 +1,7 @@
 <script>
   export let title = 'Page Tile';
   export let description = null;
+
 </script>
 
 <section>
@@ -40,4 +41,5 @@
     padding: 16px 2%;
     width: 75%;
   }
+
 </style>
