@@ -64,19 +64,14 @@ const fetchUser = async function (email, token) {
 };
 
 const setAuthUser = async (authUser, accessToken) => {
-    await fetchUser(authUser.email, accessToken);
-    if (!usersReq._id) {
+    const fetchUserReq = await fetchUser(authUser.email, accessToken);
+    console.log(fetchUserReq);
+    if (!fetchUserReq._id) {
         user.set({
             email: authUser.email,
             token: accessToken
         });
-        user.subscribe((value) => {
-            if (value && value._id) {
-                navigate('/');
-            } else {
-                navigate('/user/add');
-            }
-        });
+        navigate('/user/add');
     } else if (!usersReq.profile) {
         user.set({ ...usersReq, token: accessToken });
         navigate('/profile/add');
