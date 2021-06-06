@@ -56,19 +56,16 @@ const loginWithRedirect = async (options) => {
 }
 
 const fetchUser = async function (email, token) {
-    return new Promise(() => {
-        try {
-            usersReq = await apiService.userGet(email, token);
-            resolve(usersReq);
-        } catch (e) {
-            resolve(`Fetch User Error: ${e}`);
-        }
-    })
-
+    try {
+        usersReq = await apiService.userGet(email, token);
+        resolve(usersReq);
+    } catch (e) {
+        resolve(`Fetch User Error: ${e}`);
+    }
 };
 
 const setAuthUser = async (authUser, accessToken) => {
-    await fetchUser(authUser.email, accessToken);
+    usersReq = await apiService.userGet(authUser.email, accessToken);
     if (!usersReq._id) {
         user.set({
             email: authUser.email,
