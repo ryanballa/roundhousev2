@@ -56,6 +56,7 @@ const loginWithRedirect = async (options) => {
 }
 
 const fetchUser = async function (email, token) {
+    isUserLoading.set(true);
     try {
         usersReq = await apiService.userGet(email, token);
     } catch (e) {
