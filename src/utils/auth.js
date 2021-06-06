@@ -56,7 +56,6 @@ const loginWithRedirect = async (options) => {
 }
 
 const fetchUser = async function (email, token) {
-    isUserLoading.set(true);
     try {
         usersReq = await apiService.userGet(email, token);
     } catch (e) {
@@ -66,7 +65,6 @@ const fetchUser = async function (email, token) {
 
 const setAuthUser = async (authUser, accessToken) => {
     await fetchUser(authUser.email, accessToken);
-    isUserLoading.set(false);
     if (!usersReq._id) {
         user.set({
             email: authUser.email,
@@ -81,7 +79,7 @@ const setAuthUser = async (authUser, accessToken) => {
         user.set({ ...usersReq, token: accessToken });
 
     }
-
+    isUserLoading.set(false);
 }
 
 const checkAuthUser = async () => {
@@ -115,6 +113,7 @@ const checkAuthUser = async () => {
                     setAuthUser(authUser, token.__raw);
                 }
             } else {
+                isUserLoading.set(false);
                 navigate('/');
             }
         });
