@@ -37,7 +37,6 @@ const createClient = async () => {
         const authUser = await auth0Client.getUser();
         const token = await auth0Client.getIdTokenClaims();
         isAuthenticated.set(true);
-        setAuthUser(authUser, token.id_token);
     }
 
     return auth0Client;
