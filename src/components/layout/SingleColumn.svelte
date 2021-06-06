@@ -25,10 +25,14 @@
   :global(h3) {
     font-size: var(--size-h3);
     font-weight: bold;
+    margin-bottom: 8px;
   }
   :global(h4) {
     font-size: var(--size-h4);
     font-weight: bold;
+  }
+  :global(.columns p) {
+    margin-bottom: 16px;
   }
   .pageDescription {
     color: var(--color-body);
