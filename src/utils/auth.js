@@ -66,6 +66,7 @@ const fetchUser = async function (email, token) {
 
 const setAuthUser = async (authUser, accessToken) => {
     await fetchUser(authUser.email, accessToken);
+    isUserLoading.set(false);
     if (!usersReq._id) {
         user.set({
             email: authUser.email,
@@ -112,7 +113,6 @@ const checkAuthUser = async () => {
             if (isLoggedIn && authUser && token.__raw) {
                 if (!user._id) {
                     setAuthUser(authUser, token.__raw);
-                    isUserLoading.set(false);
                 }
             } else {
                 navigate('/');
