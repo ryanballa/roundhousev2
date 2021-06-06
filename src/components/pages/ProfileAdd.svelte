@@ -44,9 +44,7 @@
 
   onMount(async () => {
     user.subscribe((value) => {
-      console.log(value);
       if (value && value._id) {
-        console.log(value);
         isLoading = false;
         if (value.profile || value.profile.length > 0) {
           hasError = true;
@@ -54,6 +52,7 @@
       }
     });
   });
+
 </script>
 
 <SingleColumn title="Create Your Profile">

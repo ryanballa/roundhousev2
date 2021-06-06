@@ -70,7 +70,13 @@ const setAuthUser = async (authUser, accessToken) => {
             email: authUser.email,
             token: accessToken
         });
-        navigate('/user/add');
+        user.subscribe((value) => {
+            if (value && value._id) {
+                navigate('/');
+            } else {
+                navigate('/user/add');
+            }
+        });
     } else if (!usersReq.profile) {
         user.set({ ...usersReq, token: accessToken });
         navigate('/profile/add');
