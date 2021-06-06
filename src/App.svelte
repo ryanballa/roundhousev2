@@ -1,7 +1,7 @@
 <!-- App.svelte -->
 <script>
   import { Router } from 'svelte-navigator';
-  import { colors, sizes, forms } from './utils/styling';
+  import { colors, sizes, forms, zIndexes } from './utils/styling';
   import Header from './components/core/Header.svelte';
   import Footer from './components/core/Footer.svelte';
   import Navigation from './components/core/Navigation.svelte';
@@ -22,6 +22,13 @@
     for (let [prop, size] of Object.entries(sizes)) {
       let varString = `--size-${prop}`;
       document.documentElement.style.setProperty(varString, size);
+    }
+  };
+
+  const setZIndexes = () => {
+    for (let [prop, zIndex] of Object.entries(zIndexes)) {
+      let varString = `--zIndex-${prop}`;
+      document.documentElement.style.setProperty(varString, zIndex);
     }
   };
 
@@ -70,6 +77,7 @@
   setRootColors();
   setSizes();
   setFormSettings();
+  setZIndexes();
 
 </script>
 

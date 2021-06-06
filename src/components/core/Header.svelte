@@ -70,7 +70,6 @@
   .accountContext {
     display: flex;
     float: right;
-    margin-top: 8px;
   }
   .accountLinkWrapper {
     display: block;
@@ -116,7 +115,22 @@
     background-color: var(--color-bgHighlight);
     display: flex;
     justify-content: space-between;
+    min-height: 60px;
     width: 85%;
+  }
+
+  @media (max-width: 1100px) {
+    .leftBar {
+      width: 50px;
+    }
+
+    .rightMenu {
+      width: calc(100% - 50px);
+    }
+
+    h1 .linkWrapper :global(svg) {
+      display: none;
+    }
   }
 
 </style>

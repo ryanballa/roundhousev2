@@ -39,3 +39,7 @@ export const forms = {
     borderRadius: '4px',
     padding: '8px',
 }
+
+export const zIndexes = {
+    menu: '100',
+};

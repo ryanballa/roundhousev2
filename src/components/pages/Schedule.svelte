@@ -531,4 +531,19 @@
     margin: 16px auto 8px auto;
   }
 
+  @media (max-width: 1100px) {
+    .dayRange {
+      display: block;
+      margin: 0;
+      padding: 0;
+    }
+    .dayRange > li {
+      border: 1px solid var(--color-steel);
+      text-align: center;
+      margin-bottom: 16px;
+      padding: 16px;
+      width: 100%;
+    }
+  }
+
 </style>

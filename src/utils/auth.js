@@ -58,9 +58,8 @@ const loginWithRedirect = async (options) => {
 const fetchUser = async function (email, token) {
     try {
         usersReq = await apiService.userGet(email, token);
-        resolve(usersReq);
     } catch (e) {
-        resolve(`Fetch User Error: ${e}`);
+        console.log(`Fetch User Error: ${e}`);
     }
 };
 

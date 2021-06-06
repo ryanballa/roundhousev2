@@ -46,4 +46,10 @@
     width: 75%;
   }
 
+  @media (max-width: 1100px) {
+    section {
+      width: 90%;
+    }
+  }
+
 </style>

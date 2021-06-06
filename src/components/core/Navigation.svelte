@@ -5,6 +5,9 @@
   import Tracking from '../icons/Tracking.svelte';
   import Train from '../icons/Train.svelte';
   import Schedule from '../icons/Schedule.svelte';
+  import Hamburger from '../icons/Hamburger.svelte';
+
+  let isMenuOpen = false;
 
   function getProps({ location, href, isPartiallyCurrent, isCurrent }) {
     const isActive = href === '/' ? isCurrent : isPartiallyCurrent || isCurrent;
@@ -16,21 +19,37 @@
     return {};
   }
 
+  function handleMenuOpen() {
+    isMenuOpen = !isMenuOpen;
+  }
+
+  function handleMenuClose() {
+    isMenuOpen = false;
+  }
+
 </script>
 
 <nav>
   {#if $isAuthenticated}
-    <ul>
+    <button class="hamburgerMenu" on:click={handleMenuOpen}>
+      <Hamburger />
+    </button>
+    <ul class={`menuWrapper ${isMenuOpen ? 'open' : ''}`}>
       <li>
         <span class="linkWrapper">
-          <Link {getProps} class="link" to="towers"
+          <Link {getProps} class="link" to="towers" on:click={handleMenuClose}
             ><Work size={20} /><span>Towers</span></Link
           >
         </span>
       </li>
       <li>
         <span class="linkWrapper">
-          <Link {getProps} class="link" to="inventory">
+          <Link
+            {getProps}
+            class="link"
+            to="inventory"
+            on:click={handleMenuClose}
+          >
             <span class="iconWrapper"><Train size={20} /></span><span
               >Inventory</span
             >
@@ -45,21 +64,39 @@
         </span>
         <ul class="sub">
           <li>
-            <Link {getProps} class="link" to="tracking/consists">Consists</Link>
+            <Link
+              {getProps}
+              class="link"
+              to="tracking/consists"
+              on:click={handleMenuClose}>Consists</Link
+            >
           </li>
           <li>
-            <Link {getProps} class="link" to="tracking/cabs">Cabs</Link>
+            <Link
+              {getProps}
+              class="link"
+              to="tracking/cabs"
+              on:click={handleMenuClose}>Cabs</Link
+            >
           </li>
           <li>
-            <Link {getProps} class="link" to="tracking/locomotives"
-              >Locomotives</Link
+            <Link
+              {getProps}
+              class="link"
+              to="tracking/locomotives"
+              on:click={handleMenuClose}>Locomotives</Link
             >
           </li>
         </ul>
       </li>
       <li>
         <span class="linkWrapper">
-          <Link {getProps} class="link" to="schedule">
+          <Link
+            {getProps}
+            class="link"
+            to="schedule"
+            on:click={handleMenuClose}
+          >
             <span class="iconWrapper"><Schedule size={20} /></span><span
               >Schedule</span
             >
@@ -71,6 +108,17 @@
 </nav>
 
 <style>
+  .hamburgerMenu {
+    background: none;
+    display: none;
+    border: none;
+    margin: 0 auto;
+    width: auto;
+  }
+  .hamburgerMenu :global(svg) {
+    fill: var(--color-navLinks);
+    height: 30px;
+  }
   .iconWrapper {
     display: inline-block;
     width: 20px;
@@ -118,6 +166,21 @@
     padding: 1%;
     width: 15%;
   }
+  .menuWrapper.open {
+    background: var(--color-navBg);
+    display: block;
+    padding: 32px 0;
+    position: absolute;
+    text-align: center;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: var(--zIndex-menu);
+  }
+  .menuWrapper.open .linkWrapper {
+    display: block;
+  }
   li {
     align-items: center;
     align-content: center;
@@ -133,6 +196,19 @@
   ul {
     margin: 0;
     padding: 0;
+  }
+
+  @media (max-width: 1100px) {
+    .menuWrapper {
+      display: none;
+    }
+    .hamburgerMenu {
+      display: block;
+    }
+    nav {
+      width: 50px;
+      padding: 0;
+    }
   }
 
 </style>
