@@ -1,7 +1,7 @@
 import { navigate } from 'svelte-navigator';
 import createAuth0Client from "@auth0/auth0-spa-js";
 import clubs from '../store/clubs';
-import { user, isAuthenticated, popupOpen } from "../store/user";
+import { user, isAuthenticated, isUserLoading } from "../store/user";
 import config from "../lib/authConfig";
 import apiService from '../lib/API';
 
@@ -77,6 +77,7 @@ const setAuthUser = async (authUser, accessToken) => {
     } else {
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
         user.set({ ...usersReq, token: accessToken });
+
     }
 
 }
@@ -103,12 +104,14 @@ const checkAuthUser = async () => {
             token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
             ...usersReq,
         });
+        isUserLoading.set(false);
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
     } else {
         isAuthenticated.subscribe(isLoggedIn => {
             if (isLoggedIn && authUser && token.__raw) {
                 if (!user._id) {
                     setAuthUser(authUser, token.__raw);
+                    isUserLoading.set(false);
                 }
             } else {
                 navigate('/');

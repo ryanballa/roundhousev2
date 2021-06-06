@@ -2,13 +2,14 @@
   import { onMount } from 'svelte';
   import { Link } from 'svelte-navigator';
   import auth from '../../utils/auth';
-  import { isAuthenticated, user } from '../../store/user';
+  import { isAuthenticated, user, isUserLoading } from '../../store/user';
   import Dropdown from '../elements/Dropdown.svelte';
   import Logo from '../icons/Logo.svelte';
 
   onMount(async () => {
     auth.checkAuthUser();
   });
+
 </script>
 
 <header class="appHeader">
@@ -38,23 +39,25 @@
             <Link class="changelog" to="/changelog">What's New</Link>
           </span>
         {/if}
-        <Dropdown
-          title={$isAuthenticated && $user.name ? $user.name : 'Log In'}
-        >
-          <ul>
-            {#if $isAuthenticated}
-              <li>
-                <Link to="/profile/edit">Profile</Link>
-              </li>
-            {/if}
-            {#if $isAuthenticated}<li>
-                <button on:click={auth.handleLogout}>Logout</button>
-              </li>{/if}
-            {#if !$isAuthenticated}<li>
-                <button on:click={auth.handleLogin}>Login</button>
-              </li>{/if}
-          </ul>
-        </Dropdown>
+        {#if !$isUserLoading}
+          <Dropdown
+            title={$isAuthenticated && $user.name ? $user.name : 'Log In'}
+          >
+            <ul>
+              {#if $isAuthenticated}
+                <li>
+                  <Link to="/profile/edit">Profile</Link>
+                </li>
+              {/if}
+              {#if $isAuthenticated}<li>
+                  <button on:click={auth.handleLogout}>Logout</button>
+                </li>{/if}
+              {#if !$isAuthenticated}<li>
+                  <button on:click={auth.handleLogin}>Login</button>
+                </li>{/if}
+            </ul>
+          </Dropdown>
+        {/if}
       </div>
     </div>
   </div>
@@ -115,4 +118,5 @@
     justify-content: space-between;
     width: 85%;
   }
+
 </style>
