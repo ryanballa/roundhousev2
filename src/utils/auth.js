@@ -55,36 +55,40 @@ const loginWithRedirect = async (options) => {
     }
 }
 
-const fetchUser = async function (email, accessToken) {
-    try {
-        usersReq = await apiService.userGet(email, token);
-        if (!usersReq._id) {
-            user.set({
-                email: authUser.email,
-                token: accessToken
-            });
-            user.subscribe((value) => {
-                if (value && value._id) {
-                    navigate('/');
-                } else {
-                    navigate('/user/add');
-                }
-            });
-        } else if (!usersReq.profile) {
-            user.set({ ...usersReq, token: accessToken });
-            navigate('/profile/add');
-        } else {
-            clubs.addClubs({ _id: usersReq.clubs[0]._id });
-            user.set({ ...usersReq, token: accessToken });
-
+const fetchUser = async function (email, token) {
+    return new Promise(() => {
+        try {
+            usersReq = await apiService.userGet(email, token);
+            resolve(usersReq);
+        } catch (e) {
+            resolve(`Fetch User Error: ${e}`);
         }
-    } catch (e) {
-        console.log(`Fetch User Error: ${e}`);
-    }
+    })
+
 };
 
 const setAuthUser = async (authUser, accessToken) => {
     await fetchUser(authUser.email, accessToken);
+    if (!usersReq._id) {
+        user.set({
+            email: authUser.email,
+            token: accessToken
+        });
+        user.subscribe((value) => {
+            if (value && value._id) {
+                navigate('/');
+            } else {
+                navigate('/user/add');
+            }
+        });
+    } else if (!usersReq.profile) {
+        user.set({ ...usersReq, token: accessToken });
+        navigate('/profile/add');
+    } else {
+        clubs.addClubs({ _id: usersReq.clubs[0]._id });
+        user.set({ ...usersReq, token: accessToken });
+
+    }
     isUserLoading.set(false);
 }
 
