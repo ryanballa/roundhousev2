@@ -55,7 +55,7 @@ const loginWithRedirect = async (options) => {
     }
 }
 
-const fetchUser = async function (email, token) {
+const fetchUser = async function (email, accessToken) {
     try {
         usersReq = await apiService.userGet(email, token);
         if (!usersReq._id) {
