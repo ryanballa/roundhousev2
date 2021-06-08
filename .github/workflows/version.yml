@@ -9,6 +9,10 @@ jobs:
   createPullRequest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Bump version
-        run: npm version patch
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - run: git config --global user.name 'LocomotiveHouse'
+      - run: git config --global user.email 'noreply@locomotivehouse.com'
+      - run: npm version patch -m "[RELEASE] %s"
+      - run: git push
