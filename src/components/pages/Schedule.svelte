@@ -170,6 +170,13 @@
     caculateDate(newOffset);
   }
 
+  function calcHourRange(hour) {
+    if (hour === '11:30' || hour === '12:00') {
+      return 3;
+    }
+    return 2;
+  }
+
   const fetchData = async function () {
     try {
       scheduleReq = await apiService.scheduleGet(
@@ -247,15 +254,23 @@
             {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')]}
               <ul class="users">
                 {#each usersByDate[format(date, 'yyyy-MM-dd')].sort( (a, b) => (a.date > b.date ? 1 : -1), ) as user}
-                  <li title={user.notes}>
-                    {user.owner.name} : {format(
-                      new Date(user.date),
-                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
-                    )} - {format(
-                      add(new Date(user.date), { hours: 2 }),
-                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
-                    )}
-                  </li>
+                  {#if format(new Date(user.date), 'hh:mm') === '10:00'}
+                    <li>{user.owner.name} : 9:30 AM - 11:30 AM</li>
+                  {:else}
+                    <li title={user.notes}>
+                      {user.owner.name} : {format(
+                        new Date(user.date),
+                        twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
+                      )} - {format(
+                        add(new Date(user.date), {
+                          hours: calcHourRange(
+                            format(new Date(user.date), 'hh:mm'),
+                          ),
+                        }),
+                        twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
+                      )}
+                    </li>
+                  {/if}
                 {/each}
               </ul>
             {/if}
@@ -274,8 +289,8 @@
                       {#if format(new Date(date), 'EEEE') !== 'Saturday'}
                         <li
                           on:click={() => {
-                            selectedButton = '9:30 - 11:30';
-                            selectedTime = '9:30';
+                            selectedButton = '9:30-11:30';
+                            selectedTime = '10:00';
                           }}
                         >
                           <button
@@ -284,7 +299,7 @@
                               : ''}
                             on:click={() => {
                               selectedButton = '9:30-11:30';
-                              selectedTime = '9:30';
+                              selectedTime = '10:00';
                             }}>&nbsp;</button
                           >
                           <span>9:30AM - 11:30AM</span>
