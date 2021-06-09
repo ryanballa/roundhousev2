@@ -340,7 +340,7 @@
                               selectedTime = '10:00';
                             }}>&nbsp;</button
                           >
-                          <span>12PM - 3PM</span>
+                          <span>10PM - 12PM</span>
                         </li>
                         <li
                           on:click={() => {
