@@ -24,7 +24,7 @@
 
   daylightSavings();
 
-  const quota = 8;
+  const quota = 9;
 
   window.addEventListener(
     'overlayClick',
@@ -100,12 +100,12 @@
     // figure out if the user is present and if the qutoa is exceeded
     for (const key in usersByDate) {
       let quotaLimit = false;
-      if (
-        format(new Date(key), 'EEEE') === 'Wednesday' &&
-        usersByDate[key].length > 3
-      ) {
-        quotaLimit = true;
-      }
+      // if (
+      //   format(new Date(key), 'EEEE') === 'Wednesday' &&
+      //   usersByDate[key].length > 3
+      // ) {
+      //   quotaLimit = true;
+      // }
       if (usersByDate[key].length >= quota) {
         quotaLimit = true;
       }
@@ -260,100 +260,147 @@
               </ul>
             {/if}
           </div>
-          <div class="actions">
-            {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaReached)))}
-              <div
-                class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
-                  ? 'adding'
-                  : 'hidden'}"
-              >
-                <div class="addOptions">
-                  <h4>Pick a Time</h4>
-                  <ul>
-                    <li
-                      on:click={() => {
-                        selectedButton = '4-6';
-                        selectedTime = '16:00';
-                      }}
-                    >
-                      <button
-                        class={selectedButton === '4-6' ? 'selected' : ''}
-                        on:click={() => {
-                          selectedButton = '4-6';
-                          selectedTime = '16:00';
-                        }}>&nbsp;</button
-                      >
-                      <span>4PM - 6PM</span>
-                    </li>
-                    <li
-                      on:click={() => {
-                        selectedButton = '6-8';
-                        selectedTime = '18:00';
-                      }}
-                    >
-                      <button
-                        class={selectedButton === '6-8' ? 'selected' : ''}
-                        on:click={() => {
-                          selectedButton = '6-8';
-                          selectedTime = '18:00';
-                        }}>&nbsp;</button
-                      >
-                      <span>6PM - 8PM</span>
-                    </li>
-                    <li
-                      on:click={() => {
-                        selectedButton = '8-10';
-                        selectedTime = '20:00';
-                      }}
-                    >
-                      <button
-                        class={selectedButton === '8-10' ? 'selected' : ''}
-                        on:click={() => {
-                          selectedButton = '8-10';
-                          selectedTime = '20:00';
-                        }}>&nbsp;</button
-                      >
-                      <span>8PM - 9:30PM</span>
-                    </li>
-                  </ul>
-                  <div class="notesWrapper">
-                    <h4>Add Notes</h4>
-                    <input
-                      type="text"
-                      on:change={(e) => {
-                        notes = e.target.value;
-                      }}
-                    />
-                    <Button actionEvent={handleAdd} actionText="Schedule" />
+          {#if format(new Date(date), 'EEEE') !== 'Sunday' && format(date, 'dd') < 28 && format(date, 'dd') >= 11}
+            <div class="actions">
+              {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaReached)))}
+                <div
+                  class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
+                    ? 'adding'
+                    : 'hidden'}"
+                >
+                  <div class="addOptions">
+                    <h4>Pick a Time</h4>
+                    <ul>
+                      {#if format(new Date(date), 'EEEE') !== 'Saturday'}
+                        <li
+                          on:click={() => {
+                            selectedButton = '9:30 - 11:30';
+                            selectedTime = '9:30';
+                          }}
+                        >
+                          <button
+                            class={selectedButton === '9:30-11:30'
+                              ? 'selected'
+                              : ''}
+                            on:click={() => {
+                              selectedButton = '9:30-11:30';
+                              selectedTime = '9:30';
+                            }}>&nbsp;</button
+                          >
+                          <span>9:30AM - 11:30AM</span>
+                        </li>
+                        <li
+                          on:click={() => {
+                            selectedButton = '11:30-2:30';
+                            selectedTime = '11:30';
+                          }}
+                        >
+                          <button
+                            class={selectedButton === '11:30-2:30'
+                              ? 'selected'
+                              : ''}
+                            on:click={() => {
+                              selectedButton = '11:30-2:30';
+                              selectedTime = '11:30';
+                            }}>&nbsp;</button
+                          >
+                          <span>11:30AM - 2:30PM</span>
+                        </li>
+                        <li
+                          on:click={() => {
+                            selectedButton = '18:30-20:30';
+                            selectedTime = '18:30';
+                          }}
+                        >
+                          <button
+                            class={selectedButton === '18:30-20:30'
+                              ? 'selected'
+                              : ''}
+                            on:click={() => {
+                              selectedButton = '18:30-20:30';
+                              selectedTime = '18:30';
+                            }}>&nbsp;</button
+                          >
+                          <span>6:30PM - 8:30PM</span>
+                        </li>
+                      {/if}
+                      {#if format(new Date(date), 'EEEE') === 'Saturday'}
+                        <li
+                          on:click={() => {
+                            selectedButton = '10:00 - 12:00';
+                            selectedTime = '10:00';
+                          }}
+                        >
+                          <button
+                            class={selectedButton === '10:00 - 12:00'
+                              ? 'selected'
+                              : ''}
+                            on:click={() => {
+                              selectedButton = '10:00 - 12:00';
+                              selectedTime = '10:00';
+                            }}>&nbsp;</button
+                          >
+                          <span>12PM - 3PM</span>
+                        </li>
+                        <li
+                          on:click={() => {
+                            selectedButton = '12:00 - 15:00';
+                            selectedTime = '12:00';
+                          }}
+                        >
+                          <button
+                            class={selectedButton === '12:00 - 15:00'
+                              ? 'selected'
+                              : ''}
+                            on:click={() => {
+                              selectedButton = '12:00 - 15:00';
+                              selectedTime = '12:00';
+                            }}>&nbsp;</button
+                          >
+                          <span>12PM - 3PM</span>
+                        </li>
+                      {/if}
+                    </ul>
+                    <div class="notesWrapper">
+                      <h4>Add Notes</h4>
+                      <input
+                        type="text"
+                        on:change={(e) => {
+                          notes = e.target.value;
+                        }}
+                      />
+                      <Button actionEvent={handleAdd} actionText="Schedule" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <button
-                class="add"
-                on:click={() => {
-                  handleSubmit(add(date, { days: 0 }));
-                }}>+</button
-              >
-            {/if}
-            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true)}
-              <button
-                class="remove"
-                on:click={() => {
-                  handleRemove(
-                    usersByDate[format(date, 'yyyy-MM-dd')].find(
-                      (item) => item.owner._id === $conditionalStores.user._id,
-                    )._id,
-                    format(date, 'yyyy-MM-dd'),
-                  );
-                }}>-</button
-              >
-            {/if}
-            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find( (item) => {
-                  return item.quotaReached == true;
-                }, )}
-              <span>Capacity Reached</span>
-            {/if}
-          </div>
+                <button
+                  class="add"
+                  on:click={() => {
+                    handleSubmit(add(date, { days: 0 }));
+                  }}>+</button
+                >
+              {/if}
+              {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true)}
+                <button
+                  class="remove"
+                  on:click={() => {
+                    handleRemove(
+                      usersByDate[format(date, 'yyyy-MM-dd')].find(
+                        (item) =>
+                          item.owner._id === $conditionalStores.user._id,
+                      )._id,
+                      format(date, 'yyyy-MM-dd'),
+                    );
+                  }}>-</button
+                >
+              {/if}
+              {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find( (item) => {
+                    return item.quotaReached == true;
+                  }, )}
+                <span>Capacity Reached</span>
+              {/if}
+            </div>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -405,7 +452,7 @@
     margin: 0 auto 16px auto;
     padding: 0;
     text-align: left;
-    width: 170px;
+    width: 200px;
   }
   .dayRange .addOptions li {
     border: none;
