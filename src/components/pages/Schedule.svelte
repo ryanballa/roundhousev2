@@ -445,7 +445,7 @@
     bottom: 20px;
     left: -100px;
     position: absolute;
-    width: 500px;
+    width: 300px;
     z-index: 1001;
   }
   .dayRange .addOptions button {
@@ -544,7 +544,7 @@
   }
   .scheduled {
     margin-bottom: 16px;
-    height: 300px;
+    height: 550px;
   }
   .scheduled .empty {
     font-size: var(--size-small);
