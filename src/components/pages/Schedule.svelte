@@ -445,7 +445,7 @@
     bottom: 20px;
     left: -100px;
     position: absolute;
-    width: 300px;
+    width: 500px;
     z-index: 1001;
   }
   .dayRange .addOptions button {
