@@ -1,6 +1,8 @@
 <!-- App.svelte -->
 <script>
   import { Router } from 'svelte-navigator';
+  import * as Sentry from '@sentry/browser';
+  import { Integrations } from '@sentry/tracing';
   import { colors, sizes, forms, zIndexes } from './utils/styling';
   import Header from './components/core/Header.svelte';
   import Footer from './components/core/Footer.svelte';
@@ -50,6 +52,17 @@
   };
 
   const init = async () => {
+    Sentry.init({
+      dsn:
+        'https://dbe0f009be9647e1878b4452adaa2694@o820586.ingest.sentry.io/5809225',
+      integrations: [new Integrations.BrowserTracing()],
+
+      // Set tracesSampleRate to 1.0 to capture 100%
+      // of transactions for performance monitoring.
+      // We recommend adjusting this value in production
+      tracesSampleRate: 1.0,
+    });
+
     window.addEventListener(
       'showOverlay',
       function (e) {
