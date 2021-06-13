@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
   import { add, sub, format, toDate } from 'date-fns';
-  import { convertToLocalTime } from 'date-fns-timezone';
   import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';

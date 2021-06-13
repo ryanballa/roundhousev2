@@ -73,10 +73,12 @@ const setAuthUser = async (authUser, accessToken) => {
     } else if (!usersReq.profile) {
         user.set({ ...usersReq, token: accessToken });
         navigate('/profile/add');
-    } else {
+    } else if (usersReq) {
         clubs.addClubs({ _id: usersReq.clubs[0]._id });
         user.set({ ...usersReq, token: accessToken });
 
+    } else if (!usersReq) {
+        navigate('/login');
     }
     isUserLoading.set(false);
 }
