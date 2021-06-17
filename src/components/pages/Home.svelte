@@ -33,7 +33,7 @@
       </div>
     {/if}
     {#if !$isAuthenticated}
-      <button on:click={auth.handleLogin}>Log In</button>
+      <button class="button" on:click={auth.handleLogin}>Log In</button>
     {/if}
   </div>
 </SingleColumn>
