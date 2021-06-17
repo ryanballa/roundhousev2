@@ -1,8 +1,8 @@
 <script>
   import SingleColumn from '../layout/SingleColumn.svelte';
   import { Link } from 'svelte-navigator';
-  import auth from '../utils/auth';
-  import { isAuthenticated } from '../store/user';
+  import auth from '../../utils/auth';
+  import { isAuthenticated } from '../../store/user';
 
 </script>
 
