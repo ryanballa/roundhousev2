@@ -52,16 +52,18 @@
   };
 
   const init = async () => {
-    Sentry.init({
-      dsn:
-        'https://dbe0f009be9647e1878b4452adaa2694@o820586.ingest.sentry.io/5809225',
-      integrations: [new Integrations.BrowserTracing()],
+    if (__SNOWPACK_ENV__.MODE !== 'development') {
+      Sentry.init({
+        dsn:
+          'https://dbe0f009be9647e1878b4452adaa2694@o820586.ingest.sentry.io/5809225',
+        integrations: [new Integrations.BrowserTracing()],
 
-      // Set tracesSampleRate to 1.0 to capture 100%
-      // of transactions for performance monitoring.
-      // We recommend adjusting this value in production
-      tracesSampleRate: 1.0,
-    });
+        // Set tracesSampleRate to 1.0 to capture 100%
+        // of transactions for performance monitoring.
+        // We recommend adjusting this value in production
+        tracesSampleRate: 1.0,
+      });
+    }
 
     window.addEventListener(
       'showOverlay',

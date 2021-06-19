@@ -10,6 +10,7 @@ const {
     SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
     SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
     SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+    SNOWPACK_PUBLIC_CLUB_ID,
 } = import.meta.env;
 
 let auth0Client;
@@ -106,7 +107,7 @@ const checkAuthUser = async () => {
             ...usersReq,
         });
         isUserLoading.set(false);
-        clubs.addClubs({ _id: usersReq.clubs[0]._id });
+        clubs.addClubs({ _id: SNOWPACK_PUBLIC_CLUB_ID });
     } else {
         isAuthenticated.subscribe(isLoggedIn => {
             if (isLoggedIn && authUser && token.__raw) {

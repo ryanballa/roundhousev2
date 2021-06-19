@@ -55,6 +55,9 @@
   };
 
   const validateAddress = (value) => {
+    if (value <= 127) {
+      return { validateAddress: `${value} is reserved for consisting` };
+    }
     const existingAddresses = $locomotives.filter(
       (val) =>
         val.address === parseInt(value) &&
@@ -93,6 +96,7 @@
       }
     });
   });
+
 </script>
 
 <SingleColumn title="Add Locomotive">
