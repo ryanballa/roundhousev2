@@ -170,10 +170,7 @@
   }
 
   function calcHourRange(hour) {
-    if (hour === '11:30' || hour === '12:00') {
-      return 3;
-    }
-    return 2;
+    return 4;
   }
 
   const fetchData = async function () {
@@ -253,28 +250,24 @@
             {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')]}
               <ul class="users">
                 {#each usersByDate[format(date, 'yyyy-MM-dd')].sort( (a, b) => (a.date > b.date ? 1 : -1), ) as user}
-                  {#if format(new Date(user.date), 'hh:mm') === '10:00'}
-                    <li>{user.owner.name} : 9:30 AM - 11:30 AM</li>
-                  {:else}
-                    <li title={user.notes}>
-                      {user.owner.name} : {format(
-                        new Date(user.date),
-                        twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
-                      )} - {format(
-                        add(new Date(user.date), {
-                          hours: calcHourRange(
-                            format(new Date(user.date), 'hh:mm'),
-                          ),
-                        }),
-                        twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
-                      )}
-                    </li>
-                  {/if}
+                  <li title={user.notes}>
+                    {user.owner.name} : {format(
+                      new Date(user.date),
+                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
+                    )} - {format(
+                      add(new Date(user.date), {
+                        hours: calcHourRange(
+                          format(new Date(user.date), 'hh:mm'),
+                        ),
+                      }),
+                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
+                    )}
+                  </li>
                 {/each}
               </ul>
             {/if}
           </div>
-          {#if format(new Date(date), 'EEEE') !== 'Sunday' && format(date, 'dd') < 28 && format(date, 'dd') >= 11}
+          {#if format(new Date(date), 'EEEE') !== 'Saturday' && format(new Date(date), 'EEEE') !== 'Sunday'}
             <div class="actions">
               {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaReached)))}
                 <div
@@ -285,93 +278,21 @@
                   <div class="addOptions">
                     <h4>Pick a Time</h4>
                     <ul>
-                      {#if format(new Date(date), 'EEEE') !== 'Saturday'}
+                      {#if format(new Date(date), 'EEEE') !== 'Saturday' || format(new Date(date), 'EEEE') !== 'Sunday'}
                         <li
                           on:click={() => {
-                            selectedButton = '9:30-11:30';
-                            selectedTime = '10:00';
+                            selectedButton = '4:00';
+                            selectedTime = '16:00';
                           }}
                         >
                           <button
-                            class={selectedButton === '9:30-11:30'
-                              ? 'selected'
-                              : ''}
+                            class={selectedButton === '4:00' ? 'selected' : ''}
                             on:click={() => {
-                              selectedButton = '9:30-11:30';
-                              selectedTime = '10:00';
+                              selectedButton = '4:00';
+                              selectedTime = '16:00';
                             }}>&nbsp;</button
                           >
-                          <span>9:30AM - 11:30AM</span>
-                        </li>
-                        <li
-                          on:click={() => {
-                            selectedButton = '11:30-2:30';
-                            selectedTime = '11:30';
-                          }}
-                        >
-                          <button
-                            class={selectedButton === '11:30-2:30'
-                              ? 'selected'
-                              : ''}
-                            on:click={() => {
-                              selectedButton = '11:30-2:30';
-                              selectedTime = '11:30';
-                            }}>&nbsp;</button
-                          >
-                          <span>11:30AM - 2:30PM</span>
-                        </li>
-                        <li
-                          on:click={() => {
-                            selectedButton = '18:30-20:30';
-                            selectedTime = '18:30';
-                          }}
-                        >
-                          <button
-                            class={selectedButton === '18:30-20:30'
-                              ? 'selected'
-                              : ''}
-                            on:click={() => {
-                              selectedButton = '18:30-20:30';
-                              selectedTime = '18:30';
-                            }}>&nbsp;</button
-                          >
-                          <span>6:30PM - 8:30PM</span>
-                        </li>
-                      {/if}
-                      {#if format(new Date(date), 'EEEE') === 'Saturday'}
-                        <li
-                          on:click={() => {
-                            selectedButton = '10:00 - 12:00';
-                            selectedTime = '10:00';
-                          }}
-                        >
-                          <button
-                            class={selectedButton === '10:00 - 12:00'
-                              ? 'selected'
-                              : ''}
-                            on:click={() => {
-                              selectedButton = '10:00 - 12:00';
-                              selectedTime = '10:00';
-                            }}>&nbsp;</button
-                          >
-                          <span>10PM - 12PM</span>
-                        </li>
-                        <li
-                          on:click={() => {
-                            selectedButton = '12:00 - 15:00';
-                            selectedTime = '12:00';
-                          }}
-                        >
-                          <button
-                            class={selectedButton === '12:00 - 15:00'
-                              ? 'selected'
-                              : ''}
-                            on:click={() => {
-                              selectedButton = '12:00 - 15:00';
-                              selectedTime = '12:00';
-                            }}>&nbsp;</button
-                          >
-                          <span>12PM - 3PM</span>
+                          <span>4PM - 8PM</span>
                         </li>
                       {/if}
                     </ul>
