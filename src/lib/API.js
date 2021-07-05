@@ -306,6 +306,24 @@ class api {
             return e;
         }
     }
+    async issueClose(doc, token) {
+        const updatedIssue = { ...doc };
+        updatedIssue.status = "Complete";
+        try {
+            this.response = await fetch(`${apiURL}api/issue/${doc._id}`, {
+                method: "POST",
+                body: JSON.stringify(updatedIssue),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
+            });
+            const issue = await this.response.json();
+            return issue;
+        } catch (e) {
+            return e;
+        }
+    }
     async issuesPost(doc, token, clubId) {
         try {
             this.response = await fetch(`${apiURL}api/issues/${clubId}`, {

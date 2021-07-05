@@ -60,6 +60,15 @@
     fetchData($conditionalStores.user.token, $conditionalStores.club._id);
   };
 
+  const handleCompleteIssue = async (row) => {
+    const issueRes = await apiService.issueClose(
+      row,
+      $conditionalStores.user.token,
+    );
+    towers.reset();
+    fetchData($conditionalStores.user.token, $conditionalStores.club._id);
+  };
+
   let columns = [];
 
   const filterDataByIssueType = (issues, towers) => {
@@ -157,6 +166,9 @@
                 handleLeave: (row) => {
                   handleRemoveUser(row);
                 },
+                handleComplete: (row) => {
+                  handleCompleteIssue(row);
+                },
               },
             },
           },
@@ -164,6 +176,7 @@
       }
     });
   });
+
 </script>
 
 <SingleColumn title="Towers">
@@ -301,4 +314,5 @@
     padding: 12px;
     text-align: center;
   }
+
 </style>

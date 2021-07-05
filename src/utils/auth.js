@@ -106,8 +106,8 @@ const checkAuthUser = async () => {
             token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
             ...usersReq,
         });
-        isUserLoading.set(false);
         clubs.addClubs({ _id: SNOWPACK_PUBLIC_CLUB_ID });
+        isUserLoading.set(false);
     } else {
         isAuthenticated.subscribe(isLoggedIn => {
             if (isLoggedIn && authUser && token.__raw) {
