@@ -26,7 +26,7 @@
         name="timePreference"
         value="false"
       />
-      <label for="time12HR">12 HR</label>
+      <label for="time12HR">24 HR</label>
     </div>
     <div>
       <input
@@ -35,7 +35,7 @@
         id="time24HR"
         name="timePreference"
         value="true"
-      /><label for="time24HR">24 HR</label>
+      /><label for="time24HR">12 HR</label>
     </div>
   </div>
   <Hint name="timePreference" on="validateTime">You must select an option.</Hint
