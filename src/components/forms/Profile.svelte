@@ -4,6 +4,10 @@
 
   export let values = {};
 
+  export let handleTimeUpdate = (e) => {
+    return e.target.value;
+  };
+
 </script>
 
 <li>
@@ -21,21 +25,22 @@
     <div>
       <input
         checked={!values.profile.timePreference}
+        on:change={handleTimeUpdate}
         type="radio"
         id="time12HR"
         name="timePreference"
-        value="false"
-      />
-      <label for="time12HR">24 HR</label>
+        value={false}
+      /><label class="hourLabel" for="time12HR">24 HR</label>
     </div>
     <div>
       <input
         checked={values.profile.timePreference}
+        on:change={handleTimeUpdate}
         type="radio"
         id="time24HR"
         name="timePreference"
-        value="true"
-      /><label for="time24HR">12 HR</label>
+        value={true}
+      /><label class="hourLabel" for="time24HR">12 HR</label>
     </div>
   </div>
   <Hint name="timePreference" on="validateTime">You must select an option.</Hint
@@ -107,6 +112,10 @@
     position: relative;
     top: 3px;
     width: auto;
+  }
+  .hourLabel {
+    display: inline-block;
+    margin-left: 8px;
   }
 
 </style>

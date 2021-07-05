@@ -58,14 +58,13 @@
       initial: $user.profile ? $user.profile.timePreference : true,
       validators: [validateTime],
     },
-    fontSize: {
-      validators: [required],
-    },
+    fontSize: {},
   });
 
   onMount(async () => {
     user.subscribe((value) => {
       if (value && value._id && value.profile) {
+        $form.fontSize._value = value.profile.fontSize.toString() || '1';
         isLoading = false;
         if (!value.profile) {
           hasError = true;
@@ -84,8 +83,8 @@
       <Forms>
         <Profile
           values={$user}
-          handleFontSizeUpdate={(value) => {
-            $form.fontSize._value = value;
+          handleTimeUpdate={(value) => {
+            $form.timePreference._value = value;
             $form.touched = true;
           }}
         />
