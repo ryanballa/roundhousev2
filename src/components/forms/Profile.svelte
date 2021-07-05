@@ -1,11 +1,9 @@
 <script>
   import { Hint } from 'svelte-use-form';
-  import NumberTicker from '../elements/forms/NumberTicker.svelte';
+  import FontSize from '../icons/FontSize.svelte';
 
-  export let handleFontSizeUpdate = (value) => {
-    return value;
-  };
   export let values = {};
+
 </script>
 
 <li>
@@ -19,7 +17,7 @@
 </li>
 <li>
   <div>
-    Time Preference
+    <div class="fieldTitle">Time Preference</div>
     <div>
       <input
         checked={!values.profile.timePreference}
@@ -43,12 +41,72 @@
   <Hint name="timePreference" on="validateTime">You must select an option.</Hint
   >
 </li>
-<li>
-  <NumberTicker
-    name="fontSize"
-    value={parseFloat(values.profile.fontSize)}
-    handleUpdate={(value) => {
-      handleFontSizeUpdate(value);
-    }}
-  />
+<li class="fontSizeOption">
+  <div class="fieldTitle">Font Size Selection</div>
+  <label for="fontSizeNormal">
+    <input
+      checked={values.profile.fontSize === 1}
+      type="radio"
+      id="fontSizeNormal"
+      name="fontSize"
+      value="1"
+    />
+    <span>Normal</span>
+    <div class="fontSize fontSizeNormal">
+      <FontSize />
+    </div>
+  </label>
+  <label for="fontSizeLarge">
+    <input
+      checked={values.profile.fontSize === 1.25}
+      type="radio"
+      id="fontSizeLarge"
+      name="fontSize"
+      value="1.25"
+    />
+    <span>Large</span>
+    <div class="fontSize fontSizeLarge">
+      <FontSize />
+    </div>
+  </label>
+  <label for="fontSizeLarger">
+    <input
+      checked={values.profile.fontSize === 1.5}
+      type="radio"
+      id="fontSizeLarger"
+      name="fontSize"
+      value="1.5"
+    />
+    <span>Larger</span>
+    <div class="fontSize fontSizeLarger">
+      <FontSize />
+    </div>
+  </label>
 </li>
+
+<style>
+  .fieldTitle {
+    font-size: 100%;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  .fontSizeOption :global(label) {
+    align-items: center;
+    display: flex;
+  }
+  .fontSizeOption :global(span) {
+    display: block;
+    margin-left: 10px;
+    width: 90px;
+  }
+  .fontSize {
+    display: inline;
+  }
+  .fontSize :global(svg) {
+    height: 20px;
+    position: relative;
+    top: 3px;
+    width: auto;
+  }
+
+</style>

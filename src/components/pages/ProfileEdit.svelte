@@ -20,7 +20,7 @@
       _id: $form._id._value,
       bio: $form.bio._value,
       timePreference: $form.timePreference._value === 'true',
-      fontSize: JSON.stringify($form.fontSize._value),
+      fontSize: parseFloat($form.fontSize._value),
       owner: {
         _ref: $user._id,
         _type: 'reference',
@@ -73,6 +73,7 @@
       }
     });
   });
+
 </script>
 
 <SingleColumn title="Edit Your Profile">
