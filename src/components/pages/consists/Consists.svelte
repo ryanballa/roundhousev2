@@ -1,24 +1,29 @@
 <script>
   import { onMount } from 'svelte';
+  import { navigate } from 'svelte-navigator';
   import { format } from 'date-fns';
-  import consists from '../../store/consists';
-  import SingleColumn from '../layout/SingleColumn.svelte';
-  import DynamicContent from '../core/DynamicContent.svelte';
-  import TableButtonDelete from '../elements/TableButtonDelete.svelte';
-  import Table from '../elements/Table.svelte';
-  import apiService from '../../lib/API';
-  import { user } from '../../store/user';
-  import clubs from '../../store/clubs';
+  import consists from '../../../store/consists';
+  import SingleColumn from '../../layout/SingleColumn.svelte';
+  import DynamicContent from '../../core/DynamicContent.svelte';
+  import TableActions from './TableActions.svelte';
+  import Table from '../../elements/Table.svelte';
+  import apiService from '../../../lib/API';
+  import { user } from '../../../store/user';
+  import clubs from '../../../store/clubs';
   let rows = [];
 
-  const handleDelete = async (id) => {
+  const handleRemoveConcist = async (row) => {
     try {
-      await apiService.consistsDelete(id, $user.token);
-      const updatedRows = rows.filter((r) => r._id !== id);
+      await apiService.consistsDelete(row._id, $user.token);
+      const updatedRows = rows.filter((r) => r._id !== row._id);
       consists.addConsists(updatedRows);
     } catch (e) {
       console.log(`Error: ${e}`);
     }
+  };
+
+  const handleEditConcist = (row) => {
+    navigate(`/tracking/consists/edit/${row._id}`);
   };
 
   const columns = [
@@ -51,10 +56,14 @@
       title: 'Actions',
       sortable: false,
       renderComponent: {
-        component: TableButtonDelete,
+        component: TableActions,
         props: {
-          deleteAction: handleDelete,
-          rowOwner: 'concistOwner',
+          handleDelete: (row) => {
+            handleRemoveConcist(row);
+          },
+          handleEdit: (row) => {
+            handleEditConcist(row);
+          },
         },
       },
     },

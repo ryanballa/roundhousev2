@@ -1,13 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import { navigate } from 'svelte-navigator';
-  import SingleColumn from '../layout/SingleColumn.svelte';
-  import Forms from '../layout/Forms.svelte';
-  import Button from '../elements/Button.svelte';
+  import SingleColumn from '../../layout/SingleColumn.svelte';
+  import Forms from '../../layout/Forms.svelte';
+  import Button from '../../elements/Button.svelte';
   import { useForm, required, minLength, Hint } from 'svelte-use-form';
-  import apiService from '../../lib/API';
-  import { user } from '../../store/user';
-  import clubs from '../../store/clubs';
+  import apiService from '../../../lib/API';
+  import { user } from '../../../store/user';
+  import clubs from '../../../store/clubs';
 
   let usersReq = null;
 

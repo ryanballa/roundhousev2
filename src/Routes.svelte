@@ -1,8 +1,9 @@
 <script>
   import { Route } from 'svelte-navigator';
   import Home from './components/pages/Home.svelte';
-  import Consists from './components/pages/Consists.svelte';
-  import ConsistAdd from './components/pages/ConsistAdd.svelte';
+  import Consists from './components/pages/consists/Consists.svelte';
+  import ConsistAdd from './components/pages/consists/ConsistAdd.svelte';
+  import ConsistEdit from './components/pages/consists/ConsistEdit.svelte';
   import Schedule from './components/pages/Schedule.svelte';
   import Login from './components/pages/Login.svelte';
   import Cabs from './components/pages/Cabs.svelte';
@@ -53,6 +54,7 @@
       <Consists />
     </Route>
     <Route path="/add" component={ConsistAdd} />
+    <Route path="/edit/*" component={ConsistEdit} />
   </Route>
 </Route>
 <Route path="schedule">
