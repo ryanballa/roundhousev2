@@ -4,6 +4,8 @@
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
   import Button from '../elements/Button.svelte';
+  import { user } from '../../store/user';
+  import cabs from '../../store/cabs';
   import {
     useForm,
     required,
@@ -50,7 +52,10 @@
 
   const fetchUsers = async function () {
     try {
-      usersReq = await apiService.usersGet($conditionalStores.club._id);
+      usersReq = await apiService.usersGet(
+        $conditionalStores.club._id,
+        $user.token,
+      );
     } catch (e) {
       hasError = true;
     }

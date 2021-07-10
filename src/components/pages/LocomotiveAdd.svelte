@@ -6,6 +6,7 @@
   import Forms from '../layout/Forms.svelte';
   import Banner from '../elements/Banner.svelte';
   import Button from '../elements/Button.svelte';
+  import { user } from '../../store/user';
   import {
     useForm,
     required,
@@ -79,7 +80,7 @@
 
   const fetchUsers = async (clubId) => {
     try {
-      usersReq = await apiService.usersGet(clubId);
+      usersReq = await apiService.usersGet(clubId, $user.token);
     } catch (e) {
       hasError = true;
     }
@@ -96,7 +97,6 @@
       }
     });
   });
-
 </script>
 
 <SingleColumn title="Add Locomotive">

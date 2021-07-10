@@ -58,7 +58,7 @@
 
   const fetchUsers = async function (clubId) {
     try {
-      usersReq = await apiService.usersGet(clubId);
+      usersReq = await apiService.usersGet(clubId, $user.token);
     } catch (e) {
       hasError = true;
     }

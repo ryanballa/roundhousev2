@@ -33,10 +33,14 @@ class api {
             return e;
         }
     }
-    async usersGet(clubId) {
+    async usersGet(clubId, token) {
         try {
             this.response = await fetch(`${apiURL}api/users/${clubId}`, {
                 method: "GET",
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Authorization: 'Bearer ' + token,
+                }
             });
             const users = await this.response.json();
             return users;
