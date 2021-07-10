@@ -11,7 +11,7 @@ class api {
                 }
             });
             const user = await this.response.json();
-            return { _id: user._id, email: user.email, name: user.name, clubs: user.membership, profile: user.profiles[0] };
+            return { _id: user._id, email: user.email, name: user.name, clubs: user.membership, profile: user.profiles[0], isAdmin: user.isAdmin };
         } catch (e) {
             console.log(e);
             return e;
