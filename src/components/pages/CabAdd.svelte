@@ -18,6 +18,7 @@
   import conditionalStores from '../../utils/conditionalStores';
 
   let usersReq = null;
+  let rows;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,6 +67,7 @@
       rows = value;
     });
     conditionalStores.subscribe((value) => {
+      console.log(value);
       if (value && value.user._id && value.club._id) {
         if (!usersReq) {
           fetchUsers();
