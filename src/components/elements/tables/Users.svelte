@@ -3,6 +3,7 @@
 
   export let row;
   export let handleAddUser;
+
 </script>
 
 <div>
@@ -10,8 +11,8 @@
     {#if row && row.responder && row.responder.length > 0}
       {#each row.responder as responder}
         <li class="user-wrapper">
-          <span class="user">{responder.name[0]}</span>
-          <span class="name">{responder.name}</span>
+          <span class="user">{responder?.name[0]}</span>
+          <span class="name">{responder?.name}</span>
         </li>
       {/each}
     {:else}
@@ -51,4 +52,5 @@
     align-items: center;
     display: flex;
   }
+
 </style>
