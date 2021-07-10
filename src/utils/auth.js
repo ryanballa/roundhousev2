@@ -100,11 +100,12 @@ const checkAuthUser = async () => {
             SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
         );
         user.set({
+            ...usersReq,
             _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
             email: SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
             name: SNOWPACK_PUBLIC_LOGGED_IN_USER_NAME,
             token: SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-            ...usersReq,
+            isAdmin: true,
         });
         clubs.addClubs({ _id: SNOWPACK_PUBLIC_CLUB_ID });
         isUserLoading.set(false);
