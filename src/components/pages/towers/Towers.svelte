@@ -89,7 +89,8 @@
   const issuesByTowerId = (towers, issues) => {
     const theIssues = {};
     towers.forEach((tower) => {
-      const items = issues.filter((iss) => iss.membership._id === tower._id);
+      let items = issues.filter((iss) => iss.membership._id === tower._id);
+      items = items.filter((iss) => iss.status !== 'Complete');
       theIssues[tower._id] = items;
     });
     return theIssues;
