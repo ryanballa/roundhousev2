@@ -50,7 +50,7 @@
 
   onMount(async () => {
     clubs.subscribe((value) => {
-      if (!usersReq) {
+      if (!usersReq && value._id) {
         fetchUsers(value._id);
       }
     });
