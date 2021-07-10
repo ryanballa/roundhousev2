@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { add, sub, format, toDate } from 'date-fns';
+  import { add, sub, format, toDate, isWeekend } from 'date-fns';
   import { zonedTimeToUtc, utcToZonedTime } from 'date-fns-tz';
   import Loader from '../elements/Loader.svelte';
   import Button from '../elements/Button.svelte';
@@ -20,6 +20,7 @@
   let error = null;
   let notes = null;
   let twentyFourHRTime = false;
+  let hasNoteError = false;
 
   daylightSavings();
 
@@ -46,45 +47,50 @@
   };
 
   const handleAdd = async () => {
-    error = null;
-    const UtcZonedTime = zonedTimeToUtc(
-      new Date(`${addingDate}T${selectedTime}`),
-      {
-        timeZone,
-      },
-    );
-    const formattedUtcTime = UtcZonedTime;
-    if (!working) {
-      working = true;
-      const doc = {
-        _type: 'schedule',
-        date: formattedUtcTime,
-        membership: {
-          _ref: $conditionalStores.club._id,
-          _type: 'reference',
+    if (!notes) {
+      hasNoteError = true;
+    } else {
+      hasNoteError = false;
+      error = null;
+      const UtcZonedTime = zonedTimeToUtc(
+        new Date(`${addingDate}T${selectedTime}`),
+        {
+          timeZone,
         },
-        notes,
-        owner: {
-          _ref: $conditionalStores.user._id,
-          _type: 'reference',
-        },
-      };
-      const usersOnAddingDate = await apiService.scheduleGetUsersByDate(
-        $conditionalStores.club._id,
-        $conditionalStores.user.token,
-        formattedUtcTime,
       );
-      if (usersOnAddingDate.length >= quota) {
-        error = 'Oops, a user beat you and this day is now full.';
-      } else {
-        apiService
-          .schedulePost(doc, $conditionalStores.user.token)
-          .then((res) => {
-            scheduleReq.push(res);
-            addingDate = null;
-            selectedButton = null;
-            fetchData();
-          });
+      const formattedUtcTime = UtcZonedTime;
+      if (!working) {
+        working = true;
+        const doc = {
+          _type: 'schedule',
+          date: formattedUtcTime,
+          membership: {
+            _ref: $conditionalStores.club._id,
+            _type: 'reference',
+          },
+          notes,
+          owner: {
+            _ref: $conditionalStores.user._id,
+            _type: 'reference',
+          },
+        };
+        const usersOnAddingDate = await apiService.scheduleGetUsersByDate(
+          $conditionalStores.club._id,
+          $conditionalStores.user.token,
+          formattedUtcTime,
+        );
+        if (usersOnAddingDate.length >= quota) {
+          error = 'Oops, a user beat you and this day is now full.';
+        } else {
+          apiService
+            .schedulePost(doc, $conditionalStores.user.token)
+            .then((res) => {
+              scheduleReq.push(res);
+              addingDate = null;
+              selectedButton = null;
+              fetchData();
+            });
+        }
       }
     }
   };
@@ -197,6 +203,15 @@
     });
   });
 
+  const isWeekday = (date) => {
+    return (
+      format(new Date(date), 'EEEE') === 'Monday' ||
+      format(new Date(date), 'EEEE') === 'Tuesday' ||
+      format(new Date(date), 'EEEE') === 'Wednesday' ||
+      format(new Date(date), 'EEEE') === 'Thursday' ||
+      format(new Date(date), 'EEEE') === 'Friday'
+    );
+  };
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 </script>
@@ -251,91 +266,99 @@
               <ul class="users">
                 {#each usersByDate[format(date, 'yyyy-MM-dd')].sort( (a, b) => (a.date > b.date ? 1 : -1), ) as user}
                   <li title={user.notes}>
-                    {user.owner.name} : {format(
-                      new Date(user.date),
-                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
-                    )} - {format(
-                      add(new Date(user.date), {
-                        hours: calcHourRange(
-                          format(new Date(user.date), 'hh:mm'),
-                        ),
-                      }),
-                      twentyFourHRTime ? 'hh:mm a' : 'kk:mm',
-                    )}
+                    <b>{isWeekday(date) ? '4PM - 8:00' : '10AM - 4PM'}</b>
+                    {user.owner.name}
                   </li>
                 {/each}
               </ul>
             {/if}
           </div>
-          {#if format(new Date(date), 'EEEE') !== 'Saturday' && format(new Date(date), 'EEEE') !== 'Sunday'}
-            <div class="actions">
-              {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaReached)))}
-                <div
-                  class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
-                    ? 'adding'
-                    : 'hidden'}"
-                >
-                  <div class="addOptions">
-                    <h4>Pick a Time</h4>
-                    <ul>
-                      {#if format(new Date(date), 'EEEE') !== 'Saturday' || format(new Date(date), 'EEEE') !== 'Sunday'}
-                        <li
+          <div class="actions">
+            {#if (usersByDate && !usersByDate[format(date, 'yyyy-MM-dd')]) || (usersByDate && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showAdd === true && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.quotaReached)))}
+              <div
+                class="addWrapper {addingDate === format(date, 'yyyy-MM-dd')
+                  ? 'adding'
+                  : 'hidden'}"
+              >
+                <div class="addOptions">
+                  <h4>Pick a Time</h4>
+                  <ul>
+                    {#if isWeekday(date)}
+                      <li
+                        on:click={() => {
+                          selectedButton = '4:00';
+                          selectedTime = '16:00';
+                        }}
+                      >
+                        <button
+                          class={selectedButton === '4:00' ? 'selected' : ''}
                           on:click={() => {
                             selectedButton = '4:00';
                             selectedTime = '16:00';
-                          }}
+                          }}>&nbsp;</button
                         >
-                          <button
-                            class={selectedButton === '4:00' ? 'selected' : ''}
-                            on:click={() => {
-                              selectedButton = '4:00';
-                              selectedTime = '16:00';
-                            }}>&nbsp;</button
-                          >
-                          <span>4PM - 8PM</span>
-                        </li>
-                      {/if}
-                    </ul>
-                    <div class="notesWrapper">
-                      <h4>Add Notes</h4>
-                      <input
-                        type="text"
-                        on:change={(e) => {
-                          notes = e.target.value;
+                        <span>4PM - 8PM</span>
+                      </li>
+                    {/if}
+                    {#if format(new Date(date), 'EEEE') === 'Saturday' || format(new Date(date), 'EEEE') === 'Sunday'}
+                      <li
+                        on:click={() => {
+                          selectedButton = '10:00';
+                          selectedTime = '10:00';
                         }}
-                      />
-                      <Button actionEvent={handleAdd} actionText="Schedule" />
-                    </div>
+                      >
+                        <button
+                          class={selectedButton === '10:00' ? 'selected' : ''}
+                          on:click={() => {
+                            selectedButton = '10:00';
+                            selectedTime = '16:00';
+                          }}>&nbsp;</button
+                        >
+                        <span>10AM - 4PM</span>
+                      </li>
+                    {/if}
+                  </ul>
+                  <div class="notesWrapper">
+                    <h4>Add Notes</h4>
+                    <input
+                      type="text"
+                      on:change={(e) => {
+                        notes = e.target.value;
+                      }}
+                    />
+                    {#if hasNoteError}<div class="scheduleError">
+                        Please enter a note
+                      </div>{/if}
+                    <Button actionEvent={handleAdd} actionText="Schedule" />
                   </div>
                 </div>
-                <button
-                  class="add"
-                  on:click={() => {
-                    handleSubmit(add(date, { days: 0 }));
-                  }}>+</button
-                >
-              {/if}
-              {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true)}
-                <button
-                  class="remove"
-                  on:click={() => {
-                    handleRemove(
-                      usersByDate[format(date, 'yyyy-MM-dd')].find(
-                        (item) =>
-                          item.owner._id === $conditionalStores.user._id,
-                      )._id,
-                      format(date, 'yyyy-MM-dd'),
-                    );
-                  }}>-</button
-                >
-              {/if}
-              {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find( (item) => {
-                    return item.quotaReached == true;
-                  }, )}
-                <span>Capacity Reached</span>
-              {/if}
-            </div>
-          {/if}
+              </div>
+              <button
+                class="add"
+                on:click={() => {
+                  handleSubmit(add(date, { days: 0 }));
+                }}>+</button
+              >
+            {/if}
+            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true)}
+              <button
+                class="remove"
+                on:click={() => {
+                  handleRemove(
+                    usersByDate[format(date, 'yyyy-MM-dd')].find(
+                      (item) => item.owner._id === $conditionalStores.user._id,
+                    )._id,
+                    format(date, 'yyyy-MM-dd'),
+                  );
+                }}>-</button
+              >
+            {/if}
+            {#if usersByDate && usersByDate[format(date, 'yyyy-MM-dd')] && !usersByDate[format(date, 'yyyy-MM-dd')].find((item) => item.showRemove === true) && usersByDate[format(date, 'yyyy-MM-dd')].find( (item) => {
+                  return item.quotaReached == true;
+                }, )}
+              <span>Capacity Reached</span>
+            {/if}
+          </div>
         </li>
       {/each}
     </ul>
@@ -497,6 +520,7 @@
   }
   .errorMessage {
     color: var(--color-terraCotta);
+    font-size: 90%;
   }
   .notesWrapper {
     margin-bottom: 16px;
@@ -508,6 +532,10 @@
     padding: 8px;
     width: 200px;
   }
+  .notesWrapper .scheduleError {
+    color: var(--color-terraCotta);
+  }
+
   .notesWrapper :global(button) {
     display: block;
     margin: 16px auto 8px auto;
