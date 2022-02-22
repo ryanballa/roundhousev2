@@ -60,7 +60,6 @@ const fetchUser = async function (email, token) {
 
 const setAuthUser = async (authUser, token) => {
   usersReq = await apiService.userGet(authUser.email, token);
-  console.log(usersReq);
   if (!usersReq._id) {
     user.set({
       email: authUser.email,
@@ -122,11 +121,10 @@ function handleLogin() {
   navigate('/login');
 }
 
-function handleLogout() {
-  return auth0Client.logout({
-    returnTo: 'https://locomotivehouse.com',
-  });
-}
+const handleLogout = async () => {
+  await m.user.logout();
+  navigate('/login');
+};
 
 const auth = {
   loginWithRedirect,
