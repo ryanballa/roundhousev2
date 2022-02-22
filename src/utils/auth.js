@@ -58,8 +58,9 @@ const fetchUser = async function (email, token) {
   }
 };
 
-const setAuthUser = async (authUser, accessToken) => {
-  usersReq = await apiService.userGet(authUser.email, accessToken);
+const setAuthUser = async (authUser, token) => {
+  usersReq = await apiService.userGet(authUser.email, token);
+  console.log(usersReq);
   if (!usersReq._id) {
     user.set({
       email: authUser.email,
