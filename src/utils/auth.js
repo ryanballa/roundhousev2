@@ -46,18 +46,8 @@ const createClient = async () => {
 };
 
 const loginWithRedirect = async ({ selectedEmail }) => {
-  //   try {
-  //     await auth0Client.loginWithRedirect({
-  //       redirect_uri: window.location.origin,
-  //       prompt: 'login', // Force login prompt. No silence auth for you!
-  //     });
-  //   } catch (e) {
-  //     // eslint-disable-next-line
-  //     console.error(e);
-  //   }
-
   const magicUser = await m.auth.loginWithMagicLink({ email: selectedEmail });
-  console.log(magicUser);
+  setAuthUser({ email: selectedEmail }, magicUser);
 };
 
 const fetchUser = async function (email, token) {
@@ -89,20 +79,21 @@ const setAuthUser = async (authUser, accessToken) => {
 };
 
 const checkAuthUser = async () => {
-  auth0Client = await createClient();
+  //   auth0Client = await createClient();
 
-  isAuthenticated.set(await auth0Client.isAuthenticated());
+  //   isAuthenticated.set(await auth0Client.isAuthenticated());
 
-  const authUser = await auth0Client.getUser();
-  const token = await auth0Client.getIdTokenClaims();
+  //   const authUser = await auth0Client.getUser();
+  //   const token = await auth0Client.getIdTokenClaims();
 
   // In DEV we load the user from settings
+  console.log(SNOWPACK_PUBLIC_LOGGED_IN_USER_ID);
   if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
     isAuthenticated.set(true);
-    await fetchUser(
-      SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-      SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-    );
+    // await fetchUser(
+    //   SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
+    //   SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
+    // );
     user.set({
       ...usersReq,
       _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,

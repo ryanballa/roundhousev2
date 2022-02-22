@@ -20,6 +20,9 @@
     auth.loginWithRedirect({ selectedEmail })
    
   };
+
+  auth.checkAuthUser();
+
 </script>
 
 <SingleColumn title="Log In">
