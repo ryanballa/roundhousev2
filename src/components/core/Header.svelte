@@ -5,11 +5,6 @@
   import { isAuthenticated, user, isUserLoading } from '../../store/user';
   import Dropdown from '../elements/Dropdown.svelte';
   import Logo from '../icons/Logo.svelte';
-
-  onMount(async () => {
-    auth.checkAuthUser();
-  });
-
 </script>
 
 <header class="appHeader">

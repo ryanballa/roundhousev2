@@ -3,6 +3,7 @@
   import SingleColumn from '../layout/SingleColumn.svelte';
   import Forms from '../layout/Forms.svelte';
   import Button from '../elements/Button.svelte';
+  import auth from '../../utils/auth';
   import { useForm, Hint, required, email, HintGroup } from 'svelte-use-form';
 
   let selectedEmail = null;
@@ -16,8 +17,8 @@
   const handleSubmit = async (e) => {
     e.preventDefault();
     selectedEmail = $form.email._value;
-    const user = await m.auth.loginWithMagicLink({ email: selectedEmail });
-    console.log(user);
+    auth.loginWithRedirect({ selectedEmail })
+   
   };
 </script>
 
