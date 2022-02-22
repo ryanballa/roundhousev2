@@ -64,36 +64,35 @@ const setAuthUser = async (authUser, token) => {
   if (!usersReq._id) {
     user.set({
       email: authUser.email,
-      token: accessToken,
+      token: token,
     });
     navigate('/user/add');
   } else if (!usersReq.profile) {
-    user.set({ ...usersReq, token: accessToken });
+    user.set({ ...usersReq, token: token });
     navigate('/profile/add');
   } else if (usersReq) {
     clubs.addClubs({ _id: usersReq.clubs[0]._id });
-    user.set({ ...usersReq, token: accessToken });
+    user.set({ ...usersReq, token });
   } else if (!usersReq) {
     navigate('/login');
+  } else {
+    user.set({
+      ...usersReq,
+      _id: usersReq._id,
+      email: usersReq.email,
+      name: usersReq.name,
+      token,
+      isAdmin: usersReq.isAdmin,
+    });
+    clubs.addClubs({ _id: usersReq.clubs[0]._id });
   }
   isUserLoading.set(false);
 };
 
 const checkAuthUser = async () => {
-  //   auth0Client = await createClient();
-
-  //   isAuthenticated.set(await auth0Client.isAuthenticated());
-
-  //   const authUser = await auth0Client.getUser();
-  //   const token = await auth0Client.getIdTokenClaims();
-
   // In DEV we load the user from settings
   if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
     isAuthenticated.set(true);
-    // await fetchUser(
-    //   SNOWPACK_PUBLIC_LOGGED_IN_USER_EMAIL,
-    //   SNOWPACK_PUBLIC_LOGGED_IN_USER_TOKEN,
-    // );
     user.set({
       ...usersReq,
       _id: SNOWPACK_PUBLIC_LOGGED_IN_USER_ID,
