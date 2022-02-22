@@ -87,7 +87,6 @@ const checkAuthUser = async () => {
   //   const token = await auth0Client.getIdTokenClaims();
 
   // In DEV we load the user from settings
-  console.log(SNOWPACK_PUBLIC_LOGGED_IN_USER_ID);
   if (SNOWPACK_PUBLIC_LOGGED_IN_USER_ID) {
     isAuthenticated.set(true);
     // await fetchUser(
@@ -105,16 +104,18 @@ const checkAuthUser = async () => {
     clubs.addClubs({ _id: SNOWPACK_PUBLIC_CLUB_ID });
     isUserLoading.set(false);
   } else {
-    isAuthenticated.subscribe((isLoggedIn) => {
-      if (isLoggedIn && authUser && token.__raw) {
-        if (!user._id) {
-          setAuthUser(authUser, token.__raw);
+    if (window.location.pathname !== '/login') {
+      isAuthenticated.subscribe((isLoggedIn) => {
+        if (isLoggedIn && authUser && token.__raw) {
+          if (!user._id) {
+            setAuthUser(authUser, token.__raw);
+          }
+        } else {
+          isUserLoading.set(false);
+          navigate('/');
         }
-      } else {
-        isUserLoading.set(false);
-        navigate('/');
-      }
-    });
+      });
+    }
   }
 };
 
