@@ -123,6 +123,7 @@ function handleLogin() {
 
 const handleLogout = async () => {
   await m.user.logout();
+  isAuthenticated.set(false);
   navigate('/login');
 };
 
