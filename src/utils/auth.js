@@ -71,7 +71,6 @@ const setAuthUser = async (authUser, token) => {
     user.set({ ...usersReq, token: token });
     navigate('/profile/add');
   } else if (usersReq) {
-    console.log('setting user');
     user.set({
       ...usersReq,
       _id: usersReq._id,
@@ -81,6 +80,7 @@ const setAuthUser = async (authUser, token) => {
       isAdmin: usersReq.isAdmin,
     });
     clubs.addClubs({ _id: usersReq.clubs[0]._id });
+    isAuthenticated.set(true);
     navigate('/');
   } else if (!usersReq) {
     navigate('/login');
